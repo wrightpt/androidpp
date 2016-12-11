@@ -58,17 +58,6 @@ ContentFrame::~ContentFrame()
     m_surfaceView.reset();
 }
 
-std::shared_ptr<ContentFrame> ContentFrame::createPopup(Rect& clientRect)
-{
-    ViewHostWindow* hostWindow = view::ViewHostWindow::createPopup(clientRect);
-    if (!hostWindow)
-        return nullptr;
-
-    std::shared_ptr<ContentFrame> contentFrame = create();
-    hostWindow->setContentView(contentFrame);
-    return contentFrame;
-}
-
 void ContentFrame::invalidate()
 {
     if (m_contentVisibility != View::VISIBLE)

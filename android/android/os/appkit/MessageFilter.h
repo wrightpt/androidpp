@@ -42,8 +42,8 @@ public:
     bool receiveMessage(Messenger&, Message&);
 
 private:
-    std::vector<std::safe_function<bool (Messenger&, Message&)>> m_messageReceivers;
-    std::unordered_map<int32_t, std::safe_function<bool (Messenger&, Message&)>> m_dedicatedMessageReceivers;
+    std::vector<std::function<bool (Messenger&, Message&)>> m_messageReceivers;
+    std::unordered_map<int32_t, std::function<bool (Messenger&, Message&)>> m_dedicatedMessageReceivers;
 };
 
 inline void MessageFilter::addMessageReceiver(std::function<bool (Messenger&, Message&)> receiver)

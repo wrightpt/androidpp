@@ -22,14 +22,14 @@ set(OS_HEADERS
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${LIBRARY_PRODUCT_DIR}/include"
-    "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${LIBRARY_PRODUCT_DIR}/include/platforms"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
     "${CMAKE_SOURCE_DIR}/private"
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
+    "${LIBRARY_PRODUCT_DIR}/include"
+    "${LIBRARY_PRODUCT_DIR}/include/platforms"
+    "${ANGLE_LIBRARY_DIR}/include"
 )
 
 add_library(android.os.appkit OBJECT ${OS_HEADERS} ${OS_SOURCES})

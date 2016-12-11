@@ -35,6 +35,19 @@ MotionEvent::MotionEvent()
 }
 
 MotionEvent::MotionEvent(MotionEvent&& other)
+    : m_eventTime(other.m_eventTime)
+    , m_downTime(other.m_downTime)
+    , m_action(other.m_action)
+    , m_location(other.m_location)
+    , m_rawLocation(other.m_rawLocation)
+    , m_pressure(other.m_pressure)
+    , m_size(other.m_size)
+    , m_metaState(other.m_metaState)
+    , m_xPrecision(other.m_xPrecision)
+    , m_yPrecision(other.m_yPrecision)
+    , m_flags(other.m_flags)
+    , m_source(other.m_source)
+    , m_private(std::move(other.m_private))
 {
 }
 
@@ -165,7 +178,7 @@ float MotionEvent::getSize()
 
 int32_t MotionEvent::getSource()
 {
-    return 0;
+    return m_source;
 }
 
 float MotionEvent::getX(int32_t pointerIndex)
@@ -221,6 +234,7 @@ void MotionEvent::setLocation(float x, float y)
 
 void MotionEvent::setSource(int32_t source)
 {
+    m_source = source;
 }
 
 } // namespace view

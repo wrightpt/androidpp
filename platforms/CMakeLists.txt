@@ -10,7 +10,6 @@ set(PLATFORMS_HEADERS
     LogHelper.h
     Noncopyable.h
     Platform.h
-    SharedPtr.h
     StringConversion.h
 )
 
@@ -28,12 +27,12 @@ endif ()
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${LIBRARY_PRODUCT_DIR}/include"
-    "${LIBRARY_PRODUCT_DIR}/include/android"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
+    "${CMAKE_SOURCE_DIR}/private"
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
+    "${LIBRARY_PRODUCT_DIR}/include"
 )
 
 add_library(platforms.c++ OBJECT ${PLATFORMS_HEADERS} ${PLATFORMS_SOURCES})

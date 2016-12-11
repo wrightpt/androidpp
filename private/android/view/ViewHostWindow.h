@@ -26,8 +26,10 @@
 #pragma once
 
 #include "WindowHandle.h"
+#include <android/app/ActivityPrivate.h>
 #include <android/graphics/Point.h>
 #include <android/graphics/Rect.h>
+#include <android/os/Handler.h>
 #include <android/view/KeyEvent.h>
 #include <android/view/MotionEvent.h>
 #include <android/view/appkit/Cursor.h>
@@ -40,11 +42,21 @@ namespace view {
 class View;
 class WindowProvider;
 
-class ANDROID_EXPORT ViewHostWindow final {
+class ViewHostWindow final {
 public:
-    static std::unique_ptr<ViewHostWindow> create(WindowHandle parentWindow, const Rect& clientRect);
-    static ViewHostWindow* createPopup(const Rect& clientRect);
+    static std::unique_ptr<ViewHostWindow> create(app::Activity&, WindowHandle parentWindow, const Rect& clientRect);
     ~ViewHostWindow();
+
+    enum State {
+        Init,
+        Create,
+        Restart,
+        Start,
+        Resume,
+        Pause,
+        Stop,
+        Destroy,
+    };
 
     enum Resize {
         Restored,
@@ -52,7 +64,7 @@ public:
         Maximized,
     };
 
-    typedef std::safe_function<void (bool)> OnWindowPositionChangeListener;
+    typedef std::function<void (bool)> OnWindowPositionChangeListener;
 
     void windowCreated();
     void windowDestroyed();
@@ -60,18 +72,15 @@ public:
     void windowPositionChanged(int32_t, int32_t);
     void windowSizeChanged(int32_t, int32_t, Resize);
     void windowFocused(bool);
+    void windowActivated(bool, bool);
     void windowIsVisible(bool);
 
     void dispatchKeyEvent(KeyEvent&);
     void dispatchMouseEvent(MotionEvent&);
 
-    // FIXME: Need to support multiple popup window creation.
-    bool createPopupWindow(const Rect& clientRect);
-    void closePopupWindow();
-
     WindowHandle windowHandle() const;
 
-    void setContentView(std::shared_ptr<View>);
+    void setContentView(const std::shared_ptr<View>&);
 
     void invalidate();
     void invalidate(Rect&);
@@ -90,18 +99,22 @@ public:
     void setOnWindowPositionChangeListener(OnWindowPositionChangeListener listener);
 
     float deviceScaleFactor() const;
-    void dpiChanged(int dpi);
+    void dpiChanged(int32_t dpi);
 
 private:
-    ViewHostWindow(WindowHandle parentWindow, const Rect& clientRect);
+    ViewHostWindow(app::Activity&, WindowHandle parentWindow, const Rect& clientRect);
 
+    app::ActivityPrivate& activity();
     View* decorView() const;
 
     void windowRestored();
     void windowIsGone();
 
+    app::Activity& m_activity;
+    std::shared_ptr<os::Handler> m_handler;
     int32_t m_width;
     int32_t m_height;
+    State m_state;
     bool m_isVisible;
     bool m_isGone;
     bool m_isFocused;

@@ -99,23 +99,4 @@ template<typename C, typename F, typename... P> inline typename FunctionTraits<F
     return result.result();
 }
 
-// Safer version of C++11 std::function implementation.
-template<class>
-class safe_function;
-
-template<class R, class... Args>
-class safe_function<R(Args...)> : public std::function<R(Args...)> {
-public:
-    safe_function() { reset(); }
-    safe_function(std::nullptr_t) { reset(); }
-    safe_function(const std::function<R(Args...)>& other) : std::function<R(Args...)>(other) { if (!static_cast<bool>(*this)) reset(); }
-    safe_function(std::function<R(Args...)>&& other) : std::function<R(Args...)>(other) { if (!static_cast<bool>(*this)) reset(); }
-    template<class F>
-    safe_function(F f) { reset(f); }
-
-    void reset() { std::function<R(Args...)>(std::move([] (Args...) -> R { return R(); })).swap(*this); }
-    template<class F>
-    void reset(F f) { std::function<R(Args...)>(std::move(f)).swap(*this); }
-};
-
 }

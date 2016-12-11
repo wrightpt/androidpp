@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,36 +30,17 @@
 namespace android {
 namespace view {
 
-class ANDROID_EXPORT MenuItem {
+class ContextMenu {
 public:
-    MenuItem(String& title, bool enabled = false, bool checked = false, int32_t tag = -1)
-        : m_title(title)
-        , m_enabled(enabled)
-        , m_checked(checked)
-        , m_tag(tag)
-    {
-    }
+    class ContextMenuInfo {
+    public:
+        ANDROID_EXPORT virtual ~ContextMenuInfo() = default;
+    };
 
-    void setTitle(String& title) { m_title = title; }
-    String& title() { return m_title; }
-
-    void setEnabled(bool enabled) { m_enabled = enabled; }
-    bool enabled() { return m_enabled; }
-
-    void setChecked(bool checked) { m_checked = checked; }
-    bool checked() { return m_checked; }
-
-    void setTag(int32_t tag) { m_tag = tag; }
-    int32_t tag() { return m_tag; }
-
-private:
-    String m_title;
-    bool m_enabled;
-    bool m_checked;
-    int32_t m_tag;
+    ANDROID_EXPORT virtual ~ContextMenu() = default;
 };
 
 } // namespace view
 } // namespace android
 
-using MenuItem = android::view::MenuItem;
+using ContextMenu = android::view::ContextMenu;

@@ -61,7 +61,7 @@ protected:
     }
 
     View& m_anchor;
-    std::safe_function<void (int32_t)> m_menuItemClickListener;
+    std::function<void (int32_t)> m_menuItemClickListener;
 };
 
 } // namespace view

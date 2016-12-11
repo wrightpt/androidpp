@@ -44,13 +44,26 @@
 namespace android {
 namespace view {
 
+static RECT windowClientRect(WindowHandle parentWindow, const Rect& clientRect)
+{
+    if (!clientRect.isEmpty())
+        return static_cast<RECT>(clientRect);
+
+    if (parentWindow) {
+        RECT rect;
+        ::GetClientRect(reinterpret_cast<HWND>(parentWindow), &rect);
+        return rect;
+    }
+
+    static const RECT defaultClientRect = { 0, 0, 800, 450 };
+    return defaultClientRect;
+}
+
 std::unique_ptr<WindowProvider> WindowProvider::create(WindowHandle parentWindow, const Rect& clientRect,
     ViewHostWindow& viewHost)
 {
     return std::unique_ptr<WindowProvider>(new WindowProviderWin(parentWindow, clientRect, viewHost));
 }
-
-std::map<WindowProviderWin*, std::shared_ptr<ViewHostWindow>> WindowProviderWin::m_popupWindowHolder;
 
 WindowProviderWin::WindowProviderWin(WindowHandle parentWindow, const Rect& clientRect, ViewHostWindow& viewHost)
     : WindowProvider(viewHost)
@@ -62,8 +75,8 @@ WindowProviderWin::WindowProviderWin(WindowHandle parentWindow, const Rect& clie
     , m_isCompositing(false)
     , m_requestedCursorUpdates(false)
 {
-    Create(reinterpret_cast<HWND>(parentWindow), ATL::_U_RECT(static_cast<RECT>(clientRect)), _T("WindowProviderHWND"),
-        WS_CHILDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
+    Create(reinterpret_cast<HWND>(parentWindow), ATL::_U_RECT(windowClientRect(parentWindow, clientRect)), _T("WindowProviderHWND"),
+        parentWindow ? WS_CHILDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : WS_OVERLAPPEDWINDOW);
 
     loadIMM();
     enableInputMethod(false);
@@ -72,24 +85,6 @@ WindowProviderWin::WindowProviderWin(WindowHandle parentWindow, const Rect& clie
 WindowProviderWin::~WindowProviderWin()
 {
     DestroyWindow();
-}
-
-bool WindowProviderWin::platformCreatePopupWindow(const Rect& clientRect)
-{
-    Create(createPopupWindow(clientRect), ATL::_U_RECT(static_cast<RECT>(clientRect)), _T("PopupWindowHWND"),
-        WS_CHILDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
-
-    if (!hwnd())
-        return false;
-
-    m_popupWindowHolder[this] = std::shared_ptr<ViewHostWindow>(&m_viewHost);
-    return true;
-}
-
-void WindowProviderWin::platformClosePopupWindow()
-{
-    if (m_popupWindowHolder[this])
-        ::DestroyWindow(::GetParent(hwnd()));
 }
 
 WindowHandle WindowProviderWin::platformWindowHandle() const
@@ -157,65 +152,6 @@ HWND WindowProviderWin::hwnd() const
     return static_cast<HWND>(*this);
 }
 
-HWND WindowProviderWin::createPopupWindow(const Rect& clientRect)
-{
-    WNDCLASSEX wcex;
-
-    wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.style          = CS_DBLCLKS;
-    wcex.lpfnWndProc    = WindowProviderWin::popupWindowWndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = sizeof(WindowProviderWin*);
-    wcex.hInstance      = ::GetModuleHandle(0);
-    wcex.hIcon          = 0;
-    wcex.hCursor        = ::LoadCursor(0, IDC_ARROW);
-    wcex.hbrBackground  = 0;
-    wcex.lpszMenuName   = 0;
-    wcex.lpszClassName  = L"PopupWindowHWND";
-    wcex.hIconSm        = 0;
-
-    ::RegisterClassEx(&wcex);
-
-    HWND windowHandle = CreateWindowEx(0, L"PopupWindowHWND", 0, WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, clientRect.right, clientRect.bottom, 0, 0, 0, this);
-
-    return windowHandle;
-}
-
-LRESULT CALLBACK WindowProviderWin::popupWindowWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    LONG_PTR longPtr = ::GetWindowLongPtr(hWnd, 0);
-
-    if (message == WM_CREATE) {
-        LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        // Associate the WindowProviderWin with the window.
-        ::SetWindowLongPtr(hWnd, 0, (LONG_PTR)createStruct->lpCreateParams);
-    } else if (message == WM_DESTROY) {
-        if (WindowProviderWin* windowProvider = reinterpret_cast<WindowProviderWin*>(longPtr))
-            m_popupWindowHolder.erase(windowProvider);
-    } else {
-        if (WindowProviderWin* windowProvider = reinterpret_cast<WindowProviderWin*>(longPtr))
-            return windowProvider->popupWindowEventHandler(hWnd, message, wParam, lParam);
-    }
-
-    return ::DefWindowProc(hWnd, message, wParam, lParam);
-}
-
-LRESULT WindowProviderWin::popupWindowEventHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message) {
-    case WM_SIZE:
-        RECT clientRect;
-        ::GetClientRect(hWnd, &clientRect);
-        m_viewHost.setWindowPosition(clientRect.left, clientRect.top, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
-        m_viewHost.windowSizeChanged(LOWORD(lParam), HIWORD(lParam), (ViewHostWindow::Resize)wParam);
-        break;
-    default:
-        break;
-    }
-
-    return ::DefWindowProc(hWnd, message, wParam, lParam);;
-}
-
 static PointF pointF(const CPoint& point)
 {
     return PointF(static_cast<float>(point.x), static_cast<float>(point.y));
@@ -239,10 +175,10 @@ int WindowProviderWin::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     SetMsgHandled(FALSE);
 
+    m_viewHost.windowCreated();
+
     ShowWindow(TRUE);
     UpdateWindow();
-
-    m_viewHost.windowCreated();
     return 0;
 }
 
@@ -267,6 +203,13 @@ void WindowProviderWin::OnKillFocus(CWindow wndFocus)
     m_viewHost.windowFocused(false);
 
     resetIME();
+}
+
+void WindowProviderWin::OnActivate(UINT nActivate, BOOL bMinimized, HWND hWnd)
+{
+    SetMsgHandled(FALSE);
+
+    m_viewHost.windowActivated(nActivate > 0, bMinimized > 0);
 }
 
 BOOL WindowProviderWin::OnSetCursor(CWindow wnd, UINT nHitTest, UINT message)
@@ -399,6 +342,7 @@ static MotionEvent mouseEvent(std::chrono::milliseconds downTime, int32_t action
 {
     MotionEvent event(MotionEvent::obtain(downTime, System::currentTimeMillis(), action, xy.x, xy.y, metaStateForMouseEvent(nFlags)));
     MotionEventPrivate::setPrivate(event, std::make_unique<MouseEventPrivate>(event, actionButton, buttonStateForMouseEvent(nFlags), repeatCount, wheelDelta));
+    event.setSource(InputDevice::SOURCE_MOUSE);
     return event;
 }
 

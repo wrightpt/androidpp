@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,41 +25,41 @@
 
 #pragma once
 
-#include <java/lang.h>
+#include <android/app/Activity.h>
+#include <android/view/ViewHostWindow.h>
 
 namespace android {
-namespace view {
+namespace app {
 
-class ANDROID_EXPORT MenuItem {
+class ActivityPrivate final {
+    friend class Activity;
 public:
-    MenuItem(String& title, bool enabled = false, bool checked = false, int32_t tag = -1)
-        : m_title(title)
-        , m_enabled(enabled)
-        , m_checked(checked)
-        , m_tag(tag)
-    {
-    }
+    ActivityPrivate(Activity&);
+    ~ActivityPrivate();
 
-    void setTitle(String& title) { m_title = title; }
-    String& title() { return m_title; }
+    static ActivityPrivate& getPrivate(Activity&);
+    static void setPrivate(Activity&, std::unique_ptr<ActivityPrivate>&&);
 
-    void setEnabled(bool enabled) { m_enabled = enabled; }
-    bool enabled() { return m_enabled; }
+    void initialize(Window);
 
-    void setChecked(bool checked) { m_checked = checked; }
-    bool checked() { return m_checked; }
+    view::ViewHostWindow* hostWindow() const;
 
-    void setTag(int32_t tag) { m_tag = tag; }
-    int32_t tag() { return m_tag; }
+    void callOnCreate(const std::shared_ptr<Bundle>& savedInstanceState);
+    void callOnDestroy();
+    void callOnPause();
+    void callOnPostCreate(const std::shared_ptr<Bundle>& savedInstanceState);
+    void callOnPostResume();
+    void callOnRestart();
+    void callOnRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState);
+    void callOnResume();
+    void callOnSaveInstanceState(const std::shared_ptr<Bundle>& outState);
+    void callOnStart();
+    void callOnStop();
 
 private:
-    String m_title;
-    bool m_enabled;
-    bool m_checked;
-    int32_t m_tag;
+    Activity& m_this;
+    std::unique_ptr<view::ViewHostWindow> m_hostWindow;
 };
 
-} // namespace view
+} // namespace app
 } // namespace android
-
-using MenuItem = android::view::MenuItem;

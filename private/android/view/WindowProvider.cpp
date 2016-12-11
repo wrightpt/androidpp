@@ -33,16 +33,6 @@ WindowProvider::WindowProvider(ViewHostWindow& viewHost)
 {
 }
 
-bool WindowProvider::createPopupWindow(const Rect& clientRect)
-{
-    return platformCreatePopupWindow(clientRect);
-}
-
-void WindowProvider::closePopupWindow()
-{
-    platformClosePopupWindow();
-}
-
 WindowHandle WindowProvider::windowHandle() const
 {
     return platformWindowHandle();

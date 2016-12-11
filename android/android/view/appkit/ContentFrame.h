@@ -44,7 +44,6 @@ public:
     {
         return std::shared_ptr<ContentFrame>(new ContentFrame());
     }
-    ANDROID_EXPORT static std::shared_ptr<ContentFrame> createPopup(Rect& clientRect);
     ANDROID_EXPORT virtual ~ContentFrame();
 
     ANDROID_EXPORT ContentView& contentView() { return *m_contentView; }

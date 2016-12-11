@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,19 +23,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include "ContextThemeWrapper.h"
 
-#include <memory>
+namespace android {
+namespace content {
 
-namespace std {
-
-struct leak_deleter {
-    void operator() (void* ptr) { }
-};
-
-template<typename T> std::shared_ptr<T> shared_ptr_leak(T* ptr)
+ContextThemeWrapper::ContextThemeWrapper()
+    : ContextWrapper(nullptr)
 {
-    return std::shared_ptr<T>(ptr, leak_deleter());
 }
 
+ContextThemeWrapper::ContextThemeWrapper(Context* base)
+    : ContextWrapper(base)
+{
 }
+
+ContextThemeWrapper::~ContextThemeWrapper()
+{
+}
+
+std::shared_ptr<Object> ContextThemeWrapper::getSystemService(const String& name)
+{
+    return ContextWrapper::getSystemService(name);
+}
+
+Resources& ContextThemeWrapper::getResources()
+{
+    return ContextWrapper::getResources();
+}
+
+} // namespace content
+} // namespace android

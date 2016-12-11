@@ -1,4 +1,5 @@
 if (NOT ANDROID)
+    add_subdirectory(android/app)
     add_subdirectory(android/content)
     add_subdirectory(android/graphics)
     add_subdirectory(android/media)

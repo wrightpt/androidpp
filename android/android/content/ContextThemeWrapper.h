@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,41 +25,22 @@
 
 #pragma once
 
-#include <java/lang.h>
+#include <android/content/ContextWrapper.h>
 
 namespace android {
-namespace view {
+namespace content {
 
-class ANDROID_EXPORT MenuItem {
+class ContextThemeWrapper : public ContextWrapper {
 public:
-    MenuItem(String& title, bool enabled = false, bool checked = false, int32_t tag = -1)
-        : m_title(title)
-        , m_enabled(enabled)
-        , m_checked(checked)
-        , m_tag(tag)
-    {
-    }
+    ANDROID_EXPORT ContextThemeWrapper();
+    ANDROID_EXPORT ContextThemeWrapper(Context* base);
+    ANDROID_EXPORT virtual ~ContextThemeWrapper();
 
-    void setTitle(String& title) { m_title = title; }
-    String& title() { return m_title; }
-
-    void setEnabled(bool enabled) { m_enabled = enabled; }
-    bool enabled() { return m_enabled; }
-
-    void setChecked(bool checked) { m_checked = checked; }
-    bool checked() { return m_checked; }
-
-    void setTag(int32_t tag) { m_tag = tag; }
-    int32_t tag() { return m_tag; }
-
-private:
-    String m_title;
-    bool m_enabled;
-    bool m_checked;
-    int32_t m_tag;
+    ANDROID_EXPORT virtual std::shared_ptr<Object> getSystemService(const String& name) override;
+    ANDROID_EXPORT virtual Resources& getResources() override;
 };
 
-} // namespace view
+} // namespace content
 } // namespace android
 
-using MenuItem = android::view::MenuItem;
+using ContextThemeWrapper = android::content::ContextThemeWrapper;

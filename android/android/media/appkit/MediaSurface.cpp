@@ -83,7 +83,7 @@ void MediaSurface::reset()
         m_outputSurface->setBackbuffer(nullptr);
     m_mediaPlayer.reset();
     m_outputSurface.reset();
-    m_frameAvailableListener.reset();
+    m_frameAvailableListener = nullptr;
 }
 
 void MediaSurface::swapBuffers(GLTransportSurface&)

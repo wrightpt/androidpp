@@ -87,7 +87,7 @@ protected:
     ANDROID_EXPORT void callOnVideoSizeChangedListener(int32_t width, int32_t height);
 
     media::MediaPlayer& m_player;
-    std::safe_function<void ()> m_frameAvailableListener;
+    std::function<void ()> m_frameAvailableListener;
 };
 
 } // namespace media

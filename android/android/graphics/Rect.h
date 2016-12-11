@@ -89,10 +89,10 @@ public:
     }
 #endif
 
-    bool isEmpty() { return width() == 0 && height() == 0; }
+    bool isEmpty() const { return width() == 0 && height() == 0; }
 
-    T width() { return right - left; }
-    T height() { return bottom - top; }
+    T width() const { return right - left; }
+    T height() const { return bottom - top; }
 
     void setWidth(T w) { right = left + w; }
     void setHeight(T h) { bottom = top + h; }

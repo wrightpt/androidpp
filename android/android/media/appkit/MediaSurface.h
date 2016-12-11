@@ -39,7 +39,7 @@ public:
     ANDROID_EXPORT static std::shared_ptr<MediaSurface> create();
     ANDROID_EXPORT virtual ~MediaSurface();
 
-    typedef std::safe_function<void (MediaSurface&)> OnFrameAvailableListener;
+    typedef std::function<void (MediaSurface&)> OnFrameAvailableListener;
 
     ANDROID_EXPORT virtual void setSourceMedia(std::shared_ptr<MediaPlayer>&);
     ANDROID_EXPORT virtual void setOutputSurface(std::shared_ptr<GLTransportSurface>);

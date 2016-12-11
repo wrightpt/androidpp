@@ -1,4 +1,5 @@
 set(VIEW_SOURCES
+    ContextMenu.cpp
     InputEvent.cpp
     KeyEvent.cpp
     MotionEvent.cpp
@@ -7,6 +8,7 @@ set(VIEW_SOURCES
 )
 
 set(VIEW_HEADERS
+    ContextMenu.h
     InputDevice.h
     InputEvent.h
     KeyEvent.h
@@ -15,18 +17,18 @@ set(VIEW_HEADERS
     MotionEvent.h
     View.h
     ViewGroup.h
+    Window.h
 )
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${LIBRARY_PRODUCT_DIR}/include"
-    "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${ANGLE_LIBRARY_DIR}/include"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
     "${CMAKE_SOURCE_DIR}/private"
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
+    "${LIBRARY_PRODUCT_DIR}/include"
+    "${ANGLE_LIBRARY_DIR}/include"
 )
 
 add_subdirectory(appkit)

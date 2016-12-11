@@ -61,9 +61,9 @@ protected:
     }
 
     View& m_anchor;
-    std::safe_function<void (int32_t)> m_menuItemClickListener;
-    std::safe_function<void (int32_t)> m_menuItemFocusListener;
-    std::safe_function<void (PopupMenu&)> m_dismissListener;
+    std::function<void (int32_t)> m_menuItemClickListener;
+    std::function<void (int32_t)> m_menuItemFocusListener;
+    std::function<void (PopupMenu&)> m_dismissListener;
 };
 
 } // namespace widget

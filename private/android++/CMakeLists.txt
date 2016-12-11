@@ -19,6 +19,7 @@ if (NOT ANDROID)
 
     add_library(android++ SHARED
         ${ANDROID_SOURCES}
+        $<TARGET_OBJECTS:android.app>
         $<TARGET_OBJECTS:android.content>
         $<TARGET_OBJECTS:android.content.res>
         $<TARGET_OBJECTS:android.graphics>
@@ -35,6 +36,7 @@ if (NOT ANDROID)
         $<TARGET_OBJECTS:android.widget>
         $<TARGET_OBJECTS:java.lang>
         $<TARGET_OBJECTS:platforms.c++>
+        $<TARGET_OBJECTS:private.android.app>
         $<TARGET_OBJECTS:private.android.content>
         $<TARGET_OBJECTS:private.android.media>
         $<TARGET_OBJECTS:private.android.media.appkit>
@@ -50,4 +52,8 @@ if (NOT ANDROID)
     )
 
     target_link_libraries(android++ ${ANDROID_LIB_DEPS})
+
+    add_post_build_command(android++)
+    copy_library_headers_directory(android++ "${CMAKE_SOURCE_DIR}/android" include/android++/android)
+    copy_library_headers_directory(android++ "${CMAKE_SOURCE_DIR}/platforms" include/android++/platforms)
 endif ()

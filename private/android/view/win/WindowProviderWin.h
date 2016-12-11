@@ -56,9 +56,6 @@ public:
 private:
     WindowProviderWin(WindowHandle parentWindow, const Rect& clientRect, ViewHostWindow&);
 
-    bool platformCreatePopupWindow(const Rect& clientRect) override;
-    void platformClosePopupWindow() override;
-
     WindowHandle platformWindowHandle() const override;
 
     void platformStartInputMethod(bool) override;
@@ -85,6 +82,7 @@ private:
         MSG_WM_SETFOCUS(OnSetFocus)
         MSG_WM_KILLFOCUS(OnKillFocus)
         MSG_WM_SETCURSOR(OnSetCursor)
+        MSG_WM_ACTIVATE(OnActivate)
         MSG_WM_SHOWWINDOW(OnShowWindow)
         MSG_WM_PAINT(OnPaint)
         MSG_WM_ERASEBKGND(OnEraseBkgnd)
@@ -126,6 +124,7 @@ private:
     void OnKillFocus(CWindow wndFocus);
     BOOL OnSetCursor(CWindow wnd, UINT nHitTest, UINT message);
 
+    void OnActivate(UINT nActivate, BOOL bMinimized, HWND hWnd);
     void OnShowWindow(BOOL bShow, UINT nStatus);
     void OnPaint(CDCHandle dc);
     BOOL OnEraseBkgnd(CDCHandle dc);
@@ -208,8 +207,6 @@ private:
     bool m_isCompositing;
     bool m_requestedCursorUpdates;
     CursorAnchorInfo m_cursorAnchorInfo;
-
-    static std::map<WindowProviderWin*, std::shared_ptr<ViewHostWindow>> m_popupWindowHolder;
 };
 
 } // namespace view

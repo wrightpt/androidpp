@@ -40,10 +40,6 @@ public:
         ViewHostWindow& viewHost);
     virtual ~WindowProvider() { }
 
-    // FIXME: Need to support multiple popup window creation.
-    bool createPopupWindow(const Rect& clientRect);
-    void closePopupWindow();
-
     WindowHandle windowHandle() const;
 
     void startInputMethod(bool);
@@ -57,9 +53,6 @@ public:
 
 protected:
     WindowProvider(ViewHostWindow&);
-
-    virtual bool platformCreatePopupWindow(const Rect& clientRect) = 0;
-    virtual void platformClosePopupWindow() = 0;
 
     virtual WindowHandle platformWindowHandle() const = 0;
 

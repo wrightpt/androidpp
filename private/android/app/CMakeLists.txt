@@ -1,11 +1,9 @@
-set(MEDIA_SOURCES
-    AudioFile.cpp
-    MediaSurface.cpp
+set(APP_SOURCES
+    ActivityPrivate.cpp
 )
 
-set(MEDIA_HEADERS
-    AudioFile.h
-    MediaSurface.h
+set(APP_HEADERS
+    ActivityPrivate.h
 )
 
 include_directories(
@@ -19,4 +17,4 @@ include_directories(
     "${ANGLE_LIBRARY_DIR}/include"
 )
 
-add_library(android.media.appkit OBJECT ${MEDIA_HEADERS} ${MEDIA_SOURCES})
+add_library(private.android.app OBJECT ${APP_HEADERS} ${APP_SOURCES})
