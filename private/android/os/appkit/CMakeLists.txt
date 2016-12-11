@@ -28,4 +28,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(private.android.os.appkit STATIC ${OS_HEADERS} ${OS_SOURCES})
+add_library(private.android.os.appkit OBJECT ${OS_HEADERS} ${OS_SOURCES})

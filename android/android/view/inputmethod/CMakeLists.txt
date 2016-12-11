@@ -1,9 +1,11 @@
-set(VIEW_SOURCES
+set(INPUTMETHOD_SOURCES
     BaseInputConnection.cpp
+    CursorAnchorInfo.cpp
+    InputConnection.cpp
     InputMethodManager.cpp
 )
 
-set(VIEW_HEADERS
+set(INPUTMETHOD_HEADERS
     BaseInputConnection.h
     CursorAnchorInfo.h
     EditorInfo.h
@@ -15,7 +17,7 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${LIBRARY_PRODUCT_DIR}/include/ANGLE/include"
+    "${ANGLE_LIBRARY_DIR}/include"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
     "${CMAKE_SOURCE_DIR}/private"
@@ -23,4 +25,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(android.view.inputmethod STATIC ${VIEW_HEADERS} ${VIEW_SOURCES})
+add_library(android.view.inputmethod OBJECT ${INPUTMETHOD_HEADERS} ${INPUTMETHOD_SOURCES})

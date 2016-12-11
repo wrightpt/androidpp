@@ -1,4 +1,6 @@
 set(VIEW_SOURCES
+    KeyEventPrivate.cpp
+    MotionEventPrivate.cpp
     ViewHostWindow.cpp
     ViewPrivate.cpp
     WindowProvider.cpp
@@ -29,7 +31,7 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${LIBRARY_PRODUCT_DIR}/include/ANGLE/include"
+    "${ANGLE_LIBRARY_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/wtl"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
@@ -39,5 +41,6 @@ include_directories(
 )
 
 add_subdirectory(appkit)
+add_subdirectory(inputmethod)
 
-add_library(private.android.view STATIC ${VIEW_HEADERS} ${VIEW_SOURCES})
+add_library(private.android.view OBJECT ${VIEW_HEADERS} ${VIEW_SOURCES})

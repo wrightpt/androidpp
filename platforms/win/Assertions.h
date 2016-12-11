@@ -25,15 +25,11 @@
 
 #pragma once
 
-#include <android/util/Log.h>
+#include <platforms/ExportMacros.h>
 
-#include <assert>
-
-static inline void ASSERT(bool expression)
-{
-    (void) ((expression) ? 0 : android::util::Log::wtf("util", "ASSERT"));
-}
-
-#if defined(WIN32)
-#define CHECK_HRESULT(hr, ...) if (FAILED(hr)) { LOGE("hr = %p, at %s(%d)", hr, __FILE__, __LINE__); return __VA_ARGS__; }
+#ifndef NDEBUG
+ANDROID_C_EXPORT void ASSERT(bool expression);
+#else
+static void ASSERT(expression) { }
 #endif
+ANDROID_C_EXPORT void RELEASE_ASSERT(bool expression);

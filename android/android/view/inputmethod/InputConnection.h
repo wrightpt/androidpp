@@ -35,12 +35,14 @@ namespace inputmethod {
 class InputConnectionPrivate;
 
 class InputConnection {
+    friend class InputConnectionPrivate;
 public:
     // The editor is requested to call updateCursorAnchorInfo(android.view.View, CursorAnchorInfo) at once, as soon as possible, regardless of cursor/anchor position changes.
     static const int32_t CURSOR_UPDATE_IMMEDIATE = 1;
     // The editor is requested to call updateCursorAnchorInfo(android.view.View, CursorAnchorInfo) whenever cursor/anchor position is changed.
     static const int32_t CURSOR_UPDATE_MONITOR = 2;
 
+    ANDROID_EXPORT virtual ~InputConnection();
     // Commit text to the text box and set the new cursor position. 
     ANDROID_EXPORT virtual bool commitText(CharSequence& text, int32_t newCursorPosition) = 0;
     // Delete beforeLength characters of text before the current cursor position, and delete afterLength characters of text after the current cursor position, excluding the selection. 
@@ -55,8 +57,6 @@ public:
     ANDROID_EXPORT virtual bool setComposingText(CharSequence& text, int32_t newCursorPosition) = 0;
     // Send a key event to the process that is currently attached through this input connection.
     ANDROID_EXPORT virtual bool sendKeyEvent(KeyEvent& event) = 0;
-
-    ANDROID_EXPORT virtual ~InputConnection();
 
 private:
     std::unique_ptr<InputConnectionPrivate> m_private;

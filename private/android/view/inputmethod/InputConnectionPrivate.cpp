@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,49 +23,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ContextWrapper.h"
-
-#include <android/content/ContextPrivate.h>
-#include <android/view/inputmethod/InputMethodManager.h>
+#include "InputConnectionPrivate.h"
 
 namespace android {
-namespace content {
+namespace view {
+namespace inputmethod {
 
-ContextWrapper::ContextWrapper(Context* base)
-    : m_base(base)
+InputConnectionPrivate* InputConnectionPrivate::getPrivate(InputConnection& connection)
 {
+    return connection.m_private.get();
 }
 
-ContextWrapper::~ContextWrapper()
+void InputConnectionPrivate::setPrivate(InputConnection& connection, std::unique_ptr<InputConnectionPrivate>&& p)
 {
+    connection.m_private = std::move(p);
 }
 
-Context& ContextWrapper::getApplicationContext()
+bool InputConnectionPrivate::setComposingText(const CharSequence& text, const std::vector<CompositionClause>& underlines, int32_t newCursorPosition)
 {
-    if (m_base)
-        return m_base->getApplicationContext();
-
-    return *this;
+    return false;
 }
 
-std::shared_ptr<Object> ContextWrapper::getSystemService(const String& name)
-{
-    if (m_base)
-        return m_base->getSystemService(name);
-
-    if (name.compare(Context::INPUT_METHOD_SERVICE) == 0) {
-        static std::shared_ptr<InputMethodManager> imm = std::make_shared<InputMethodManager>();
-        return imm;
-    }
-
-    return nullptr;
-}
-
-Resources& ContextWrapper::getResources()
-{
-    static Resources resources;
-    return resources;
-}
-
-} // namespace content
+} // namespace inputmethod
+} // namespace view
 } // namespace android

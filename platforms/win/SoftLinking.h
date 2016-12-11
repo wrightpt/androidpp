@@ -279,9 +279,9 @@
     }
 
 #define SOFT_LINK_FUNCTION_MAY_FAIL_FOR_HEADER(functionNamespace, framework, functionName, resultType, parameterDeclarations, parameterNames) \
-    WTF_EXTERN_C_BEGIN \
+    extern "C" { \
     resultType functionName parameterDeclarations; \
-    WTF_EXTERN_C_END \
+    } \
     namespace functionNamespace { \
     extern resultType (*softLink##framework##functionName) parameterDeclarations; \
     bool canLoad_##framework##_##functionName(); \
@@ -290,9 +290,9 @@
     }
 
 #define SOFT_LINK_FUNCTION_MAY_FAIL_FOR_SOURCE(functionNamespace, framework, functionName, resultType, parameterDeclarations, parameterNames) \
-    WTF_EXTERN_C_BEGIN \
+    extern "C" { \
     resultType functionName parameterDeclarations; \
-    WTF_EXTERN_C_END \
+    } \
     namespace functionNamespace { \
     resultType (*softLink##framework##functionName) parameterDeclarations = 0; \
     bool init_##framework##_##functionName(); \

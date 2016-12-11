@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,49 +23,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ContextWrapper.h"
-
-#include <android/content/ContextPrivate.h>
-#include <android/view/inputmethod/InputMethodManager.h>
+#include "CursorAnchorInfo.h"
 
 namespace android {
-namespace content {
+namespace view {
+namespace inputmethod {
 
-ContextWrapper::ContextWrapper(Context* base)
-    : m_base(base)
+RectF CursorAnchorInfo::getCharacterBounds(int32_t index)
 {
+    return RectF();
 }
 
-ContextWrapper::~ContextWrapper()
+int32_t CursorAnchorInfo::getSelectionStart()
 {
+    return 0;
 }
 
-Context& ContextWrapper::getApplicationContext()
+int32_t CursorAnchorInfo::getSelectionEnd()
 {
-    if (m_base)
-        return m_base->getApplicationContext();
-
-    return *this;
+    return 0;
 }
 
-std::shared_ptr<Object> ContextWrapper::getSystemService(const String& name)
-{
-    if (m_base)
-        return m_base->getSystemService(name);
-
-    if (name.compare(Context::INPUT_METHOD_SERVICE) == 0) {
-        static std::shared_ptr<InputMethodManager> imm = std::make_shared<InputMethodManager>();
-        return imm;
-    }
-
-    return nullptr;
-}
-
-Resources& ContextWrapper::getResources()
-{
-    static Resources resources;
-    return resources;
-}
-
-} // namespace content
+} // namespace inputmethod
+} // namespace view
 } // namespace android

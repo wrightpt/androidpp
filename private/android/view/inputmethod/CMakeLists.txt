@@ -1,9 +1,9 @@
-set(OPENGL_SOURCES
-    GLSurfaceView.cpp
+set(INPUTMETHOD_SOURCES
+    InputConnectionPrivate.cpp
 )
 
-set(OPENGL_HEADERS
-    GLSurfaceView.h
+set(INPUTMETHOD_HEADERS
+    InputConnectionPrivate.h
 )
 
 include_directories(
@@ -18,6 +18,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_subdirectory(appkit)
-
-add_library(android.opengl OBJECT ${OPENGL_HEADERS} ${OPENGL_SOURCES})
+add_library(private.android.view.inputmethod OBJECT ${INPUTMETHOD_HEADERS} ${INPUTMETHOD_SOURCES})

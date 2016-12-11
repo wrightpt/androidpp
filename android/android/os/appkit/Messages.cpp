@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,49 +23,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ContextWrapper.h"
-
-#include <android/content/ContextPrivate.h>
-#include <android/view/inputmethod/InputMethodManager.h>
+#include "Messages.h"
 
 namespace android {
-namespace content {
+namespace os {
+namespace appkit {
 
-ContextWrapper::ContextWrapper(Context* base)
-    : m_base(base)
-{
-}
+int32_t Messages::m_registeredMessages = 0;
 
-ContextWrapper::~ContextWrapper()
-{
-}
-
-Context& ContextWrapper::getApplicationContext()
-{
-    if (m_base)
-        return m_base->getApplicationContext();
-
-    return *this;
-}
-
-std::shared_ptr<Object> ContextWrapper::getSystemService(const String& name)
-{
-    if (m_base)
-        return m_base->getSystemService(name);
-
-    if (name.compare(Context::INPUT_METHOD_SERVICE) == 0) {
-        static std::shared_ptr<InputMethodManager> imm = std::make_shared<InputMethodManager>();
-        return imm;
-    }
-
-    return nullptr;
-}
-
-Resources& ContextWrapper::getResources()
-{
-    static Resources resources;
-    return resources;
-}
-
-} // namespace content
+} // namespace appkit
+} // namespace os
 } // namespace android

@@ -12,7 +12,7 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${LIBRARY_PRODUCT_DIR}/include/ANGLE/include"
+    "${ANGLE_LIBRARY_DIR}/include"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
     "${CMAKE_SOURCE_DIR}/private"
@@ -22,4 +22,4 @@ include_directories(
 
 add_subdirectory(res)
 
-add_library(android.content STATIC ${CONTENT_HEADERS} ${CONTENT_SOURCES})
+add_library(android.content OBJECT ${CONTENT_HEADERS} ${CONTENT_SOURCES})

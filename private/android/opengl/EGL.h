@@ -29,6 +29,10 @@
 
 #define EGL_NO_CONFIG (EGLConfig)(0)
 
+#if EGL_SOFT_LINKING
+#define eglGetDisplay eglGetDisplayPtr()
+#endif
+
 #if defined(WIN32)
 #undef ERROR
 #undef ERROR_INVALID_OPERATION

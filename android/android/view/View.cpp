@@ -25,6 +25,7 @@
 
 #include "View.h"
 
+#include <android/content/ContextWrapper.h>
 #include <android/view/ViewHostWindow.h>
 #include <android/view/ViewPrivate.h>
 #include <android/view/WindowProvider.h>
@@ -79,6 +80,61 @@ void View::invalidate()
 }
 
 void View::invalidate(Rect&)
+{
+}
+
+Context& View::getContext()
+{
+    static ContextWrapper context(0);
+    return context;
+}
+
+os::Binder* View::getWindowToken()
+{
+    return 0;
+}
+
+std::unique_ptr<InputConnection> View::onCreateInputConnection(EditorInfo& outAttrs)
+{
+    return 0;
+}
+
+bool View::onGenericMotionEvent(MotionEvent&)
+{
+    return false;
+}
+
+bool View::onKeyDown(int32_t, KeyEvent&)
+{
+    return false;
+}
+
+bool View::onKeyLongPress(int32_t, KeyEvent&)
+{
+    return false;
+}
+
+bool View::onKeyMultiple(int32_t, int32_t, KeyEvent&)
+{
+    return false;
+}
+
+bool View::onKeyPreIme(int32_t, KeyEvent&)
+{
+    return false;
+}
+
+bool View::onKeyShortcut(int32_t, KeyEvent&)
+{
+    return false;
+}
+
+bool View::onKeyUp(int32_t, KeyEvent&)
+{
+    return false;
+}
+
+void View::onWindowFocusChanged(bool)
 {
 }
 

@@ -29,4 +29,4 @@ include_directories(
 
 add_subdirectory(appkit)
 
-add_library(android.os STATIC ${OS_HEADERS} ${OS_SOURCES})
+add_library(android.os OBJECT ${OS_HEADERS} ${OS_SOURCES})

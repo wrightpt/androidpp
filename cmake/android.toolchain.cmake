@@ -411,6 +411,9 @@ if( NOT ANDROID_NDK )
   endif( ANDROID_NDK )
  endif( NOT ANDROID_STANDALONE_TOOLCHAIN )
 endif( NOT ANDROID_NDK )
+if( NOT ANDROID_SDK )
+  __INIT_VARIABLE( ANDROID_SDK PATH ENV_ANDROID_SDK )
+endif()
 
 # remember found paths
 if( ANDROID_NDK )
@@ -451,6 +454,11 @@ else()
     or put the toolchain or NDK in the default path:
       sudo ln -s ~/my-android-ndk ${ANDROID_NDK_SEARCH_PATH}/android-ndk
       sudo ln -s ~/my-android-toolchain ${ANDROID_STANDALONE_TOOLCHAIN_SEARCH_PATH}" )
+endif()
+
+if( ANDROID_SDK )
+ get_filename_component( ANDROID_SDK "${ANDROID_SDK}" ABSOLUTE )
+ set( ANDROID_SDK "${ANDROID_SDK}" CACHE INTERNAL "Path of the Android SDK" FORCE )
 endif()
 
 # android NDK layout
@@ -972,6 +980,10 @@ else()
  unset( ANDROID_COMPILER_IS_CLANG CACHE )
 endif()
 
+if( ANDROID_COMPILER_IS_CLANG AND MSVC14 )
+ set( CMAKE_GENERATOR_TOOLSET DefaultClang )
+endif()
+
 string( REPLACE "." "" _clang_name "clang${ANDROID_CLANG_VERSION}" )
 if( NOT EXISTS "${ANDROID_CLANG_TOOLCHAIN_ROOT}/bin/${_clang_name}${TOOL_OS_SUFFIX}" )
  set( _clang_name "clang" )
@@ -1133,7 +1145,7 @@ endif()
 
 # Force set compilers because standard identification works badly for us
 include( CMakeForceCompiler )
-CMAKE_FORCE_C_COMPILER( "${CMAKE_C_COMPILER}" GNU )
+set(CMAKE_C_COMPILER "${CMAKE_C_COMPILER}" GNU )
 if( ANDROID_COMPILER_IS_CLANG )
  set( CMAKE_C_COMPILER_ID Clang )
 endif()
@@ -1145,7 +1157,7 @@ else()
 endif()
 set( CMAKE_C_HAS_ISYSROOT 1 )
 set( CMAKE_C_COMPILER_ABI ELF )
-CMAKE_FORCE_CXX_COMPILER( "${CMAKE_CXX_COMPILER}" GNU )
+set(CMAKE_CXX_COMPILER "${CMAKE_CXX_COMPILER}" GNU )
 if( ANDROID_COMPILER_IS_CLANG )
  set( CMAKE_CXX_COMPILER_ID Clang)
 endif()

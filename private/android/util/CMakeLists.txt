@@ -22,4 +22,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(private.android.util STATIC ${UTIL_HEADERS} ${UTIL_SOURCES})
+add_library(private.android.util OBJECT ${UTIL_HEADERS} ${UTIL_SOURCES})

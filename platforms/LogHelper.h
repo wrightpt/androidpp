@@ -47,6 +47,10 @@
 #define FMT_RECT                FMT_POINT"-"FMT_POINT
 #define ARG_RECT(rc)            (rc).left, (rc).top, (rc).right, (rc).bottom
 
+#if defined(WIN32)
+#define CHECK_HRESULT(hr, ...)  if (FAILED(hr)) { LOGE("hr = %p, at %s(%d)", hr, __FILE__, __LINE__); return __VA_ARGS__; }
+#endif
+
 #undef LOG
 
 ANDROID_EXPORT int32_t LOG(int32_t priority, const char* tag, const char* format, ...);

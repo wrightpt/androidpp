@@ -25,7 +25,12 @@
 
 #include "XAudio2AudioDevice.h"
 
+#include <platforms/LogHelper.h>
 #include <platforms/win/Assertions.h>
+#include <platforms/win/SoftLinking.h>
+
+SOFT_LINK_LIBRARY(XAudio2_9);
+SOFT_LINK_OPTIONAL(XAudio2_9, XAudio2Create, HRESULT, __stdcall, (IXAudio2**, UINT32, XAUDIO2_PROCESSOR));
 
 namespace android {
 namespace media {
@@ -73,6 +78,9 @@ void XAudio2AudioDevice::initialize()
     if (m_device)
         return;
 
+    if (!XAudio2CreatePtr())
+        return;
+
     HRESULT hr = S_OK;
 
     // Initialize the COM library.
@@ -83,9 +91,9 @@ void XAudio2AudioDevice::initialize()
 #if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(NDEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
-    hr = XAudio2Create(&m_device, flags);
+    hr = XAudio2CreatePtr()(&m_device, flags, XAUDIO2_DEFAULT_PROCESSOR);
     if (FAILED(hr) && flags)
-        hr = XAudio2Create(&m_device, 0);
+        hr = XAudio2CreatePtr()(&m_device, 0, XAUDIO2_DEFAULT_PROCESSOR);
     CHECK_HRESULT(hr);
     hr = m_device->RegisterForCallbacks(this);
     CHECK_HRESULT(hr);

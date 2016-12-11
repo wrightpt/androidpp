@@ -25,7 +25,10 @@
 
 #pragma once
 
+#include <android/view/appkit/CompositionClause.h>
 #include <android/view/inputmethod/InputConnection.h>
+
+#include <vector>
 
 namespace android {
 namespace view {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,49 +23,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ContextWrapper.h"
-
-#include <android/content/ContextPrivate.h>
-#include <android/view/inputmethod/InputMethodManager.h>
+#include "KeyEventPrivate.h"
 
 namespace android {
-namespace content {
+namespace view {
 
-ContextWrapper::ContextWrapper(Context* base)
-    : m_base(base)
+void KeyEventPrivate::getNativeKeyCode(KeyEvent& event, int32_t code)
 {
 }
 
-ContextWrapper::~ContextWrapper()
+void KeyEventPrivate::setNativeKeyCode(KeyEvent& event, int32_t code)
 {
 }
 
-Context& ContextWrapper::getApplicationContext()
+void KeyEventPrivate::getVirtualKeyCode(KeyEvent& event, int32_t code)
 {
-    if (m_base)
-        return m_base->getApplicationContext();
-
-    return *this;
 }
 
-std::shared_ptr<Object> ContextWrapper::getSystemService(const String& name)
+void KeyEventPrivate::setVirtualKeyCode(KeyEvent& event, int32_t code)
 {
-    if (m_base)
-        return m_base->getSystemService(name);
-
-    if (name.compare(Context::INPUT_METHOD_SERVICE) == 0) {
-        static std::shared_ptr<InputMethodManager> imm = std::make_shared<InputMethodManager>();
-        return imm;
-    }
-
-    return nullptr;
 }
 
-Resources& ContextWrapper::getResources()
+bool KeyEventPrivate::isSystemKey(KeyEvent& event)
 {
-    static Resources resources;
-    return resources;
+    return false;
 }
 
-} // namespace content
+void KeyEventPrivate::setSystemKey(KeyEvent& event, bool value)
+{
+}
+
+} // namespace view
 } // namespace android

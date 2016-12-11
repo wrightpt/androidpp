@@ -83,6 +83,12 @@ void ViewGroup::setVisibility(int32_t visibility)
     propagate(m_children, &View::setVisibility, visibility);
 }
 
+void ViewGroup::onWindowFocusChanged(bool hasWindowFocus)
+{
+    View::onWindowFocusChanged(hasWindowFocus);
+    propagate(m_children, &View::onWindowFocusChanged, hasWindowFocus);
+}
+
 void ViewGroup::onAttachedToWindow()
 {
     View::onAttachedToWindow();
@@ -99,6 +105,12 @@ void ViewGroup::onWindowVisibilityChanged(int visibility)
 {
     View::onWindowVisibilityChanged(visibility);
     propagate(m_children, &View::onWindowVisibilityChanged, visibility);
+}
+
+void ViewGroup::onFocusChanged(bool gainFocus, int32_t direction, Rect& previouslyFocusedRect)
+{
+    View::onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    propagate(m_children, &View::onFocusChanged, gainFocus, direction, previouslyFocusedRect);
 }
 
 void ViewGroup::onMeasure(int32_t widthMeasureSpec, int32_t heightMeasureSpec)

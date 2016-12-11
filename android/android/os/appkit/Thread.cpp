@@ -32,9 +32,10 @@
 
 namespace android {
 namespace os {
-namespace appkit {
 
 pthread_main_np_t mainThreadIdentifier = 0;
+
+namespace appkit {
 
 bool Thread::isMainThread()
 {

@@ -1,6 +1,7 @@
 set(OS_SOURCES
     MessageChannel.cpp
     MessageHost.cpp
+    Messages.cpp
     Process.cpp
     ProcessLauncher.cpp
     Thread.cpp
@@ -31,4 +32,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(android.os.appkit STATIC ${OS_HEADERS} ${OS_SOURCES})
+add_library(android.os.appkit OBJECT ${OS_HEADERS} ${OS_SOURCES})

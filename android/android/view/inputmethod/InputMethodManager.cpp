@@ -25,8 +25,6 @@
 
 #include "InputMethodManager.h"
 
-#include <android/view/View.h>
-
 namespace android {
 namespace view {
 namespace inputmethod {

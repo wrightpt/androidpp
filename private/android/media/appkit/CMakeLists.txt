@@ -20,7 +20,7 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${LIBRARY_PRODUCT_DIR}/include/ANGLE/include"
+    "${ANGLE_LIBRARY_DIR}/include"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
     "${CMAKE_SOURCE_DIR}/private"
@@ -28,4 +28,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(private.android.media.appkit STATIC ${MEDIA_HEADERS} ${MEDIA_SOURCES})
+add_library(private.android.media.appkit OBJECT ${MEDIA_HEADERS} ${MEDIA_SOURCES})

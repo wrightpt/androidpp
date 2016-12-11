@@ -1,4 +1,5 @@
 set(UTIL_SOURCES
+    DisplayMetrics.cpp
     Log.cpp
 )
 
@@ -18,4 +19,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(android.util STATIC ${UTIL_HEADERS} ${UTIL_SOURCES})
+add_library(android.util OBJECT ${UTIL_HEADERS} ${UTIL_SOURCES})

@@ -46,6 +46,11 @@ ViewPrivate& ViewPrivate::getPrivate(View& view)
     return *view.m_private;
 }
 
+void ViewPrivate::setPrivate(View& view, std::unique_ptr<ViewPrivate>&& p)
+{
+    view.m_private = std::move(p);
+}
+
 ViewHostWindow* ViewPrivate::hostWindow() const
 {
     if (m_parentView)

@@ -32,5 +32,13 @@ namespace content {
 
 wchar_t Context::INPUT_METHOD_SERVICE[] = L"android.view.inputmethod.InputMethodManager";
 
+Context::Context()
+{
+}
+
+Context::~Context()
+{
+}
+
 } // namespace content
 } // namespace android

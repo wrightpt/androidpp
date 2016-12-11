@@ -209,6 +209,7 @@ public:
     // Tool type constant: Unknown tool type.
     static const int32_t TOOL_TYPE_UNKNOWN = 0x00000000;
 
+    ANDROID_EXPORT MotionEvent();
     ANDROID_EXPORT MotionEvent(MotionEvent&& other);
 
     // Create a new MotionEvent, filling in a subset of the basic motion values.
@@ -278,7 +279,7 @@ public:
     // Return the precision of the Y coordinates being reported.
     ANDROID_EXPORT float getYPrecision();
     // Checks if a mouse or stylus button (or combination of buttons) is pressed.
-    ANDROID_EXPORT boolean isButtonPressed(int32_t button);
+    ANDROID_EXPORT bool isButtonPressed(int32_t button);
     // Adjust this event's location.
     ANDROID_EXPORT void offsetLocation(float deltaX, float deltaY);
     // Recycle the MotionEvent, to be re-used by a later caller.

@@ -46,6 +46,11 @@ void MediaPlayerPrivate::setFactory(MediaPlayerPrivate* (*factory)(MediaPlayer&)
     s_factory = factory;
 }
 
+MediaPlayerPrivate& MediaPlayerPrivate::getPrivate(MediaPlayer& mp)
+{
+    return *mp.m_private;
+}
+
 void MediaPlayerPrivate::callOnBufferingUpdateListener(int32_t percent)
 {
     m_player.m_bufferingUpdateListener(percent);

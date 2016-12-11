@@ -39,4 +39,10 @@
 #define ANDROID_EXPORT __attribute__((visibility("default")))
 #endif
 
+#if defined(__cplusplus)
+#define ANDROID_C_EXPORT extern "C"
+#else
+#define ANDROID_C_EXPORT extern
+#endif
+
 #define NO_EXPORT

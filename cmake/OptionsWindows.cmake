@@ -4,15 +4,15 @@
 add_definitions(-DNOMINMAX -DUNICODE -D_UNICODE -D_WINDOWS -DWINVER=0x601)
 
 if (${MSVC_CXX_ARCHITECTURE_ID} STREQUAL "X86")
-    link_directories("${LIBRARY_PRODUCT_DIR}/lib32")
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_PRODUCT_DIR}/lib32)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_PRODUCT_DIR}/lib32)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${LIBRARY_PRODUCT_DIR}/bin32)
+    link_directories("${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib32")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/lib32)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib32)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin32)
 else ()
-    link_directories("${LIBRARY_PRODUCT_DIR}/lib64")
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_PRODUCT_DIR}/lib64)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_PRODUCT_DIR}/lib64)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${LIBRARY_PRODUCT_DIR}/bin64)
+    link_directories("${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib64")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/lib64)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib64)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin64)
 endif ()
 
 add_definitions(
@@ -70,11 +70,11 @@ foreach (flag_var
     CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
     CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
     # Use the multithreaded static runtime library instead of the default DLL runtime.
-    string(REGEX REPLACE "/MD" "/MD" ${flag_var} "${${flag_var}}")
+    string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
 
     # No debug runtime, even in debug builds.
     if (NOT DEBUG_SUFFIX)
-        string(REGEX REPLACE "/MDd" "/MD" ${flag_var} "${${flag_var}}")
+        string(REGEX REPLACE "/MTd" "/MT" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "/D_DEBUG" "" ${flag_var} "${${flag_var}}")
     endif ()
 endforeach ()
@@ -85,46 +85,3 @@ foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${OUTPUTCONFIG}")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG} "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${OUTPUTCONFIG}")
 endforeach()
-
-macro(ADD_PREFIX_HEADER _target _header)
-    get_target_property(_old_compile_flags ${_target} COMPILE_FLAGS)
-    if (${_old_compile_flags} STREQUAL "_old_compile_flags-NOTFOUND")
-        set(_old_compile_flags "")
-    endif ()
-    set_target_properties(${_target} PROPERTIES COMPILE_FLAGS "/FI\"${_header}\" ${_old_compile_flags}")
-endmacro()
-
-macro(ADD_POST_BUILD_COMMAND _library)
-    set(${_library}_POST_BUILD_COMMAND "${CMAKE_BINARY_DIR}/${_library}/postBuild.cmd")
-    file(WRITE "${${_library}_POST_BUILD_COMMAND}" "@echo Running ${_library} post build tasks...\n")
-    add_custom_command(TARGET ${_library} POST_BUILD COMMAND ${${_library}_POST_BUILD_COMMAND} VERBATIM)
-endmacro()
-
-macro(COPY_LIBRARY_HEADERS _library _list _destination)
-    file(APPEND "${${_library}_POST_BUILD_COMMAND}" "@mkdir \"${LIBRARY_PRODUCT_DIR}/${_destination}\" >nul 2>nul\n")
-    foreach (_file ${_list})
-        get_filename_component(_absolute "${_file}" ABSOLUTE)
-        file(APPEND "${${_library}_POST_BUILD_COMMAND}" "@xcopy /y /d /f \"${_absolute}\" \"${LIBRARY_PRODUCT_DIR}/${_destination}\" >nul 2>nul\n")
-    endforeach ()
-endmacro()
-
-macro(COPY_LIBRARY_HEADERS_DIRECTORY _library _source _destination)
-    get_filename_component(_absolute "${_source}" ABSOLUTE)
-    file(APPEND "${${_library}_POST_BUILD_COMMAND}" "@robocopy /s /e \"${_absolute}/\" \"${LIBRARY_PRODUCT_DIR}/${_destination}/\" \"*.h\" \"*.hpp\" >nul 2>nul\n")
-    file(APPEND "${${_library}_POST_BUILD_COMMAND}" "IF %ERRORLEVEL% LEQ 3 set ERRORLEVEL=0\n")
-endmacro()
-
-add_definitions(-DWIN32_POSIX -D_WINSOCKAPI_ -D__STDC_FORMAT_MACROS -DHAVE_STRUCT_TIMESPEC)
-
-add_definitions(-DANGLE_WEBKIT_WIN -DGL_GLEXT_PROTOTYPES -DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DLIBXML_STATIC -DLIBXSLT_STATIC -DXMD_H)
-
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB")
-set(WIN32_SYSTEM_LIBRARIES libcmt msvcrt msvcprt OLDNAMES Version vcruntime ucrt atls Shlwapi winmm)
-
-link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-if (${MSVC_CXX_ARCHITECTURE_ID} STREQUAL "X86")
-    link_directories("${LIBRARY_PRODUCT_DIR}/lib32")
-else ()
-    link_directories("${LIBRARY_PRODUCT_DIR}/lib64")
-endif ()

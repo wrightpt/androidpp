@@ -1,5 +1,3 @@
-add_definitions(-DBUILDING_ANDROID)
-
 if (NOT ANDROID)
     add_subdirectory(android/content)
     add_subdirectory(android/graphics)

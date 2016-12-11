@@ -18,7 +18,7 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/android"
-    "${LIBRARY_PRODUCT_DIR}/include/ANGLE/include"
+    "${ANGLE_LIBRARY_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/wtl"
     "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/android"
@@ -27,4 +27,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(private.android.widget STATIC ${WIDGET_HEADERS} ${WIDGET_SOURCES})
+add_library(private.android.widget OBJECT ${WIDGET_HEADERS} ${WIDGET_SOURCES})

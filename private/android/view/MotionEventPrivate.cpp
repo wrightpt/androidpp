@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2016 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,49 +23,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ContextWrapper.h"
-
-#include <android/content/ContextPrivate.h>
-#include <android/view/inputmethod/InputMethodManager.h>
+#include "MotionEventPrivate.h"
 
 namespace android {
-namespace content {
+namespace view {
 
-ContextWrapper::ContextWrapper(Context* base)
-    : m_base(base)
+MotionEventPrivate::MotionEventPrivate(MotionEvent&)
 {
 }
 
-ContextWrapper::~ContextWrapper()
+MotionEventPrivate::~MotionEventPrivate()
 {
 }
 
-Context& ContextWrapper::getApplicationContext()
+MotionEventPrivate& MotionEventPrivate::getPrivate(MotionEvent& event)
 {
-    if (m_base)
-        return m_base->getApplicationContext();
-
-    return *this;
+    return *event.m_private;
 }
 
-std::shared_ptr<Object> ContextWrapper::getSystemService(const String& name)
+void MotionEventPrivate::setPrivate(MotionEvent& event, std::unique_ptr<MotionEventPrivate>&& p)
 {
-    if (m_base)
-        return m_base->getSystemService(name);
-
-    if (name.compare(Context::INPUT_METHOD_SERVICE) == 0) {
-        static std::shared_ptr<InputMethodManager> imm = std::make_shared<InputMethodManager>();
-        return imm;
-    }
-
-    return nullptr;
+    event.m_private = std::move(p);
 }
 
-Resources& ContextWrapper::getResources()
-{
-    static Resources resources;
-    return resources;
-}
-
-} // namespace content
+} // namespace view
 } // namespace android

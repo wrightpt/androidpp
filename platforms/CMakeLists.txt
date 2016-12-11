@@ -15,6 +15,10 @@ set(PLATFORMS_HEADERS
 )
 
 if (WIN32)
+    list(APPEND PLATFORMS_SOURCES
+        win/Assertions.cpp
+    )
+
     list(APPEND PLATFORMS_HEADERS
         win/Assertions.h
         win/COMPtr.h
@@ -32,6 +36,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_definitions(-DBUILDING_ANDROID)
-
-add_library(platforms.c++ STATIC ${PLATFORMS_HEADERS} ${PLATFORMS_SOURCES})
+add_library(platforms.c++ OBJECT ${PLATFORMS_HEADERS} ${PLATFORMS_SOURCES})

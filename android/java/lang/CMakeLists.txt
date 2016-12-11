@@ -26,4 +26,4 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
 )
 
-add_library(java.lang STATIC ${LANG_HEADERS} ${LANG_SOURCES})
+add_library(java.lang OBJECT ${LANG_HEADERS} ${LANG_SOURCES})

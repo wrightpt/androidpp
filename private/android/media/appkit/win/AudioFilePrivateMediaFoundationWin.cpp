@@ -32,6 +32,7 @@
 #include <android/media/win/DataSourceProviderByteStream.h>
 
 #include <android/os/appkit/Process.h>
+#include <platforms/LogHelper.h>
 #include <platforms/StringConversion.h>
 #include <platforms/win/SoftLinking.h>
 
