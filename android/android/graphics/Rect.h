@@ -31,6 +31,10 @@
 #include <windows.h>
 #endif
 
+#if defined(JNI_EXPORT)
+#include <android/graphics/Managed/Rect.h>
+#endif
+
 namespace android {
 namespace graphics {
 
@@ -86,6 +90,17 @@ public:
     operator RECT() const
     {
         return { left, top, right, bottom };
+    }
+#endif
+#if defined(JNI_EXPORT)
+    RectT(const Managed::Rect& rc)
+        : left(rc.left), top(rc.top), right(rc.right), bottom(rc.bottom)
+    {
+    }
+
+    operator std::shared_ptr<Managed::Rect>() const
+    {
+        return Managed::Rect::create(left, top, right, bottom);
     }
 #endif
 

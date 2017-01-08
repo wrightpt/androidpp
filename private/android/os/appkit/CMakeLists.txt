@@ -24,6 +24,7 @@ include_directories(
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
+    "${LIBRARY_PRODUCT_DIR}/include/ndk"
     "${ANGLE_LIBRARY_DIR}/include"
 )
 

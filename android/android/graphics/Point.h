@@ -31,6 +31,10 @@
 #include <windows.h>
 #endif
 
+#if defined(JNI_EXPORT)
+#include <android/graphics/Managed/Point.h>
+#endif
+
 namespace android {
 namespace graphics {
 
@@ -64,6 +68,17 @@ public:
     operator POINT() const
     {
         return { x, y };
+    }
+#endif
+#if defined(JNI_EXPORT)
+    PointT(const Managed::Point& pt)
+        : x(pt.x), y(pt.y)
+    {
+    }
+
+    operator std::shared_ptr<Managed::Point>() const
+    {
+        return Managed::Point::create(x, y);
     }
 #endif
 

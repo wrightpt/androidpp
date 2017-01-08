@@ -10,9 +10,9 @@ if (NOT ANDROID)
             DLLMain.cpp
         )
         list(APPEND ANDROID_LIB_DEPS
-            mfuuid
-            platforms
+            ndk
             pthreadnp
+            mfuuid
             ${WIN32_SYSTEM_LIBRARIES}
         )
     endif ()
