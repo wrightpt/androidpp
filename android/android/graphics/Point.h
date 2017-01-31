@@ -31,7 +31,7 @@
 #include <windows.h>
 #endif
 
-#if defined(JNI_EXPORT)
+#if defined(JNI_STATIC) || defined(JNI_SHARED)
 #include <android/graphics/Managed/Point.h>
 #endif
 
@@ -70,7 +70,7 @@ public:
         return { x, y };
     }
 #endif
-#if defined(JNI_EXPORT)
+#if defined(JNI_STATIC) || defined(JNI_SHARED)
     PointT(const Managed::Point& pt)
         : x(pt.x), y(pt.y)
     {

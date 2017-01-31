@@ -73,7 +73,7 @@ void ProcessLauncher::setProcessLaunchedListener(std::function<void (int32_t)> l
     m_processLaunchedListener = std::move(listener);
 }
 
-bool ProcessLauncher::connect(String& moduleName, String& moduleEntry, String& arguments, const std::vector<int32_t>& fileDescriptors, std::function<void (intptr_t)> connectionCallback)
+bool ProcessLauncher::connect(String moduleName, String moduleEntry, String arguments, const std::vector<int32_t>& fileDescriptors, std::function<void (intptr_t)> connectionCallback)
 {
     Connection* connection = platformCreateProcess(moduleName, moduleEntry, arguments, fileDescriptors);
     if (!connection)

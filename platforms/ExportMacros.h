@@ -46,3 +46,7 @@
 #endif
 
 #define NO_EXPORT
+
+#if defined(JNI_STATIC) || defined(JNI_SHARED)
+#include <androidjni/JNIExportMacros.h>
+#endif

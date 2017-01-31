@@ -31,7 +31,7 @@
 #include <windows.h>
 #endif
 
-#if defined(JNI_EXPORT)
+#if defined(JNI_STATIC) || defined(JNI_SHARED)
 #include <android/graphics/Managed/Rect.h>
 #endif
 
@@ -92,7 +92,7 @@ public:
         return { left, top, right, bottom };
     }
 #endif
-#if defined(JNI_EXPORT)
+#if defined(JNI_STATIC) || defined(JNI_SHARED)
     RectT(const Managed::Rect& rc)
         : left(rc.left), top(rc.top), right(rc.right), bottom(rc.bottom)
     {

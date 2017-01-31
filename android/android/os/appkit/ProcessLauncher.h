@@ -60,7 +60,7 @@ public:
 
     ANDROID_EXPORT static void setProcessLaunchedListener(std::function<void (int32_t)>);
 
-    ANDROID_EXPORT static bool connect(String& moduleName, String& moduleEntry, String& arguments,
+    ANDROID_EXPORT static bool connect(String moduleName, String moduleEntry, String arguments,
         const std::vector<int32_t>& fileDescriptors, std::function<void (intptr_t)> connectionCallback);
 
     ANDROID_EXPORT static std::shared_ptr<Connection> getConnection(int32_t);
