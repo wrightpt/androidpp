@@ -25,12 +25,11 @@
 
 #pragma once
 
+#include <android/opengl.h>
 #include <android/view/View.h>
 
 namespace android {
 namespace opengl {
-
-typedef void* GL10;
 
 class ANDROID_EXPORT GLSurfaceView : public view::View {
 public:
