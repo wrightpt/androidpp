@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <android/view/appkit/CompositionClause.h>
+#include <android/view/CompositionClause.h>
 #include <android/view/inputmethod/InputConnection.h>
 
 #include <vector>

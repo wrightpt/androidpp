@@ -25,39 +25,22 @@
 
 #pragma once
 
-#include <android/view/appkit/UIEvent.h>
+#include <java/lang.h>
 
 namespace android {
 namespace view {
-namespace appkit {
 
-class ANDROID_EXPORT UIKeyEvent : public UIEvent {
-public:
-    static UIKeyEvent create(Action action, Modifiers modifiers, uint32_t repeatCount, KeyState& keyState)
-    {
-        return UIKeyEvent(currentTime(), action, modifiers, repeatCount, keyState);
-    }
-    static UIKeyEvent create(std::chrono::milliseconds timestamp, Action action, Modifiers modifiers, uint32_t repeatCount, KeyState& keyState)
-    {
-        return UIKeyEvent(timestamp, action, modifiers, repeatCount, keyState);
-    }
-    ~UIKeyEvent() = default;
+struct CompositionClause {
+    int32_t startOffset;
+    int32_t endOffset;
+    uint32_t color;
+    bool focus;
 
-    virtual KeyState& keyState() override { return m_keyState; }
-
-protected:
-    UIKeyEvent(std::chrono::milliseconds timestamp, Action action, Modifiers modifiers, uint32_t repeatCount, KeyState& keyState)
-        : UIEvent(timestamp, Source::Key, action, modifiers, repeatCount, 0)
-        , m_keyState(keyState)
-    {
-    }
-
-private:
-    KeyState m_keyState;
+    CompositionClause()
+        : startOffset(0), endOffset(0), color(0), focus(false) { }
+    CompositionClause(int32_t s, int32_t e, uint32_t c, bool f)
+        : startOffset(s), endOffset(e), color(c), focus(f) { }
 };
 
-} // namespace appkit
 } // namespace view
 } // namespace android
-
-using UIKeyEvent = android::view::appkit::UIKeyEvent;

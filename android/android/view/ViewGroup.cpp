@@ -27,7 +27,6 @@
 
 #include <android/view/ViewPrivate.h>
 #include <android/view/WindowProvider.h>
-#include <android/view/appkit/UIEvent.h>
 #include <platforms/Functional.h>
 
 namespace android {

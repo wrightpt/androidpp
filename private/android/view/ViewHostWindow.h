@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "Cursor.h"
 #include "WindowHandle.h"
 #include <android/app/ActivityPrivate.h>
 #include <android/graphics/Point.h>
@@ -32,7 +33,6 @@
 #include <android/os/Handler.h>
 #include <android/view/KeyEvent.h>
 #include <android/view/MotionEvent.h>
-#include <android/view/appkit/Cursor.h>
 #include <android/view/inputmethod/InputConnection.h>
 #include <platforms/Functional.h>
 

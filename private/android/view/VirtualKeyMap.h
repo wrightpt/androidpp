@@ -29,7 +29,6 @@
 
 namespace android {
 namespace view {
-namespace appkit {
 
 class VirtualKeyMap final {
 public:
@@ -809,8 +808,5 @@ public:
     }
 };
 
-} // namespace appkit
 } // namespace view
 } // namespace android
-
-using VirtualKeyMap = android::view::appkit::VirtualKeyMap;

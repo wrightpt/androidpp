@@ -25,13 +25,12 @@
 
 #pragma once
 
-#include <android/view/appkit/Cursor.h>
+#include <android/view/Cursor.h>
 
 #include <windows.h>
 
 namespace android {
 namespace view {
-namespace appkit {
 
 class CursorWin : public Cursor {
 public:
@@ -83,6 +82,5 @@ private:
     static std::shared_ptr<Cursor> zoomOutCursor();
 };
 
-} // namespace appkit
 } // namespace view
 } // namespace android

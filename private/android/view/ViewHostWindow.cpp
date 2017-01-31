@@ -30,8 +30,6 @@
 #include <android/view/View.h>
 #include <android/view/ViewPrivate.h>
 #include <android/view/WindowProvider.h>
-#include <android/view/appkit/EditableContext.h>
-#include <android/view/appkit/UIMouseEvent.h>
 
 #include <algorithm>
 #include <assert>

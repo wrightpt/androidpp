@@ -27,8 +27,8 @@
 
 #include "WindowProvider.h"
 
+#include "VirtualKeyMap.h"
 #include <android/graphics/PointF.h>
-#include <android/view/appkit/VirtualKeyMap.h>
 #include <android/view/inputmethod/CursorAnchorInfo.h>
 
 #include <atlbase.h>

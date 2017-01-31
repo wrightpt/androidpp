@@ -29,7 +29,6 @@
 
 namespace android {
 namespace view {
-namespace appkit {
 
 std::shared_ptr<Cursor> Cursor::systemCursor(Type cursorType)
 {
@@ -348,6 +347,5 @@ std::shared_ptr<Cursor> CursorWin::zoomOutCursor()
     return arrowCursor();
 }
 
-} // namespace appkit
 } // namespace view
 } // namespace android

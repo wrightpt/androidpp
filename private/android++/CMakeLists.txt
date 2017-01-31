@@ -31,7 +31,6 @@ if (NOT ANDROID)
         $<TARGET_OBJECTS:android.os.appkit>
         $<TARGET_OBJECTS:android.util>
         $<TARGET_OBJECTS:android.view>
-        $<TARGET_OBJECTS:android.view.appkit>
         $<TARGET_OBJECTS:android.view.inputmethod>
         $<TARGET_OBJECTS:android.widget>
         $<TARGET_OBJECTS:java.lang>
@@ -46,7 +45,6 @@ if (NOT ANDROID)
         $<TARGET_OBJECTS:private.android.os.appkit>
         $<TARGET_OBJECTS:private.android.util>
         $<TARGET_OBJECTS:private.android.view>
-        $<TARGET_OBJECTS:private.android.view.appkit>
         $<TARGET_OBJECTS:private.android.view.inputmethod>
         $<TARGET_OBJECTS:private.android.widget>
     )

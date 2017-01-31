@@ -31,7 +31,6 @@ include_directories(
     "${ANGLE_LIBRARY_DIR}/include"
 )
 
-add_subdirectory(appkit)
 add_subdirectory(inputmethod)
 
 add_library(android.view OBJECT ${VIEW_HEADERS} ${VIEW_SOURCES})

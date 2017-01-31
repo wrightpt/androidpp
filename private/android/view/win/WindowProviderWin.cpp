@@ -26,14 +26,14 @@
 #include "WindowProviderWin.h"
 
 #include <android/os/Looper.h>
+#include <android/view/CompositionClause.h>
 #include <android/view/InputDevice.h>
 #include <android/view/KeyEvent.h>
 #include <android/view/KeyEventPrivate.h>
 #include <android/view/MotionEvent.h>
 #include <android/view/MotionEventPrivate.h>
 #include <android/view/ViewHostWindow.h>
-#include <android/view/appkit/CompositionClause.h>
-#include <android/view/appkit/win/CursorWin.h>
+#include <android/view/win/CursorWin.h>
 #include <android/view/inputmethod/InputConnectionPrivate.h>
 
 #include <platforms/LogHelper.h>
@@ -224,7 +224,7 @@ BOOL WindowProviderWin::OnSetCursor(CWindow wnd, UINT nHitTest, UINT message)
     else if (cursorToShow->getType() == Cursor::Type::Default)
         return FALSE;
 
-    ::SetCursor(std::static_pointer_cast<appkit::CursorWin>(cursorToShow)->nativeCursor());
+    ::SetCursor(std::static_pointer_cast<CursorWin>(cursorToShow)->nativeCursor());
     m_cursor = m_pendingCursor;
     m_pendingCursor = Cursor::systemCursor(Cursor::Type::Retain);
 

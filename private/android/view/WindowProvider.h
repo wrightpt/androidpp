@@ -25,9 +25,9 @@
 
 #pragma once
 
+#include "Cursor.h"
 #include "WindowHandle.h"
 #include <android/graphics/Rect.h>
-#include <android/view/appkit/Cursor.h>
 
 namespace android {
 namespace view {

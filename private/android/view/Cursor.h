@@ -25,43 +25,77 @@
 
 #pragma once
 
-#include <android/view/appkit/UIEvent.h>
+#include <android/graphics/Bitmap.h>
 
 namespace android {
 namespace view {
-namespace appkit {
 
-class ANDROID_EXPORT UIMouseEvent : public UIEvent {
+class Cursor {
 public:
-    static UIMouseEvent create()
-    {
-        return UIMouseEvent(currentTime(), Action::None, Modifiers(), PointF(), PointF(), 1);
-    }
-    static UIMouseEvent create(Action action, Modifiers modifiers, PointF& coord, PointF& globalCoord, int repeatCount)
-    {
-        return UIMouseEvent(currentTime(), action, modifiers, coord, globalCoord, repeatCount);
-    }
-    static UIMouseEvent create(std::chrono::milliseconds timestamp, Action action, Modifiers modifiers, PointF& coord, PointF& globalCoord, int repeatCount)
-    {
-        return UIMouseEvent(timestamp, action, modifiers, coord, globalCoord, repeatCount);
-    }
-    ~UIMouseEvent() = default;
+    enum class Type {
+        Default = -2,
+        Retain = -1,
+        Pointer = 0,
+        Cross,
+        Hand,
+        IBeam,
+        Wait,
+        Help,
+        EastResize,
+        NorthResize,
+        NorthEastResize,
+        NorthWestResize,
+        SouthResize,
+        SouthEastResize,
+        SouthWestResize,
+        WestResize,
+        NorthSouthResize,
+        EastWestResize,
+        NorthEastSouthWestResize,
+        NorthWestSouthEastResize,
+        ColumnResize,
+        RowResize,
+        MiddlePanning,
+        EastPanning,
+        NorthPanning,
+        NorthEastPanning,
+        NorthWestPanning,
+        SouthPanning,
+        SouthEastPanning,
+        SouthWestPanning,
+        WestPanning,
+        Move,
+        VerticalText,
+        Cell,
+        ContextMenu,
+        Alias,
+        Progress,
+        NoDrop,
+        Copy,
+        None,
+        NotAllowed,
+        ZoomIn,
+        ZoomOut,
+        Grab,
+        Grabbing,
+        Custom
+    };
 
-    const Pointer* pointers() override { return &m_pointer; }
+    ANDROID_EXPORT static std::shared_ptr<Cursor> systemCursor(Type cursorType);
+
+    ANDROID_EXPORT virtual ~Cursor() = default;
+
+    ANDROID_EXPORT Type getType() { return m_cursorType; }
 
 protected:
-    UIMouseEvent(std::chrono::milliseconds timestamp, Action action, Modifiers modifiers, PointF& coord, PointF& globalCoord, int repeatCount)
-        : UIEvent(timestamp, Source::Mouse, action, modifiers, repeatCount, 1)
-        , m_pointer(Pointer(0, coord, globalCoord))
+    explicit Cursor(Type cursorType)
+        : m_cursorType(cursorType)
     {
     }
 
 private:
-    Pointer m_pointer;
+    Type m_cursorType;
 };
 
-} // namespace appkit
 } // namespace view
 } // namespace android
-
-using UIMouseEvent = android::view::appkit::UIMouseEvent;
