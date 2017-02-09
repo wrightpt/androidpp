@@ -27,8 +27,6 @@
 
 #include <EGL/eglext.h>
 
-#include <assert>
-
 namespace android {
 namespace opengl {
 namespace appkit {

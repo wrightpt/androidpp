@@ -34,7 +34,7 @@ namespace graphics {
 
 class BitmapPrivate;
 
-class ANDROID_EXPORT Bitmap {
+class Bitmap {
 public:
     enum class Config : int32_t {
         ALPHA_8 = 1,
@@ -43,21 +43,25 @@ public:
         INVALID = -1
     };
 
-    static std::shared_ptr<Bitmap> createBitmap(const std::vector<int32_t>& colors, int32_t width, int32_t height, Config config);
+    ANDROID_EXPORT static std::shared_ptr<Bitmap> createBitmap(const std::vector<int32_t>& colors, int32_t width, int32_t height, Config config);
 
-    Bitmap(const std::vector<int32_t>& colors, int32_t width, int32_t height, Config config);
-    virtual ~Bitmap();
+    ANDROID_EXPORT Bitmap(const std::vector<int32_t>& colors, int32_t width, int32_t height, Config config);
+    ANDROID_EXPORT Bitmap(const Bitmap&);
+    ANDROID_EXPORT Bitmap(Bitmap&&);
+    ANDROID_EXPORT Bitmap& operator=(const Bitmap&);
+    ANDROID_EXPORT Bitmap& operator=(Bitmap&&);
+    ANDROID_EXPORT virtual ~Bitmap();
 
-    void setPixels(const std::vector<int32_t>& pixels, int32_t offset, int32_t stride, int32_t x, int32_t y, int32_t width, int32_t height);
-    void getPixels(std::vector<int32_t>& pixels, int32_t offset, int32_t stride, int32_t x, int32_t y, int32_t width, int32_t height);
+    ANDROID_EXPORT void setPixels(const std::vector<int32_t>& pixels, int32_t offset, int32_t stride, int32_t x, int32_t y, int32_t width, int32_t height);
+    ANDROID_EXPORT void getPixels(std::vector<int32_t>& pixels, int32_t offset, int32_t stride, int32_t x, int32_t y, int32_t width, int32_t height);
 
-    int32_t getWidth();
-    int32_t getHeight();
-    int32_t getRowBytes();
-    int32_t getByteCount();
+    ANDROID_EXPORT int32_t getWidth();
+    ANDROID_EXPORT int32_t getHeight();
+    ANDROID_EXPORT int32_t getRowBytes();
+    ANDROID_EXPORT int32_t getByteCount();
 
 private:
-    std::unique_ptr<BitmapPrivate> m_private;
+    std::shared_ptr<BitmapPrivate> m_private;
 };
 
 } // namespace graphics

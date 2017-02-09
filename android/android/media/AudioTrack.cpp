@@ -26,11 +26,9 @@
 #include "AudioTrack.h"
 
 #include <android/media/AudioTrackPrivate.h>
-#include <platforms/LogHelper.h>
+#include <android++/LogHelper.h>
 
 #include <algorithm>
-
-#include <assert>
 
 namespace android {
 namespace media {
@@ -213,7 +211,7 @@ void AudioTrack::setPlaybackPositionUpdateListener(OnPlaybackPositionUpdateListe
     m_playbackPositionUpdateListener = std::move(listener);
 }
 
-void AudioTrack::setPlaybackPositionUpdateListener(OnPlaybackPositionUpdateListener listener, std::shared_ptr<os::Handler>& handler)
+void AudioTrack::setPlaybackPositionUpdateListener(OnPlaybackPositionUpdateListener listener, std::passed_ptr<os::Handler> handler)
 {
     m_playbackPositionUpdateListener = std::move(listener);
     m_playbackPositionUpdateHandler = handler;

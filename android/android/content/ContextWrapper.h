@@ -31,16 +31,21 @@ namespace android {
 namespace content {
 
 class ContextWrapper : public Context {
+    NONCOPYABLE(ContextWrapper);
 public:
-    ANDROID_EXPORT ContextWrapper(Context* base);
+    ANDROID_EXPORT ContextWrapper(Context& base);
     ANDROID_EXPORT virtual ~ContextWrapper();
 
     ANDROID_EXPORT virtual Context& getApplicationContext() override;
-    ANDROID_EXPORT virtual std::shared_ptr<Object> getSystemService(const String& name) override;
+    ANDROID_EXPORT virtual StringRef getPackageName() override;
+    ANDROID_EXPORT virtual std::shared_ptr<Object> getSystemService(StringRef name) override;
     ANDROID_EXPORT virtual Resources& getResources() override;
 
+    ANDROID_EXPORT virtual bool bindService(Intent& service, std::passed_ptr<ServiceConnection> conn, int32_t flags) override;
+    ANDROID_EXPORT virtual void unbindService(std::passed_ptr<ServiceConnection> conn) override;
+
 private:
-    Context* m_base;
+    Context& m_base;
 };
 
 } // namespace content

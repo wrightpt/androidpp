@@ -1,11 +1,15 @@
 set(LANG_SOURCES
+    Class.cpp
+    ClassLoader.cpp
 )
 
 set(LANG_HEADERS
     ../lang.h
     CharSequence.h
+    Class.h
+    ClassLoader.h
     Object.h
-    StringInlines.h
+    StringImport.h
     System.h
 )
 

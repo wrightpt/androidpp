@@ -87,7 +87,7 @@ std::shared_ptr<MediaFormat> MediaFormat::create()
     return std::shared_ptr<MediaFormat>(new MediaFormat);
 }
 
-std::shared_ptr<MediaFormat> MediaFormat::createAudioFormat(const String& mime, int32_t sampleRate, int32_t channelCount)
+std::shared_ptr<MediaFormat> MediaFormat::createAudioFormat(StringRef mime, int32_t sampleRate, int32_t channelCount)
 {
     std::shared_ptr<MediaFormat> format = create();
     format->setString(KEY_MIME, mime);
@@ -97,7 +97,7 @@ std::shared_ptr<MediaFormat> MediaFormat::createAudioFormat(const String& mime, 
 }
 
 // Returns true if a key of the given name exists in the format.
-bool MediaFormat::containsKey(const String& name)
+bool MediaFormat::containsKey(StringRef name)
 {
     return (m_integers.count(name) > 0 || m_longIntegers.count(name) > 0 || m_floats.count(name) > 0 || m_strings.count(name) > 0);
 }

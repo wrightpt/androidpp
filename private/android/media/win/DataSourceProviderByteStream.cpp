@@ -27,12 +27,11 @@
 
 #if (WINVER >= _WIN32_WINNT_WIN7)
 
-#include <platforms/win/Assertions.h>
-#include <platforms/win/SoftLinking.h>
+#include <android++/Assertions.h>
+#include <android++/LogHelper.h>
+#include <android++/win/SoftLinking.h>
 
 #include <algorithm>
-
-#include <assert>
 
 SOFT_LINK_LIBRARY(Mfplat);
 SOFT_LINK_OPTIONAL(Mfplat, MFCreateAsyncResult, HRESULT, STDAPICALLTYPE, (IUnknown*, IMFAsyncCallback*, IUnknown*, IMFAsyncResult**));

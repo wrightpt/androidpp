@@ -25,13 +25,13 @@
 
 #pragma once
 
-#include <java/lang.h>
+#include <android++/Platform.h>
 
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 
-namespace Android {
+namespace android {
 
 class Lockable {
 public:
@@ -107,17 +107,17 @@ private:
     bool m_stepOut;
 };
 
-} // namespace Android
+} // namespace android
 
 namespace java {
 namespace lang {
 
-using Object = Android::Lockable;
+using Object = android::Lockable;
 
 } // namespace lang
 } // namespace java
 
 #define synchronized(lockable) \
-    for (Android::Lock l(lockable); l; ++l)
+    for (android::Lock l(lockable); l; ++l)
 
 using Object = java::lang::Object;

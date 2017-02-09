@@ -25,10 +25,10 @@
 
 #include "MenuWin.h"
 
-#include <android/view/ViewHostWindow.h>
+#include <android/app/ActivityHostWindow.h>
 #include <android/view/ViewPrivate.h>
 
-#include <platforms/StringConversion.h>
+#include <android++/StringConversion.h>
 
 namespace android {
 namespace view {
@@ -50,7 +50,7 @@ MenuWin::~MenuWin()
     dismiss();
 }
 
-void MenuWin::addItem(const std::shared_ptr<MenuItem>& item)
+void MenuWin::addItem(std::passed_ptr<MenuItem> item)
 {
     UINT flags = MF_STRING;
     item->enabled() ? flags |= MF_ENABLED : flags |= MF_GRAYED;
@@ -60,7 +60,7 @@ void MenuWin::addItem(const std::shared_ptr<MenuItem>& item)
 
 void MenuWin::addItems(const std::vector<std::shared_ptr<MenuItem>>& items)
 {
-    for (const std::shared_ptr<MenuItem>& item : items)
+    for (std::passed_ptr<MenuItem> item : items)
         addItem(item);
 }
 
@@ -69,7 +69,7 @@ void MenuWin::addSeparator()
     ::AppendMenu(m_handle, MF_SEPARATOR, 0, nullptr);
 }
 
-std::unique_ptr<Menu> MenuWin::addSubmenu(const std::shared_ptr<MenuItem>& item)
+std::unique_ptr<Menu> MenuWin::addSubmenu(std::passed_ptr<MenuItem> item)
 {
     std::unique_ptr<MenuWin> submenu(new MenuWin(m_anchor));
     ::AppendMenu(m_handle, MF_POPUP, reinterpret_cast<UINT_PTR>(submenu->handle()), item->title().c_str());
@@ -78,7 +78,7 @@ std::unique_ptr<Menu> MenuWin::addSubmenu(const std::shared_ptr<MenuItem>& item)
 
 void MenuWin::show(Point& location)
 {
-    HWND parentHWND = reinterpret_cast<HWND>(view::getPrivate(m_anchor).hostWindow()->windowHandle());
+    HWND parentHWND = reinterpret_cast<HWND>(view::getPrivate(m_anchor).hostWindow()->window()->windowHandle());
 
     POINT point;
     point.x = location.x;

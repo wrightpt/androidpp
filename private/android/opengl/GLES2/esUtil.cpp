@@ -26,8 +26,6 @@
 #include "esUtil.h"
 #include "esUtil_win.h"
 
-#include <assert>
-
 
 
 ///

@@ -34,18 +34,21 @@
 #include <android/view/inputmethod/InputConnection.h>
 
 namespace android {
+namespace app {
+class ActivityHostWindow;
+}
+
 namespace view {
 
 class KeyEvent;
 class MotionEvent;
 class ViewGroup;
-class ViewHostWindow;
 class ViewPrivate;
 
 class View {
     friend class ViewGroup;
-    friend class ViewHostWindow;
     friend class ViewPrivate;
+    friend class app::ActivityHostWindow;
 public:
     // This view is visible.
     static const int32_t VISIBLE = 0;
@@ -61,7 +64,7 @@ public:
     static const int32_t FOCUS_UP = 33;
     static const int32_t FOCUS_DOWN = 130;
 
-    ANDROID_EXPORT View();
+    ANDROID_EXPORT View(Context&);
     ANDROID_EXPORT virtual ~View();
 
     typedef std::function<void (View*)> OnClickListener;
@@ -70,7 +73,7 @@ public:
     // Returns the context the view is running in, through which it can access the current theme, resources, etc.
     ANDROID_EXPORT Context& getContext();
     // Retrieve a unique token identifying the window this view is attached to.
-    ANDROID_EXPORT IBinder getWindowToken();
+    ANDROID_EXPORT std::shared_ptr<IBinder> getWindowToken();
 
     // Return the width of the your view.
     ANDROID_EXPORT int32_t getWidth() { return m_rect.width(); }
@@ -148,6 +151,7 @@ protected:
     ANDROID_EXPORT virtual void onConfigurationChanged(Configuration&) { }
 
 private:
+    Context& m_context;
     bool m_inWindow;
     Rect m_rect;
     int32_t m_visibility;

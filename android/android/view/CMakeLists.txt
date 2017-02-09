@@ -1,5 +1,6 @@
 set(VIEW_SOURCES
     ContextMenu.cpp
+    FrameLayout.cpp
     InputEvent.cpp
     KeyEvent.cpp
     MotionEvent.cpp
@@ -9,6 +10,7 @@ set(VIEW_SOURCES
 
 set(VIEW_HEADERS
     ContextMenu.h
+    FrameLayout.h
     InputDevice.h
     InputEvent.h
     KeyEvent.h

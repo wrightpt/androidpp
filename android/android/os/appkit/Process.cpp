@@ -33,15 +33,13 @@
 
 #include <pthread.h>
 
-#include <assert>
-
 namespace android {
 namespace os {
 namespace appkit {
 
-std::unique_ptr<Process> Process::create(const String& modulePath, const String& moduleEntry, const String& arguments, const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, intptr_t targetHandle, const std::unordered_map<String, String>& platformMainParameters)
+std::unique_ptr<Process> Process::create(StringRef modulePath, StringRef moduleEntry, StringRef arguments, const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, intptr_t targetHandle, const std::unordered_map<String, String>& platformMainParameters)
 {
-    return std::unique_ptr<Process>(platformCreate(modulePath, moduleEntry, arguments, fileDescriptors, connectionIdentifier, reinterpret_cast<IBinder>(targetHandle), platformMainParameters));
+    return std::unique_ptr<Process>(platformCreate(modulePath, moduleEntry, arguments, fileDescriptors, connectionIdentifier, reinterpret_cast<IBinder*>(targetHandle), platformMainParameters));
 }
 
 static Process* currentProcess = nullptr;
@@ -76,10 +74,10 @@ Process::Process()
     startProcess(this);
 }
 
-Process::Process(int32_t connectionIdentifier, IBinder targetHandle)
+Process::Process(int32_t connectionIdentifier, IBinder* targetHandle)
     : m_connectionIdentifier(connectionIdentifier)
     , m_mainThreadHandler(Handler::create())
-    , m_messageSender(std::make_shared<Messenger>(targetHandle))
+    //, m_messageSender(std::make_shared<Messenger>(targetHandle))
 {
     startProcess(this);
 }

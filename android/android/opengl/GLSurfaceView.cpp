@@ -25,12 +25,11 @@
 
 #include "GLSurfaceView.h"
 
-#include <platforms/LogHelper.h>
+#include <android/app/ActivityHostWindow.h>
 #include <android/opengl/GLES2/esUtil.h>
-#include <android/view/ViewHostWindow.h>
 #include <android/view/ViewPrivate.h>
+#include <android++/LogHelper.h>
 
-#include <assert>
 #include <deque>
 
 namespace android {
@@ -83,7 +82,7 @@ public:
         if (eglContext != EGL_NO_CONTEXT)
             return;
 
-        hWnd = (EGLNativeWindowType)view::getPrivate(m_view).hostWindow()->windowHandle();
+        hWnd = (EGLNativeWindowType)view::getPrivate(m_view).hostWindow()->window()->windowHandle();
         GLboolean hardwareAccelerated = esCreateContext(this, m_view.getWidth(), m_view.getHeight(), 8, 8, 8,
             false, true, true, false);
 
@@ -549,8 +548,9 @@ private:
     std::unique_ptr<std::thread> m_thread;
 };
 
-GLSurfaceView::GLSurfaceView()
-    : m_renderer(0)
+GLSurfaceView::GLSurfaceView(Context& context)
+    : View(context)
+    , m_renderer(0)
     , m_glThread(new GLThread(*this))
 {
 }

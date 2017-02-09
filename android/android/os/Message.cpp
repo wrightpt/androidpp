@@ -25,8 +25,11 @@
 
 #include "Message.h"
 
-#include "Bundle.h"
-#include "Messenger.h"
+#include <android/os/Binder.h>
+#include <android/os/Bundle.h>
+#include <android/os/Messenger.h>
+#include <android/os/ParcelPrivate.h>
+#include <android/os/ParcelablePrivate.h>
 
 namespace android {
 namespace os {
@@ -59,10 +62,37 @@ Message::Message(Message&& o)
     , arg2(o.arg2)
     , obj(o.obj)
     , target(o.target)
-    , replyTo(std::move(o.replyTo))
+    , replyTo(o.replyTo)
     , data(o.data)
 {
+    o.replyTo = nullptr;
     o.data = nullptr;
+}
+
+Message& Message::operator=(const Message& other)
+{
+    what = other.what;
+    arg1 = other.arg1;
+    arg2 = other.arg2;
+    obj = other.obj;
+    target = other.target;
+    replyTo = other.replyTo;
+    data = (other.data) ? new Bundle(*other.data) : nullptr;
+    return *this;
+}
+
+Message& Message::operator=(Message&& other)
+{
+    what = other.what;
+    arg1 = other.arg1;
+    arg2 = other.arg2;
+    obj = other.obj;
+    target = other.target;
+    replyTo = other.replyTo;
+    other.replyTo = nullptr;
+    data = other.data;
+    other.data = nullptr;
+    return *this;
 }
 
 Message::~Message()
@@ -163,17 +193,63 @@ Bundle* Message::peekData()
     return data;
 }
 
-Message& Message::operator=(Message&& other)
+class MessageCreator final : public ParcelableCreator {
+public:
+    std::shared_ptr<Parcelable> createFromParcel(Parcel& source) override
+    {
+        auto result = std::make_shared<Message>();
+        source >> result->what;
+        source >> result->arg1;
+        source >> result->arg2;
+        source >> result->obj;
+        intptr_t handle;
+        source >> handle;
+        if (handle)
+            result->replyTo = new Messenger(Binder::adopt(handle));
+        bool hasData;
+        source >> hasData;
+        if (hasData) {
+            result->data = new Bundle();
+            result->data->readFromParcel(source);
+        }
+        return std::move(result);
+    }
+
+    std::vector<std::shared_ptr<Parcelable>> newArray(int32_t size) override
+    {
+        return {};
+    }
+
+    MessageCreator()
+        : ParcelableCreator(this, L"android.os", L"Message.CREATOR")
+    {
+    }
+};
+
+const LazyInitializedPtr<Parcelable::Creator> Message::CREATOR([] { return new MessageCreator; }, true);
+
+int32_t Message::describeContents()
 {
-    what = other.what;
-    arg1 = other.arg1;
-    arg2 = other.arg2;
-    obj = other.obj;
-    target = other.target;
-    replyTo = std::move(other.replyTo);
-    data = other.data;
-    other.data = nullptr;
-    return *this;
+    return 0;
+}
+
+void Message::writeToParcel(Parcel& dest, int32_t flags)
+{
+    dest << ParcelableCreator::creator<Message>().binaryName;
+    dest << what;
+    dest << arg1;
+    dest << arg2;
+    dest << obj;
+    intptr_t handle = 0;
+    if (replyTo) {
+        auto binder = std::static_pointer_cast<Binder>(replyTo->getBinder());
+        handle = binder->handle();
+        ParcelPrivate::getPrivate(dest).setOrigin(binder);
+    }
+    dest << handle;
+    dest << (data ? true : false);
+    if (data)
+        data->writeToParcel(dest, flags);
 }
 
 } // namespace os

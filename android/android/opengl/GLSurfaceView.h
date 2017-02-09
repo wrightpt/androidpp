@@ -31,7 +31,8 @@
 namespace android {
 namespace opengl {
 
-class ANDROID_EXPORT GLSurfaceView : public view::View {
+class GLSurfaceView : public view::View {
+    NONCOPYABLE(GLSurfaceView);
 public:
     static const bool DEBUG_GL = false;
     static const bool PRINT_ALL_CONFIGS = false;
@@ -45,37 +46,37 @@ public:
         virtual void onDrawFrame(GL10 gl) = 0;
     };
 
-    GLSurfaceView();
-    virtual ~GLSurfaceView();
+    ANDROID_EXPORT GLSurfaceView(Context&);
+    ANDROID_EXPORT virtual ~GLSurfaceView();
 
     // Control whether the EGL context is preserved when the GLSurfaceView is paused and resumed. 
-    virtual void setPreserveEGLContextOnPause(bool preserveOnPause);
-    virtual bool getPreserveEGLContextOnPause();
+    ANDROID_EXPORT virtual void setPreserveEGLContextOnPause(bool preserveOnPause);
+    ANDROID_EXPORT virtual bool getPreserveEGLContextOnPause();
     // Set the renderer associated with this view. 
-    virtual void setRenderer(Renderer* renderer);
+    ANDROID_EXPORT virtual void setRenderer(Renderer* renderer);
 
     // Request that the renderer render a frame. 
-    virtual void requestRender();
+    ANDROID_EXPORT virtual void requestRender();
 
     // This is called immediately after any structural changes (format or size) have been made to the surface.
-    virtual void surfaceChanged(int32_t format, int32_t width, int32_t height);
+    ANDROID_EXPORT virtual void surfaceChanged(int32_t format, int32_t width, int32_t height);
     // This is called immediately after the surface is first created.
-    virtual void surfaceCreated();
+    ANDROID_EXPORT virtual void surfaceCreated();
     // This is called immediately before a surface is being destroyed.
-    virtual void surfaceDestroyed();
+    ANDROID_EXPORT virtual void surfaceDestroyed();
 
     // Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for your activity to start interacting with the user. 
-    virtual void onResume();
+    ANDROID_EXPORT virtual void onResume();
     // Called as part of the activity lifecycle when an activity is going into the background, but has not (yet) been killed. 
-    virtual void onPause();
+    ANDROID_EXPORT virtual void onPause();
 
     // Queue a runnable to be run on the GL rendering thread. 
-    virtual void queueEvent(std::function<void ()> r);
+    ANDROID_EXPORT virtual void queueEvent(std::function<void ()> r);
 
     // view.View
-    virtual void onAttachedToWindow() override;
-    virtual void onDetachedFromWindow() override;
-    virtual void onLayout(Rect&) override;
+    ANDROID_EXPORT virtual void onAttachedToWindow() override;
+    ANDROID_EXPORT virtual void onDetachedFromWindow() override;
+    ANDROID_EXPORT virtual void onLayout(Rect&) override;
 
 private:
     class GLThread;

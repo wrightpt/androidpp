@@ -32,8 +32,6 @@
 #include <android/os/appkit/MessageChannelMessages.h>
 #include <android/os/appkit/Process.h>
 
-#include <assert>
-
 namespace android {
 namespace opengl {
 namespace appkit {

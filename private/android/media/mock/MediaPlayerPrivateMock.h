@@ -45,7 +45,7 @@ public:
     MediaPlayerPrivateMock(MediaPlayer&);
     ~MediaPlayerPrivateMock();
 
-    void setDataSource(const String&) override;
+    void setDataSource(StringRef) override;
     void setVolume(float) override;
 
     int32_t getDuration() override;

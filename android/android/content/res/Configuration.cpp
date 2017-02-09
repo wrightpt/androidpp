@@ -31,12 +31,28 @@ namespace res {
 
 Configuration::Configuration()
 {
-    setToDefaults();
 }
 
-void Configuration::setToDefaults()
+Configuration::Configuration(const Configuration& other)
+    : densityDpi(other.densityDpi)
 {
-    densityDpi = DENSITY_DPI_UNDEFINED;
+}
+
+Configuration::Configuration(Configuration&& other)
+    : densityDpi(std::move(other.densityDpi))
+{
+}
+
+Configuration& Configuration::operator=(const Configuration& other)
+{
+    densityDpi = other.densityDpi;
+    return *this;
+}
+
+Configuration& Configuration::operator=(Configuration&& other)
+{
+    densityDpi = std::move(other.densityDpi);
+    return *this;
 }
 
 } // namespace res

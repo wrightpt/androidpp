@@ -25,14 +25,15 @@
 
 #include "ViewGroup.h"
 
+#include <android/app/WindowProvider.h>
 #include <android/view/ViewPrivate.h>
-#include <android/view/WindowProvider.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 namespace android {
 namespace view {
 
-ViewGroup::ViewGroup()
+ViewGroup::ViewGroup(Context& context)
+    : View(context)
 {
 }
 
@@ -40,7 +41,7 @@ ViewGroup::~ViewGroup()
 {
 }
 
-void ViewGroup::addView(std::shared_ptr<View> view)
+void ViewGroup::addView(std::passed_ptr<View> view)
 {
     ViewPrivate& viewPrivate = view::getPrivate(*view);
     if (!view || viewPrivate.parentView())
@@ -55,7 +56,7 @@ void ViewGroup::addView(std::shared_ptr<View> view)
     view->onAttachedToWindow();
 }
 
-void ViewGroup::bringChildToFront(std::shared_ptr<View>)
+void ViewGroup::bringChildToFront(std::passed_ptr<View>)
 {
 }
 
@@ -80,6 +81,30 @@ void ViewGroup::setVisibility(int32_t visibility)
 {
     View::setVisibility(visibility);
     propagate(m_children, &View::setVisibility, visibility);
+}
+
+bool ViewGroup::onGenericMotionEvent(MotionEvent& event)
+{
+    if (!propagate(m_children, &View::onGenericMotionEvent, event))
+        return View::onGenericMotionEvent(event);
+
+    return true;
+}
+
+bool ViewGroup::onKeyDown(int32_t keyCode, KeyEvent& event)
+{
+    if (!propagate(m_children, &View::onKeyDown, keyCode, event))
+        return View::onKeyDown(keyCode, event);
+
+    return true;
+}
+
+bool ViewGroup::onKeyUp(int32_t keyCode, KeyEvent& event)
+{
+    if (!propagate(m_children, &View::onKeyUp, keyCode, event))
+        return View::onKeyUp(keyCode, event);
+
+    return true;
 }
 
 void ViewGroup::onWindowFocusChanged(bool hasWindowFocus)
@@ -128,14 +153,6 @@ void ViewGroup::onConfigurationChanged(Configuration& config)
 {
     propagate(m_children, &View::onConfigurationChanged, config);
 }
-
-//bool ViewGroup::sendGenericEvent(UIEvent& event) // FIXME!
-//{
-//    if (!propagate(m_children, &View::sendGenericEvent, *(&event)))
-//        return View::sendGenericEvent(event);
-//
-//    return true;
-//}
 
 } // namespace view
 } // namespace android

@@ -25,7 +25,7 @@
 
 #include "GLExtensions.h"
 
-#include <platforms/StringConversion.h>
+#include <android++/StringConversion.h>
 
 #include <GLES2/gl2.h>
 
@@ -38,7 +38,7 @@ namespace appkit {
 
 static std::unordered_set<std::string> supportedExtensions;
 
-bool GLExtensions::supportsExtension(const String& extension)
+bool GLExtensions::supportsExtension(StringRef extension)
 {
     static std::once_flag onceFlag;
     std::call_once(onceFlag, [] {

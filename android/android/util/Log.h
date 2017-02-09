@@ -63,6 +63,8 @@ public:
     ANDROID_EXPORT static int32_t println(int32_t priority, const char* tag, const char* msg);
 
 private:
+    Log() = default;
+
     static int32_t println(const char* tag, const char* msg);
 };
 

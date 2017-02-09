@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2017 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,23 +27,54 @@
 
 #include <android/os/Bundle.h>
 
+#include <unordered_set>
+
 namespace android {
 namespace os {
 
 class Bundle;
 
+union BundleValue {
+    int8_t b;
+    wchar_t c;
+    int16_t s;
+    int32_t i;
+    int64_t l { 0 };
+    float f;
+    double d;
+};
+
 class BundlePrivate {
     friend class Bundle;
 public:
-    static std::shared_ptr<BundlePrivate> create();
-    virtual ~BundlePrivate() = default;
+    BundlePrivate() = default;
+    ~BundlePrivate() = default;
 
-    virtual CharSequence getCharSequence(const String& key) = 0;
-    virtual void putCharSequence(const String& key, const CharSequence& value) = 0;
+    bool findKey(StringRef key);
+    void clear();
+    void remove(StringRef key);
 
-    virtual void writeToParcel(Parcel& dest, int32_t flags) = 0;
-    virtual void readFromParcel(const Parcel& parcel) = 0;
+    BundleValue getValue(StringRef key);
+    void putValue(StringRef key, BundleValue value);
+
+    CharSequence getCharSequence(StringRef key);
+    void putCharSequence(StringRef key, const CharSequence& value);
+
+    std::shared_ptr<Parcelable> getParcelable(StringRef key);
+    void putParcelable(StringRef key, std::passed_ptr<Parcelable> value);
+
+    void writeToParcel(Parcel& dest, int32_t flags);
+    void readFromParcel(Parcel& source);
+
+private:
+    void removeKey(StringRef key);
+
+    std::unordered_set<String> m_keys;
+    std::unordered_map<String, BundleValue> m_values;
+    std::unordered_map<String, std::unique_ptr<CharSequence>> m_charSequences;
+    std::unordered_map<String, std::shared_ptr<Parcelable>> m_parcelables;
 };
+
 
 } // namespace os
 } // namespace android

@@ -24,9 +24,9 @@ if (WIN32)
 
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB")
-    set(WIN32_SYSTEM_LIBRARIES comsupp concrt libcmt libcpmt msvcrt OLDNAMES Version vcruntime ucrt atls Shlwapi winmm)
+    set(WIN32_SYSTEM_LIBRARIES comsupp concrt libcmt libcpmt msvcrt OLDNAMES Version vcruntime ucrt atls Shlwapi winmm Crypt32)
 
-    include_directories(${CMAKE_SOURCE_DIR}/platforms/win)
+    include_directories(${CMAKE_SOURCE_DIR}/android++/win)
 
     link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
     if (${MSVC_CXX_ARCHITECTURE_ID} STREQUAL "X86")
@@ -44,6 +44,6 @@ if (WIN32)
 endif ()
 
 add_subdirectory(android)
-add_subdirectory(platforms)
+add_subdirectory(android++)
 add_subdirectory(private)
 add_subdirectory(samples)

@@ -34,6 +34,7 @@ namespace media {
 class AudioTrackPrivate;
 
 class AudioTrack {
+    NONCOPYABLE(AudioTrack);
     friend class AudioTrackPrivate;
 public:
     // Denotes a successful operation.
@@ -120,7 +121,7 @@ public:
     // Sets the listener the AudioTrack notifies when a previously set marker is reached or for each periodic playback head position update.
     ANDROID_EXPORT virtual void setPlaybackPositionUpdateListener(OnPlaybackPositionUpdateListener listener);
     // Sets the listener the AudioTrack notifies when a previously set marker is reached or for each periodic playback head position update.
-    ANDROID_EXPORT virtual void setPlaybackPositionUpdateListener(OnPlaybackPositionUpdateListener listener, std::shared_ptr<os::Handler>& handler);
+    ANDROID_EXPORT virtual void setPlaybackPositionUpdateListener(OnPlaybackPositionUpdateListener listener, std::passed_ptr<os::Handler> handler);
 
     // Starts playing an AudioTrack.
     ANDROID_EXPORT virtual void play();

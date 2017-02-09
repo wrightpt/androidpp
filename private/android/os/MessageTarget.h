@@ -33,20 +33,20 @@ namespace os {
 class Handler;
 class Message;
 
-class ANDROID_EXPORT MessageTarget {
+class MessageTarget {
 public:
-    static std::unique_ptr<MessageTarget> create(IBinder target);
-    static std::unique_ptr<MessageTarget> create(std::shared_ptr<Handler> target);
+    static std::unique_ptr<MessageTarget> create(std::passed_ptr<IBinder> target);
+    static std::unique_ptr<MessageTarget> create(std::passed_ptr<Handler> target);
     virtual ~MessageTarget() = default;
+
+    static const int32_t SEND_MESSAGE = 0x00000001;
+
+    virtual std::shared_ptr<IBinder> binder() const = 0;
 
     virtual void send(Message&) = 0;
 
-    virtual IBinder handle() const = 0;
-
 protected:
     MessageTarget() = default;
-
-    static IBinder platformGetHandlerHandle(Handler&);
 };
 
 } // namespace os

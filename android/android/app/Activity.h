@@ -40,6 +40,7 @@ namespace app {
 class ActivityPrivate;
 
 class Activity : public ContextThemeWrapper {
+    NONCOPYABLE(Activity);
     friend class ActivityPrivate;
 public:
     ANDROID_EXPORT Activity(Window = nullptr);
@@ -90,27 +91,27 @@ public:
     ANDROID_EXPORT virtual void onWindowFocusChanged(bool hasFocus);
 
     // Set the activity content to an explicit view.
-    ANDROID_EXPORT virtual void setContentView(const std::shared_ptr<View>& view);
+    ANDROID_EXPORT virtual void setContentView(std::passed_ptr<View> view);
 
 protected:
     // Called when the activity is starting.
-    ANDROID_EXPORT virtual void onCreate(const std::shared_ptr<Bundle>& savedInstanceState);
+    ANDROID_EXPORT virtual void onCreate(std::passed_ptr<Bundle> savedInstanceState);
     // Perform any final cleanup before an activity is destroyed.
     ANDROID_EXPORT virtual void onDestroy();
     // Called as part of the activity lifecycle when an activity is going into the background, but has not (yet) been killed.
     ANDROID_EXPORT virtual void onPause();
     // Called when activity start-up is complete (after onStart() and onRestoreInstanceState(Bundle) have been called).
-    ANDROID_EXPORT virtual void onPostCreate(const std::shared_ptr<Bundle>& savedInstanceState);
+    ANDROID_EXPORT virtual void onPostCreate(std::passed_ptr<Bundle> savedInstanceState);
     // Called when activity resume is complete (after onResume() has been called).
     ANDROID_EXPORT virtual void onPostResume();
     // Called after onStop() when the current activity is being re-displayed to the user (the user has navigated back to it).
     ANDROID_EXPORT virtual void onRestart();
     // This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
-    ANDROID_EXPORT virtual void onRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState);
+    ANDROID_EXPORT virtual void onRestoreInstanceState(std::passed_ptr<Bundle> savedInstanceState);
     // Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for your activity to start interacting with the user.
     ANDROID_EXPORT virtual void onResume();
     // Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle) (the Bundle populated by this method will be passed to both).
-    ANDROID_EXPORT virtual void onSaveInstanceState(const std::shared_ptr<Bundle>& outState);
+    ANDROID_EXPORT virtual void onSaveInstanceState(std::passed_ptr<Bundle> outState);
     // Called after onCreate(Bundle) ? or after onRestart() when the activity had been stopped, but is now again being displayed to the user.
     ANDROID_EXPORT virtual void onStart();
     // Called when you are no longer visible to the user.

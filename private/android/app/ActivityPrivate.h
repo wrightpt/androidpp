@@ -26,10 +26,11 @@
 #pragma once
 
 #include <android/app/Activity.h>
-#include <android/view/ViewHostWindow.h>
 
 namespace android {
 namespace app {
+
+class ActivityHostWindow;
 
 class ActivityPrivate final {
     friend class Activity;
@@ -42,23 +43,27 @@ public:
 
     void initialize(Window);
 
-    view::ViewHostWindow* hostWindow() const;
+    ActivityHostWindow* hostWindow() const;
 
-    void callOnCreate(const std::shared_ptr<Bundle>& savedInstanceState);
+    void callOnCreate();
     void callOnDestroy();
     void callOnPause();
-    void callOnPostCreate(const std::shared_ptr<Bundle>& savedInstanceState);
+    void callOnPostCreate();
     void callOnPostResume();
     void callOnRestart();
-    void callOnRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState);
+    void callOnRestoreInstanceState();
     void callOnResume();
-    void callOnSaveInstanceState(const std::shared_ptr<Bundle>& outState);
+    void callOnSaveInstanceState();
     void callOnStart();
     void callOnStop();
 
+    bool callOnGenericMotionEvent(MotionEvent&);
+    bool callOnKeyDown(int32_t keyCode, KeyEvent&);
+    bool callOnKeyUp(int32_t keyCode, KeyEvent&);
+
 private:
     Activity& m_this;
-    std::unique_ptr<view::ViewHostWindow> m_hostWindow;
+    std::unique_ptr<ActivityHostWindow> m_hostWindow;
 };
 
 } // namespace app

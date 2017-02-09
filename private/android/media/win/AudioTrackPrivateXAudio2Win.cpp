@@ -28,8 +28,8 @@
 #include "XAudio2AudioDevice.h"
 #include <android/media/AudioTrack.h>
 
-#include <platforms/LogHelper.h>
-#include <platforms/win/Assertions.h>
+#include <android++/Assertions.h>
+#include <android++/LogHelper.h>
 
 #include <algorithm>
 #include <iterator>

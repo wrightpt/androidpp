@@ -42,7 +42,7 @@ public:
         return shared;
     }
 
-    inline Message Connected(int32_t channel, std::shared_ptr<Messenger>& replyTo)
+    inline Message Connected(int32_t channel, std::passed_ptr<Messenger> replyTo)
     {
         return Messages::obtain(replyTo, CONNECTED, channel);
     }

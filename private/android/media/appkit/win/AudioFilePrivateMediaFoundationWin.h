@@ -29,7 +29,7 @@
 
 #if (WINVER >= _WIN32_WINNT_WIN7)
 
-#include <platforms/win/COMPtr.h>
+#include <android++/win/COMPtr.h>
 
 #include <mfapi.h>
 #include <mfidl.h>
@@ -48,7 +48,7 @@ public:
     AudioFilePrivateMediaFoundationWin(AudioFile&);
     ~AudioFilePrivateMediaFoundationWin();
 
-    void setDataSource(const String&) override;
+    void setDataSource(StringRef) override;
     void setDataSource(DataSourceProvider) override;
 
     std::shared_ptr<MediaFormat> getOutputFormat() override;

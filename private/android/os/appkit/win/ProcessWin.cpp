@@ -29,11 +29,9 @@
 #include <android/os/Looper.h>
 #include <android/os/Messenger.h>
 #include <java/lang/System.h>
-#include <platforms/StringConversion.h>
+#include <android++/StringConversion.h>
 
 #include <shlwapi.h>
-
-#include <assert>
 
 namespace android {
 namespace os {
@@ -139,8 +137,8 @@ static void pauseProcessIfNeeded(HMODULE module)
 
 class ProcessWin : public Process {
 public:
-    ProcessWin(const String& modulePath, const String& moduleEntry, const String& arguments, const std::vector<int32_t>& fileDescriptors,
-        int32_t connectionIdentifier, IBinder targetHandle, const std::unordered_map<String, String>& platformMainParameters);
+    ProcessWin(StringRef modulePath, StringRef moduleEntry, StringRef arguments, const std::vector<int32_t>& fileDescriptors,
+        int32_t connectionIdentifier, IBinder* targetHandle, const std::unordered_map<String, String>& platformMainParameters);
     ~ProcessWin();
 
 private:
@@ -156,7 +154,7 @@ private:
     std::unordered_map<String, String> m_winMainParameters;
 };
 
-ProcessWin::ProcessWin(const String& modulePath, const String& moduleEntry, const String& arguments, const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, IBinder targetHandle, const std::unordered_map<String, String>& platformMainParameters)
+ProcessWin::ProcessWin(StringRef modulePath, StringRef moduleEntry, StringRef arguments, const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, IBinder* targetHandle, const std::unordered_map<String, String>& platformMainParameters)
     : Process(connectionIdentifier, targetHandle)
     , m_mainProc(NULL)
 {
@@ -204,7 +202,7 @@ int ProcessWin::cmdShow() const
     return std::wcstol(m_winMainParameters.at(cmdShowKey).c_str(), NULL, 10);
 }
 
-Process* Process::platformCreate(const String& modulePath, const String& moduleEntry, const String& arguments, const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, IBinder targetHandle, const std::unordered_map<String, String>& platformMainParameters)
+Process* Process::platformCreate(StringRef modulePath, StringRef moduleEntry, StringRef arguments, const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, IBinder* targetHandle, const std::unordered_map<String, String>& platformMainParameters)
 {
     return new ProcessWin(modulePath, moduleEntry, arguments, fileDescriptors, connectionIdentifier, targetHandle, platformMainParameters);
 }

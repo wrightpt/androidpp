@@ -25,8 +25,8 @@
 
 #include "ViewPrivate.h"
 
-#include <android/view/ViewHostWindow.h>
-#include <android/view/WindowProvider.h>
+#include <android/app/ActivityHostWindow.h>
+#include <android/app/WindowProvider.h>
 
 namespace android {
 namespace view {
@@ -51,7 +51,7 @@ void ViewPrivate::setPrivate(View& view, std::unique_ptr<ViewPrivate>&& p)
     view.m_private = std::move(p);
 }
 
-ViewHostWindow* ViewPrivate::hostWindow() const
+app::ActivityHostWindow* ViewPrivate::hostWindow() const
 {
     if (m_parentView)
         return m_parentView->m_private->hostWindow();

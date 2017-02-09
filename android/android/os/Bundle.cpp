@@ -26,13 +26,13 @@
 #include "Bundle.h"
 
 #include <android/os/BundlePrivate.h>
-#include <assert>
+#include <android/os/ParcelablePrivate.h>
 
 namespace android {
 namespace os {
 
 Bundle::Bundle()
-    : m_private(BundlePrivate::create())
+    : m_private(std::make_shared<BundlePrivate>())
 {
 }
 
@@ -46,33 +46,192 @@ Bundle::Bundle(Bundle&& o)
 {
 }
 
-CharSequence Bundle::getCharSequence(const String& key, const CharSequence& defaultValue)
+Bundle& Bundle::operator=(const Bundle& other)
 {
-    CharSequence result = getCharSequence(key);
-    if (result.empty())
-        return defaultValue;
-
-    return result;
+    m_private = other.m_private;
+    return *this;
 }
 
-CharSequence Bundle::getCharSequence(const String& key)
+Bundle& Bundle::operator=(Bundle&& other)
+{
+    m_private = std::move(other.m_private);
+    return *this;
+}
+
+int8_t Bundle::getByte(StringRef key)
+{
+    return m_private->getValue(key).b;
+}
+
+int8_t Bundle::getByte(StringRef key, int8_t defaultValue)
+{
+    if (!m_private->findKey(key))
+        return defaultValue;
+
+    return getByte(key);
+}
+
+wchar_t Bundle::getChar(StringRef key)
+{
+    return m_private->getValue(key).c;
+}
+
+wchar_t Bundle::getChar(StringRef key, wchar_t defaultValue)
+{
+    if (!m_private->findKey(key))
+        return defaultValue;
+
+    return getChar(key);
+}
+
+CharSequence Bundle::getCharSequence(StringRef key)
 {
     return m_private->getCharSequence(key);
 }
 
-void Bundle::putCharSequence(const String& key, const CharSequence& value)
+CharSequence Bundle::getCharSequence(StringRef key, const CharSequence& defaultValue)
+{
+    if (!m_private->findKey(key))
+        return defaultValue;
+
+    return getCharSequence(key);
+}
+
+float Bundle::getFloat(StringRef key)
+{
+    return m_private->getValue(key).f;
+}
+
+float Bundle::getFloat(StringRef key, float defaultValue)
+{
+    if (!m_private->findKey(key))
+        return defaultValue;
+
+    return getFloat(key);
+}
+
+int16_t Bundle::getShort(StringRef key)
+{
+    return m_private->getValue(key).s;
+}
+
+int16_t Bundle::getShort(StringRef key, short defaultValue)
+{
+    if (!m_private->findKey(key))
+        return defaultValue;
+
+    return getShort(key);
+}
+
+static inline BundleValue wrap(int8_t value)
+{
+    BundleValue v;
+    v.b = value;
+    return v;
+}
+
+static inline BundleValue wrap(wchar_t value)
+{
+    BundleValue v;
+    v.c = value;
+    return v;
+}
+
+static inline BundleValue wrap(float value)
+{
+    BundleValue v;
+    v.f = value;
+    return v;
+}
+
+static inline BundleValue wrap(int16_t value)
+{
+    BundleValue v;
+    v.s = value;
+    return v;
+}
+
+void Bundle::putByte(StringRef key, int8_t value)
+{
+    m_private->putValue(key, wrap(value));
+}
+
+void Bundle::putChar(StringRef key, wchar_t value)
+{
+    m_private->putValue(key, wrap(value));
+}
+
+void Bundle::putCharSequence(StringRef key, const CharSequence& value)
 {
     m_private->putCharSequence(key, value);
 }
 
-void Bundle::writeToParcel(Parcel& dest, int32_t flags)
+void Bundle::putFloat(StringRef key, float value)
 {
-    m_private->writeToParcel(dest, flags);
+    m_private->putValue(key, wrap(value));
+}
+
+void Bundle::putShort(StringRef key, int16_t value)
+{
+    m_private->putValue(key, wrap(value));
+}
+
+std::shared_ptr<Parcelable> Bundle::getParcelable(StringRef key)
+{
+    return m_private->getParcelable(key);
+}
+
+void Bundle::putParcelable(StringRef key, std::passed_ptr<Parcelable> value)
+{
+    m_private->putParcelable(key, value);
 }
 
 void Bundle::readFromParcel(Parcel& parcel)
 {
     m_private->readFromParcel(parcel);
+}
+
+void Bundle::clear()
+{
+    m_private->clear();
+}
+
+void Bundle::remove(StringRef key)
+{
+    m_private->remove(key);
+}
+
+class BundleCreator final : public ParcelableCreator {
+public:
+    std::shared_ptr<Parcelable> createFromParcel(Parcel& source) override
+    {
+        auto result = std::make_shared<Bundle>();
+        result->readFromParcel(source);
+        return std::move(result);
+    }
+
+    std::vector<std::shared_ptr<Parcelable>> newArray(int32_t size) override
+    {
+        return {};
+    }
+
+    BundleCreator()
+        : ParcelableCreator(this, L"android.os", L"Bundle.CREATOR")
+    {
+    }
+};
+
+const LazyInitializedPtr<Parcelable::Creator> Bundle::CREATOR([] { return new BundleCreator; }, true);
+
+int32_t Bundle::describeContents()
+{
+    return 0;
+}
+
+void Bundle::writeToParcel(Parcel& dest, int32_t flags)
+{
+    dest << ParcelableCreator::creator<Bundle>().binaryName;
+    m_private->writeToParcel(dest, flags);
 }
 
 } // namespace os

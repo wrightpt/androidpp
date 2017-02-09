@@ -25,13 +25,13 @@
 
 #include "ContextWrapper.h"
 
+#include <android/content/ApplicationLauncher.h>
 #include <android/content/ContextPrivate.h>
-#include <android/view/inputmethod/InputMethodManager.h>
 
 namespace android {
 namespace content {
 
-ContextWrapper::ContextWrapper(Context* base)
+ContextWrapper::ContextWrapper(Context& base)
     : m_base(base)
 {
 }
@@ -42,29 +42,32 @@ ContextWrapper::~ContextWrapper()
 
 Context& ContextWrapper::getApplicationContext()
 {
-    if (m_base)
-        return m_base->getApplicationContext();
-
-    return *this;
+    return m_base.getApplicationContext();
 }
 
-std::shared_ptr<Object> ContextWrapper::getSystemService(const String& name)
+StringRef ContextWrapper::getPackageName()
 {
-    if (m_base)
-        return m_base->getSystemService(name);
+    return m_base.getPackageName();
+}
 
-    if (name.compare(Context::INPUT_METHOD_SERVICE) == 0) {
-        static std::shared_ptr<InputMethodManager> imm = std::make_shared<InputMethodManager>();
-        return imm;
-    }
-
-    return nullptr;
+std::shared_ptr<Object> ContextWrapper::getSystemService(StringRef name)
+{
+    return m_base.getSystemService(name);
 }
 
 Resources& ContextWrapper::getResources()
 {
-    static Resources resources;
-    return resources;
+    return m_base.getResources();
+}
+
+bool ContextWrapper::bindService(Intent& service, std::passed_ptr<ServiceConnection> conn, int32_t flags)
+{
+    return m_base.bindService(service, conn, flags);
+}
+
+void ContextWrapper::unbindService(std::passed_ptr<ServiceConnection> conn)
+{
+    m_base.unbindService(conn);
 }
 
 } // namespace content

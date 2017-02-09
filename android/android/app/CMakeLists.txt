@@ -1,9 +1,11 @@
 set(APP_SOURCES
     Activity.cpp
+    Service.cpp
 )
 
 set(APP_HEADERS
     Activity.h
+    Service.h
 )
 
 include_directories(

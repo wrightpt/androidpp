@@ -33,8 +33,6 @@
 #include <unordered_map>
 #include <mutex>
 
-#include <assert>
-
 namespace android {
 namespace os {
 namespace appkit {
@@ -81,7 +79,7 @@ std::shared_ptr<MessageHost> MessageHost::get(int32_t channelIdentifier)
     }
 }
 
-MessageHost::MessageHost(std::shared_ptr<Messenger>&& messageSender)
+MessageHost::MessageHost(std::passed_ptr<Messenger>& messageSender)
     : m_channelIdentifier(uniqueChannelIdentifier())
     , m_messageSender(messageSender)
     , m_messageReceiver(std::make_shared<Messenger>(std::make_shared<MessageHostHandler>(*this, receiveMessage)))

@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include <platforms/Functional.h>
-#include <platforms/win/COMPtr.h>
+#include <android++/Functional.h>
+#include <android++/win/COMPtr.h>
 
 #if (WINVER >= _WIN32_WINNT_WIN7)
 

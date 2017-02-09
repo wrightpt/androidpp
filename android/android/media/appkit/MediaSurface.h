@@ -28,7 +28,7 @@
 #include <android/media/MediaPlayer.h>
 #include <android/opengl/appkit/GLTexture.h>
 #include <android/opengl/appkit/GLTransportSurface.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 namespace android {
 namespace media {
@@ -41,8 +41,8 @@ public:
 
     typedef std::function<void (MediaSurface&)> OnFrameAvailableListener;
 
-    ANDROID_EXPORT virtual void setSourceMedia(std::shared_ptr<MediaPlayer>&);
-    ANDROID_EXPORT virtual void setOutputSurface(std::shared_ptr<GLTransportSurface>);
+    ANDROID_EXPORT virtual void setSourceMedia(std::passed_ptr<MediaPlayer>);
+    ANDROID_EXPORT virtual void setOutputSurface(std::passed_ptr<GLTransportSurface>);
 
     // Register a callback to be invoked when a frame is available.
     ANDROID_EXPORT virtual void setOnFrameAvailableListener(OnFrameAvailableListener);

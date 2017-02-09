@@ -25,17 +25,21 @@
 
 #include "System.h"
 
-#include <platforms/StringConversion.h>
+#include <android++/StringConversion.h>
 
-#include <assert>
 #include <shlwapi.h>
 
 namespace java {
 namespace lang {
 
+int64_t System::getProcessId()
+{
+    return ::GetCurrentProcessId();
+}
+
 static const wchar_t* systemDLLName()
 {
-    static const wchar_t name[] = L"os.dll";
+    static const wchar_t name[] = L"android++.dll";
     return name;
 }
 
@@ -67,7 +71,7 @@ String System::getSystemPath()
     return modulePath(systemDLLName());
 }
 
-String System::getModulePath(const String& moduleName)
+String System::getModulePath(StringRef moduleName)
 {
     return modulePath(moduleName.c_str()) + L"\\" + moduleName + L".dll";
 }

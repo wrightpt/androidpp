@@ -25,27 +25,75 @@
 
 #pragma once
 
+#include <android/LazyInitializedPtr.h>
 #include <android/os/Parcel.h>
+#include <android/os/Parcelable.h>
 
 namespace android {
 namespace os {
 
 class BundlePrivate;
 
-class Bundle {
+class Bundle : public Parcelable {
     friend class BundlePrivate;
 public:
     ANDROID_EXPORT Bundle();
     ANDROID_EXPORT Bundle(const Bundle&);
     ANDROID_EXPORT Bundle(Bundle&&);
+    ANDROID_EXPORT Bundle& operator=(const Bundle&);
+    ANDROID_EXPORT Bundle& operator=(Bundle&&);
     ANDROID_EXPORT virtual ~Bundle() = default;
 
-    ANDROID_EXPORT CharSequence getCharSequence(const String& key, const CharSequence& defaultValue);
-    ANDROID_EXPORT CharSequence getCharSequence(const String& key);
-    ANDROID_EXPORT void putCharSequence(const String& key, const CharSequence& value);
+    // Returns the value associated with the given key, or (int8_t) 0 if no mapping of the desired type exists for the given key. 
+    ANDROID_EXPORT virtual int8_t getByte(StringRef key);
+    // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. 
+    ANDROID_EXPORT virtual int8_t getByte(StringRef key, int8_t defaultValue);
+    // Returns the value associated with the given key, or (char) 0 if no mapping of the desired type exists for the given key.
+    ANDROID_EXPORT virtual wchar_t getChar(StringRef key);
+    // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. 
+    ANDROID_EXPORT virtual wchar_t getChar(StringRef key, wchar_t defaultValue);
+    // Returns the value associated with the given key, or null if no mapping of the desired type exists for the given key or a null value is explicitly associated with the key. 
+    ANDROID_EXPORT virtual CharSequence getCharSequence(StringRef key);
+    // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key or if a null value is explicitly associatd with the given key.
+    ANDROID_EXPORT virtual CharSequence getCharSequence(StringRef key, const CharSequence& defaultValue);
+    // Returns the value associated with the given key, or 0.0f if no mapping of the desired type exists for the given key. 
+    ANDROID_EXPORT virtual float getFloat(StringRef key);
+    // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key.
+    ANDROID_EXPORT virtual float getFloat(StringRef key, float defaultValue);
+    // Returns the value associated with the given key, or (short) 0 if no mapping of the desired type exists for the given key.
+    ANDROID_EXPORT virtual int16_t getShort(StringRef key);
+    // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. 
+    ANDROID_EXPORT virtual int16_t getShort(StringRef key, short defaultValue);
 
-    ANDROID_EXPORT void writeToParcel(Parcel& dest, int32_t flags);
-    ANDROID_EXPORT void readFromParcel(Parcel& parcel);
+    // Inserts a byte value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putByte(StringRef key, int8_t value);
+    // Inserts a char value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putChar(StringRef key, wchar_t value);
+    // Inserts a CharSequence value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putCharSequence(StringRef key, const CharSequence& value);
+    // Inserts a float value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putFloat(StringRef key, float value);
+    // Inserts a short value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putShort(StringRef key, int16_t value);
+
+    // Returns the value associated with the given key, or null if no mapping of the desired type exists for the given key or a null value is explicitly associated with the key.
+    ANDROID_EXPORT virtual std::shared_ptr<Parcelable> getParcelable(StringRef key);
+    // Inserts a Parcelable value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putParcelable(StringRef key, std::passed_ptr<Parcelable> value);
+
+    // Reads the Parcel contents into this Bundle, typically in order for it to be passed through an IBinder connection. 
+    ANDROID_EXPORT virtual void readFromParcel(Parcel& parcel);
+
+    // Removes all elements from the mapping of this Bundle.
+    ANDROID_EXPORT virtual void clear();
+    // Removes any entry with the given key from the mapping of this Bundle. 
+    ANDROID_EXPORT virtual void remove(StringRef key);
+
+    // Parcelable
+    ANDROID_EXPORT static const LazyInitializedPtr<Parcelable::Creator> CREATOR;
+
+    ANDROID_EXPORT virtual int32_t describeContents() override;
+    ANDROID_EXPORT virtual void writeToParcel(Parcel& dest, int32_t flags);
 
 private:
     std::shared_ptr<BundlePrivate> m_private;

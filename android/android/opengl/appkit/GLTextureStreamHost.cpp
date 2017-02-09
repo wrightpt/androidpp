@@ -31,13 +31,11 @@
 #include <android/os/appkit/Process.h>
 #include <android/os/appkit/Thread.h>
 
-#include <assert>
-
 namespace android {
 namespace opengl {
 namespace appkit {
 
-GLTextureStreamHost::GLTextureStreamHost(std::shared_ptr<Messenger>&& messageSender)
+GLTextureStreamHost::GLTextureStreamHost(std::passed_ptr<Messenger>& messageSender)
     : MessageHost(std::move(messageSender))
     , m_width(0)
     , m_height(0)
@@ -106,7 +104,7 @@ void GLTextureStreamHost::setReceiveMessages(bool& onceFlag, Messages& messages)
 bool GLTextureStreamHost::receiveMessage(Messenger& replySender, Message& message)
 {
     if (message.what == GLTextureStreamHostMessages::get().CONNECT) {
-        new GLTextureStreamHost(std::shared_ptr<Messenger>(message.replyTo));
+        new GLTextureStreamHost(std::passed_ptr<Messenger>(message.replyTo));
         return true;
     }
 

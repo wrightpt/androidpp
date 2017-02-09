@@ -1,13 +1,18 @@
 set(CONTENT_SOURCES
+    ComponentName.cpp
     Context.cpp
     ContextThemeWrapper.cpp
     ContextWrapper.cpp
+    Intent.cpp
 )
 
 set(CONTENT_HEADERS
+    ComponentName.h
     Context.h
     ContextThemeWrapper.h
     ContextWrapper.h
+    Intent.h
+    ServiceConnection.h
 )
 
 include_directories(

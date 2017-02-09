@@ -35,6 +35,7 @@ namespace media {
 class MediaPlayer;
 
 class MediaFormat final {
+    NONCOPYABLE(MediaFormat);
 public:  
     // (String) A key describing the mime type of the MediaFormat.
     ANDROID_EXPORT static wchar_t KEY_MIME[];
@@ -126,29 +127,29 @@ public:
 
     ANDROID_EXPORT static std::shared_ptr<MediaFormat> create();
     // Creates a minimal audio format. 
-    ANDROID_EXPORT static std::shared_ptr<MediaFormat> createAudioFormat(const String& mime, int32_t sampleRate, int32_t channelCount);
+    ANDROID_EXPORT static std::shared_ptr<MediaFormat> createAudioFormat(StringRef mime, int32_t sampleRate, int32_t channelCount);
     ~MediaFormat() = default;
 
     // Returns true if a key of the given name exists in the format.
-    ANDROID_EXPORT bool containsKey(const String& name);
+    ANDROID_EXPORT bool containsKey(StringRef name);
 
     // Returns the value of a float key.
-    float getFloat(const String& name) { return m_floats[name]; }
+    float getFloat(StringRef name) { return m_floats[name]; }
     // Returns the value of an integer key.
-    int32_t getInteger(const String& name) { return m_integers[name]; }
+    int32_t getInteger(StringRef name) { return m_integers[name]; }
     // Returns the value of a long key.
-    int64_t getLong(const String& name) { return m_longIntegers[name]; }
+    int64_t getLong(StringRef name) { return m_longIntegers[name]; }
     // Returns the value of a string key. 
-    String getString(const String& name) { return m_strings[name]; }
+    String getString(StringRef name) { return m_strings[name]; }
 
     // Sets the value of a float key.
-    void setFloat(const String& name, float value) { m_floats[name] = value; }
+    void setFloat(StringRef name, float value) { m_floats[name] = value; }
     // Sets the value of an integer key.
-    void setInteger(const String& name, int32_t value) { m_integers[name] = value; }
+    void setInteger(StringRef name, int32_t value) { m_integers[name] = value; }
     // Sets the value of a long key.
-    void setLong(const String& name, int64_t value) { m_longIntegers[name] = value; }
+    void setLong(StringRef name, int64_t value) { m_longIntegers[name] = value; }
     // Sets the value of a string key. 
-    void setString(const String& name, const String& value) { m_strings[name] = value; }
+    void setString(StringRef name, StringRef value) { m_strings[name] = value; }
 
 private:
     MediaFormat() = default;

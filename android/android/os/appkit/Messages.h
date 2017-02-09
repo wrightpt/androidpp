@@ -34,7 +34,7 @@ namespace appkit {
 
 class Messages {
 public:
-    static Message obtain(std::shared_ptr<Messenger>& replyTo, int32_t what,
+    static Message obtain(std::passed_ptr<Messenger> replyTo, int32_t what,
             int32_t arg1 = 0, int32_t arg2 = 0)
     {
         Message message = Message::obtain(nullptr, what, arg1, arg2);
@@ -42,7 +42,7 @@ public:
         return message;
     }
 
-    static Message obtain(std::shared_ptr<Messenger>& replyTo, Message& m)
+    static Message obtain(std::passed_ptr<Messenger> replyTo, Message& m)
     {
         Message message = Message::obtain(nullptr, m.what, m.arg1, m.arg2, m.obj);
         message.replyTo = (m.replyTo) ? m.replyTo : replyTo.get();

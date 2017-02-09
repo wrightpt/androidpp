@@ -36,8 +36,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <assert>
-
 namespace android {
 namespace os {
 namespace appkit {
@@ -185,6 +183,16 @@ bool ProcessLauncher::Connection::receive(Message& message)
 inline void ProcessLauncherMessageHandler::handleMessage(Message& message)
 {
     m_handler(message);
+}
+
+void ProcessLauncher::platformInitialize()
+{
+}
+
+ProcessLauncher::Connection* ProcessLauncher::platformCreateProcess(StringRef moduleName, StringRef moduleEntry,
+    StringRef arguments, const std::vector<int32_t>& fileDescriptors)
+{
+    return 0;
 }
 
 } // namespace appkit

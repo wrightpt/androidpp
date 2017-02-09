@@ -26,7 +26,7 @@
 #pragma once
 
 #include <android/content/Context.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 #include <map>
 
@@ -36,6 +36,7 @@ namespace media {
 class MediaPlayerPrivate;
 
 class MediaPlayer {
+    NONCOPYABLE(MediaPlayer);
     friend class MediaPlayerPrivate;
 public:  
     // File or network related operation errors.

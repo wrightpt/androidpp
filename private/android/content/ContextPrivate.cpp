@@ -30,8 +30,9 @@
 namespace android {
 namespace content {
 
-ContextPrivate::ContextPrivate(view::ViewHostWindow& window)
-    : m_window(window)
+static ApplicationContext* globalContext = nullptr;
+
+ContextPrivate::ContextPrivate()
 {
 }
 
@@ -45,10 +46,59 @@ void ContextPrivate::setPrivate(Context& context, std::unique_ptr<ContextPrivate
     context.m_private = std::move(contextPrivate);
 }
 
-Context& ContextPrivate::getGlobalContext()
+ApplicationContext& ContextPrivate::getGlobalContext()
 {
-    static ContextWrapper* globalContext = new ContextWrapper(nullptr);
     return *globalContext;
+}
+
+void ContextPrivate::setGlobalContext(ApplicationContext& context)
+{
+    globalContext = &context;
+}
+
+void ContextPrivate::setAsActivity()
+{
+    m_isActivity = true;
+}
+
+void ContextPrivate::setAsService()
+{
+    m_isService = true;
+}
+
+void ContextPrivate::setAsApplicationContext()
+{
+    m_isApplicationContext = true;
+}
+
+bool ContextPrivate::isActivity()
+{
+    return m_isActivity;
+}
+
+bool ContextPrivate::isService()
+{
+    return m_isService;
+}
+
+bool ContextPrivate::isApplication()
+{
+    return isActivity() || isService();
+}
+
+bool ContextPrivate::isApplicationContext()
+{
+    return m_isApplicationContext;
+}
+
+app::ApplicationLoader* ContextPrivate::getApplicationLoader()
+{
+    return m_loader;
+}
+
+void ContextPrivate::setApplicationLoader(app::ApplicationLoader* loader)
+{
+    m_loader = loader;
 }
 
 } // namespace content

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <platforms/Platform.h>
+#include <android++/Platform.h>
 #include <java/lang/Object.h>
 
 namespace javax {

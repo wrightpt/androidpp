@@ -34,13 +34,13 @@ namespace view {
 
 class ViewGroup : public View {
 public:
-    ANDROID_EXPORT ViewGroup();
+    ANDROID_EXPORT ViewGroup(Context&);
     ANDROID_EXPORT virtual ~ViewGroup();
 
     // Adds a child view.
-    ANDROID_EXPORT virtual void addView(std::shared_ptr<View>);
+    ANDROID_EXPORT virtual void addView(std::passed_ptr<View>);
     // Change the z order of the child so it's on top of all other children.
-    ANDROID_EXPORT virtual void bringChildToFront(std::shared_ptr<View>);
+    ANDROID_EXPORT virtual void bringChildToFront(std::passed_ptr<View>);
 
     ANDROID_EXPORT virtual View* findFocus() override;
     // Returns the view at the specified position in the group. 
@@ -48,6 +48,9 @@ public:
 
     ANDROID_EXPORT virtual void setVisibility(int32_t) override;
 
+    ANDROID_EXPORT virtual bool onGenericMotionEvent(MotionEvent& event) override;
+    ANDROID_EXPORT virtual bool onKeyDown(int32_t keyCode, KeyEvent& event) override;
+    ANDROID_EXPORT virtual bool onKeyUp(int32_t keyCode, KeyEvent& event) override;
     ANDROID_EXPORT virtual void onWindowFocusChanged(bool hasWindowFocus) override;
 
 protected:

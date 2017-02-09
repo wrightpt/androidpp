@@ -25,8 +25,7 @@
 
 #pragma once
 
-#include <java/lang.h>
-#include <android/view/ViewHostWindow.h>
+#include <android/app/ApplicationLoader.h>
 
 namespace android {
 namespace content {
@@ -36,16 +35,31 @@ class Context;
 class ContextPrivate {
     friend class Context;
 public:
-    ContextPrivate(view::ViewHostWindow&);
+    ContextPrivate();
     ~ContextPrivate() = default;
 
     static ContextPrivate& getPrivate(Context&);
     static void setPrivate(Context&, std::unique_ptr<ContextPrivate>&&);
 
-    static Context& getGlobalContext();
+    static ApplicationContext& getGlobalContext();
+    static void setGlobalContext(ApplicationContext&);
+
+    void setAsActivity();
+    void setAsService();
+    void setAsApplicationContext();
+    bool isActivity();
+    bool isService();
+    bool isApplication();
+    bool isApplicationContext();
+
+    app::ApplicationLoader* getApplicationLoader();
+    void setApplicationLoader(app::ApplicationLoader*);
 
 private:
-    view::ViewHostWindow& m_window;
+    bool m_isActivity { false };
+    bool m_isService { false };
+    bool m_isApplicationContext { false };
+    app::ApplicationLoader* m_loader { nullptr };
 };
 
 } // namespace content

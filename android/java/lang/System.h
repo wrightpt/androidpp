@@ -37,8 +37,9 @@ public:
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
     }
 
+    ANDROID_EXPORT static int64_t getProcessId();
     ANDROID_EXPORT static String getSystemPath();
-    ANDROID_EXPORT static String getModulePath(const String&);
+    ANDROID_EXPORT static String getModulePath(StringRef);
     ANDROID_EXPORT static String currentProcessPath();
 
     ANDROID_EXPORT static void loadLibrary(String& libName);

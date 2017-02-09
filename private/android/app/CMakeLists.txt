@@ -1,10 +1,34 @@
 set(APP_SOURCES
+    ActivityHostWindow.cpp
     ActivityPrivate.cpp
+    ApplicationLoader.cpp
+    ServiceHostWindow.cpp
+    ServicePrivate.cpp
+    WindowProvider.cpp
 )
 
 set(APP_HEADERS
+    ActivityHostWindow.h
     ActivityPrivate.h
+    ApplicationLoader.h
+    ApplicationProcess.h
+    HostWindow.h
+    ServiceHostWindow.h
+    ServicePrivate.h
+    WindowHandle.h
+    WindowProvider.h
 )
+
+if (WIN32)
+    list(APPEND APP_SOURCES
+        win/ApplicationProcessWin.cpp
+        win/WindowProviderWin.cpp
+    )
+
+    list(APPEND APP_HEADERS
+        win/WindowProviderWin.h
+    )
+endif ()
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -14,6 +38,7 @@ include_directories(
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
+    "${LIBRARY_PRODUCT_DIR}/include/wtl"
     "${ANGLE_LIBRARY_DIR}/include"
 )
 

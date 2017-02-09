@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <platforms/win/COMPtr.h>
+#include <android++/win/COMPtr.h>
 
 #include <XAudio2.h>
 #include <stdint.h>

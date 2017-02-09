@@ -27,8 +27,6 @@
 
 #include <android/media/appkit/AudioFilePrivate.h>
 
-#include <assert>
-
 namespace android {
 namespace media {
 namespace appkit {

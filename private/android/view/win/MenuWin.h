@@ -37,10 +37,10 @@ class MenuWin final : public Menu {
 public:
     ~MenuWin();
 
-    void addItem(const std::shared_ptr<MenuItem>&) override;
+    void addItem(std::passed_ptr<MenuItem>) override;
     void addItems(const std::vector<std::shared_ptr<MenuItem>>&) override;
     void addSeparator() override;
-    std::unique_ptr<Menu> addSubmenu(const std::shared_ptr<MenuItem>&) override;
+    std::unique_ptr<Menu> addSubmenu(std::passed_ptr<MenuItem>) override;
 
     void show(Point&) override;
     void dismiss() override;

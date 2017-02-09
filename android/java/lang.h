@@ -25,9 +25,11 @@
 
 #pragma once
 
-#include <platforms/Platform.h>
+#include <android++/Platform.h>
 #include <java/lang/Object.h>
 
 #include <java/lang/CharSequence.h>
-#include <java/lang/StringInlines.h>
+#include <java/lang/Class.h>
+#include <java/lang/ClassLoader.h>
+#include <java/lang/StringImport.h>
 #include <java/lang/System.h>

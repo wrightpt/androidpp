@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <android/os/Binder.h>
 #include <android/os/Handler.h>
 
 namespace android {
@@ -33,35 +34,27 @@ namespace os {
 class Handler;
 class Message;
 
-class HandlerProvider {
+class HandlerProvider final : public Binder::Client {
 public:
-    static std::unique_ptr<HandlerProvider> create(Handler&);
-    virtual ~HandlerProvider() = default;
+    HandlerProvider(Handler&);
+    ~HandlerProvider();
 
-    virtual bool start() = 0;
-    virtual bool startAtTime(std::chrono::milliseconds) = 0;
-    virtual void stop() = 0;
+    static std::shared_ptr<IBinder> getBinder(Handler&);
+
+    bool start();
+    bool startAtTime(std::chrono::milliseconds);
+    void stop();
+
+    // Binder::Client
+    void onCreate() override;
+    void onDestroy() override;
+    void onTimer() override;
+    void onTransaction(int32_t code, Parcel& data, Parcel* reply, int32_t flags) override;
 
 protected:
-    HandlerProvider(Handler& c)
-        : m_client(c)
-    { }
-
-    void performMessages();
-    void receivedMessage(Message&);
-
-    Handler& m_client;
+    Handler& m_handler;
+    std::shared_ptr<Binder> m_binder;
 };
-
-inline void HandlerProvider::performMessages()
-{
-    m_client.performMessages();
-}
-
-inline void HandlerProvider::receivedMessage(Message& message)
-{
-    m_client.receivedMessage(message);
-}
 
 } // namespace os
 } // namespace android

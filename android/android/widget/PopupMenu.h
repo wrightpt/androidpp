@@ -27,8 +27,8 @@
 
 #include <android/view/View.h>
 
-#include <platforms/Functional.h>
-#include <platforms/Noncopyable.h>
+#include <android++/Functional.h>
+#include <android++/Noncopyable.h>
 
 namespace android {
 namespace widget {

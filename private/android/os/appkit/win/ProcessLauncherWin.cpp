@@ -26,9 +26,9 @@
 #include <android/os/appkit/ProcessLauncher.h>
 
 #include <android/os/Messenger.h>
-#include <android/os/win/HandlerProviderWin.h>
+//#include <android/os/win/HandlerProviderWin.h>
 #include <java/lang/System.h>
-#include <platforms/StringConversion.h>
+#include <android++/StringConversion.h>
 
 #include <VersionHelpers.h>
 #include <Windows.h>
@@ -188,7 +188,7 @@ ProcessLauncher::Connection* ProcessLauncher::platformCreateProcess(const String
     commandLine.append(std::to_wstring(connection->connectionIdentifier()));
     commandLine.append(L"\"");
     commandLine.append(L" \"");
-    commandLine.append(std::to_wstring((intptr_t)m_messageReceiver->getBinder()));
+    commandLine.append(std::to_wstring((intptr_t)m_messageReceiver->getBinder().get()));
     commandLine.append(L"\"");
 
     BOOL result = ::CreateProcessW(0, const_cast<wchar_t*>(commandLine.c_str()),

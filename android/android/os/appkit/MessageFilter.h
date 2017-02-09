@@ -26,7 +26,7 @@
 #pragma once
 
 #include <android/os/appkit/Messages.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 #include <unordered_map>
 

@@ -28,18 +28,15 @@
 #include "Handler.h"
 #include <android/os/MessageTarget.h>
 
-#include <assert>
-
 namespace android {
 namespace os {
 
-Messenger::Messenger(IBinder target)
+Messenger::Messenger(std::passed_ptr<IBinder> target)
     : m_target(MessageTarget::create(target))
 {
-    assert(target);
 }
 
-Messenger::Messenger(std::shared_ptr<Handler> target)
+Messenger::Messenger(std::passed_ptr<Handler> target)
     : m_target(MessageTarget::create(target))
 {
     assert(target);
@@ -54,9 +51,9 @@ void Messenger::send(Message& message)
     m_target->send(message);
 }
 
-IBinder Messenger::getBinder()
+std::shared_ptr<IBinder> Messenger::getBinder()
 {
-    return reinterpret_cast<IBinder>(m_target->handle());
+    return m_target->binder();
 }
 
 } // namespace os

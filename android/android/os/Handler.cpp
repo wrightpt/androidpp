@@ -33,8 +33,6 @@
 #include <algorithm>
 #include <mutex>
 
-#include <assert>
-
 namespace android {
 namespace os {
 
@@ -140,7 +138,7 @@ std::shared_ptr<Handler> Handler::create()
 }
 
 Handler::Handler()
-    : m_handler(HandlerProvider::create(*this))
+    : m_handler(std::make_unique<HandlerProvider>(*this))
     , m_nextFireTime(std::chrono::milliseconds::max())
     , m_looper(Looper::myLooper())
 {

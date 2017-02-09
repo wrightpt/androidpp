@@ -25,12 +25,17 @@
 
 #include "ActivityPrivate.h"
 
+#include <android.h>
+#include <android/app/ActivityHostWindow.h>
+#include <android/content/ContextPrivate.h>
+
 namespace android {
 namespace app {
 
 ActivityPrivate::ActivityPrivate(Activity& activity)
     : m_this(activity)
 {
+    content::ContextPrivate::getPrivate(m_this).setAsActivity();
 }
 
 ActivityPrivate::~ActivityPrivate()
@@ -49,17 +54,17 @@ void ActivityPrivate::setPrivate(Activity& activity, std::unique_ptr<ActivityPri
 
 void ActivityPrivate::initialize(Window topLevelWindow)
 {
-    m_hostWindow = view::ViewHostWindow::create(m_this, topLevelWindow, Rect());
+    m_hostWindow = ActivityHostWindow::create(m_this, topLevelWindow, Rect());
 }
 
-view::ViewHostWindow* ActivityPrivate::hostWindow() const
+ActivityHostWindow* ActivityPrivate::hostWindow() const
 {
-    return 0;
+    return m_hostWindow.get();
 }
 
-void ActivityPrivate::callOnCreate(const std::shared_ptr<Bundle>& savedInstanceState)
+void ActivityPrivate::callOnCreate()
 {
-    m_this.onCreate(savedInstanceState);
+    m_this.onCreate(content::ContextPrivate::getGlobalContext().getInstanceStateBundle());
 }
 
 void ActivityPrivate::callOnDestroy()
@@ -72,9 +77,9 @@ void ActivityPrivate::callOnPause()
     m_this.onPause();
 }
 
-void ActivityPrivate::callOnPostCreate(const std::shared_ptr<Bundle>& savedInstanceState)
+void ActivityPrivate::callOnPostCreate()
 {
-    m_this.onPostCreate(savedInstanceState);
+    m_this.onPostCreate(content::ContextPrivate::getGlobalContext().getInstanceStateBundle());
 }
 
 void ActivityPrivate::callOnPostResume()
@@ -87,9 +92,9 @@ void ActivityPrivate::callOnRestart()
     m_this.onRestart();
 }
 
-void ActivityPrivate::callOnRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState)
+void ActivityPrivate::callOnRestoreInstanceState()
 {
-    m_this.onRestoreInstanceState(savedInstanceState);
+    m_this.onRestoreInstanceState(content::ContextPrivate::getGlobalContext().getInstanceStateBundle());
 }
 
 void ActivityPrivate::callOnResume()
@@ -97,9 +102,9 @@ void ActivityPrivate::callOnResume()
     m_this.onResume();
 }
 
-void ActivityPrivate::callOnSaveInstanceState(const std::shared_ptr<Bundle>& outState)
+void ActivityPrivate::callOnSaveInstanceState()
 {
-    m_this.onSaveInstanceState(outState);
+    m_this.onSaveInstanceState(content::ContextPrivate::getGlobalContext().getInstanceStateBundle());
 }
 
 void ActivityPrivate::callOnStart()
@@ -110,6 +115,21 @@ void ActivityPrivate::callOnStart()
 void ActivityPrivate::callOnStop()
 {
     m_this.onStop();
+}
+
+bool ActivityPrivate::callOnGenericMotionEvent(MotionEvent& event)
+{
+    return m_this.onGenericMotionEvent(event);
+}
+
+bool ActivityPrivate::callOnKeyDown(int32_t keyCode, KeyEvent& event)
+{
+    return m_this.onKeyDown(keyCode, event);
+}
+
+bool ActivityPrivate::callOnKeyUp(int32_t keyCode, KeyEvent& event)
+{
+    return m_this.onKeyUp(keyCode, event);
 }
 
 } // namespace app

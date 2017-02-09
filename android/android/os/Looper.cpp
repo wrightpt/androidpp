@@ -25,7 +25,6 @@
 
 #include "Looper.h"
 
-#include <assert>
 #include <pthread.h>
 
 namespace android {

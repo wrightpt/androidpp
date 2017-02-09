@@ -25,27 +25,27 @@
 
 #include "MessageTarget.h"
 
-#include <android/os/Handler.h>
-
-#include <assert>
+#include <android/os/HandlerProvider.h>
+#include <android/os/Message.h>
+#include <android++/LogHelper.h>
 
 namespace android {
 namespace os {
 
 class HandlerMessageTarget : public MessageTarget {
 public:
-    HandlerMessageTarget(std::shared_ptr<Handler> target);
+    HandlerMessageTarget(std::passed_ptr<Handler> target);
     ~HandlerMessageTarget();
 
-    void send(Message&) override;
+    std::shared_ptr<IBinder> binder() const override;
 
-    IBinder handle() const override;
+    void send(Message&) override;
 
 private:
     std::shared_ptr<Handler> m_target;
 };
 
-HandlerMessageTarget::HandlerMessageTarget(std::shared_ptr<Handler> target)
+HandlerMessageTarget::HandlerMessageTarget(std::passed_ptr<Handler> target)
     : m_target(target)
 {
 }
@@ -54,19 +54,60 @@ HandlerMessageTarget::~HandlerMessageTarget()
 {
 }
 
+std::shared_ptr<IBinder> HandlerMessageTarget::binder() const
+{
+    return HandlerProvider::getBinder(*m_target);
+}
+
 void HandlerMessageTarget::send(Message& message)
 {
     m_target->sendMessage(message);
 }
 
-IBinder HandlerMessageTarget::handle() const
-{
-    return platformGetHandlerHandle(*m_target);
-}
-
-std::unique_ptr<MessageTarget> MessageTarget::create(std::shared_ptr<Handler> target)
+std::unique_ptr<MessageTarget> MessageTarget::create(std::passed_ptr<Handler> target)
 {
     return std::unique_ptr<MessageTarget>(new HandlerMessageTarget(target));
+}
+
+class BinderMessageTarget : public MessageTarget {
+public:
+    BinderMessageTarget(std::passed_ptr<IBinder> target);
+    ~BinderMessageTarget();
+
+    std::shared_ptr<IBinder> binder() const override;
+
+    void send(Message&) override;
+
+private:
+    std::shared_ptr<IBinder> m_target;
+};
+
+BinderMessageTarget::BinderMessageTarget(std::passed_ptr<IBinder> target)
+    : m_target(target)
+{
+}
+
+BinderMessageTarget::~BinderMessageTarget()
+{
+}
+
+std::shared_ptr<IBinder> BinderMessageTarget::binder() const
+{
+    return m_target;
+}
+
+void BinderMessageTarget::send(Message& message)
+{
+    Parcel data;
+    message.writeToParcel(data, 0);
+    if (!m_target->transact(MessageTarget::SEND_MESSAGE, data, nullptr, IBinder::FLAG_ONEWAY)) {
+        LOGE("Transaction to IBinder %x failed.", m_target.get());
+    }
+}
+
+std::unique_ptr<MessageTarget> MessageTarget::create(std::passed_ptr<IBinder> target)
+{
+    return std::unique_ptr<MessageTarget>(new BinderMessageTarget(target));
 }
 
 } // namespace os

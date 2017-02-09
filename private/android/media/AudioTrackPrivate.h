@@ -26,7 +26,7 @@
 #pragma once
 
 #include <java/lang.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 namespace android {
 namespace media {

@@ -32,25 +32,26 @@ namespace os {
 
 class LooperHolder;
 
-class ANDROID_EXPORT Looper {
+class Looper {
+    NONCOPYABLE(Looper);
 public:
     // Returns the application's main looper, which lives in the main thread of the application.
-    static Looper* getMainLooper();
+    ANDROID_EXPORT static Looper* getMainLooper();
     // Return the Looper object associated with the current thread.
-    static Looper* myLooper();
+    ANDROID_EXPORT static Looper* myLooper();
 
     // Initialize the current thread as a looper, marking it as an application's main looper.
-    static void prepareMainLooper();
+    ANDROID_EXPORT static void prepareMainLooper();
     // Initialize the current thread as a looper.
-    static void prepare();
+    ANDROID_EXPORT static void prepare();
 
     // Run the message queue in this thread.
-    static void loop();
+    ANDROID_EXPORT static void loop();
 
     // Quits the looper.
-    virtual void quit();
+    ANDROID_EXPORT virtual void quit();
     // Quits the looper safely.
-    virtual void quitSafely();
+    ANDROID_EXPORT virtual void quitSafely();
 
 private:
     Looper();

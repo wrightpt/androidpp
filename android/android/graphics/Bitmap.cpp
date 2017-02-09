@@ -25,7 +25,7 @@
 
 #include "Bitmap.h"
 
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 #include <cairo/cairo.h>
 
@@ -142,8 +142,30 @@ std::shared_ptr<Bitmap> Bitmap::createBitmap(const std::vector<int32_t>& colors,
 }
 
 Bitmap::Bitmap(const std::vector<int32_t>& colors, int32_t width, int32_t height, Bitmap::Config config)
-    : m_private(std::make_unique<BitmapPrivate>(colors, width, height, config))
+    : m_private(std::make_shared<BitmapPrivate>(colors, width, height, config))
 {
+}
+
+Bitmap::Bitmap(const Bitmap& other)
+    : m_private(other.m_private)
+{
+}
+
+Bitmap::Bitmap(Bitmap&& other)
+    : m_private(std::move(other.m_private))
+{
+}
+
+Bitmap& Bitmap::operator=(const Bitmap& other)
+{
+    m_private = other.m_private;
+    return *this;
+}
+
+Bitmap& Bitmap::operator=(Bitmap&& other)
+{
+    m_private = std::move(other.m_private);
+    return *this;
 }
 
 Bitmap::~Bitmap()

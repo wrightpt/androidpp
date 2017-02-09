@@ -76,8 +76,8 @@ private:
     static void handleMessage(Message& message);
 
     static void platformInitialize();
-    static Connection* platformCreateProcess(const String& moduleName, const String& moduleEntry,
-        const String& arguments, const std::vector<int32_t>& fileDescriptors);
+    static Connection* platformCreateProcess(StringRef moduleName, StringRef moduleEntry,
+        StringRef arguments, const std::vector<int32_t>& fileDescriptors);
 
     static std::shared_ptr<Messenger> m_messageReceiver;
     static std::function<void (int32_t)> m_processLaunchedListener;

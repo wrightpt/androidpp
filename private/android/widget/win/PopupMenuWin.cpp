@@ -25,11 +25,11 @@
 
 #include "PopupMenuWin.h"
 
+#include <android/app/ActivityHostWindow.h>
 #include <android/view/View.h>
-#include <android/view/ViewHostWindow.h>
 #include <android/view/ViewPrivate.h>
 
-#include <platforms/StringConversion.h>
+#include <android++/StringConversion.h>
 #include <algorithm>
 
 namespace android {
@@ -204,7 +204,7 @@ HWND PopupMenuWin::hwnd() const
 
 HWND PopupMenuWin::parentHWND() const
 {
-    return reinterpret_cast<HWND>(view::getPrivate(m_anchor).hostWindow()->windowHandle());
+    return reinterpret_cast<HWND>(view::getPrivate(m_anchor).hostWindow()->window()->windowHandle());
 }
 
 void PopupMenuWin::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)

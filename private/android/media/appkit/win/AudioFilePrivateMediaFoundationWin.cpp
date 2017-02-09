@@ -32,9 +32,9 @@
 #include <android/media/win/DataSourceProviderByteStream.h>
 
 #include <android/os/appkit/Process.h>
-#include <platforms/LogHelper.h>
-#include <platforms/StringConversion.h>
-#include <platforms/win/SoftLinking.h>
+#include <android++/LogHelper.h>
+#include <android++/StringConversion.h>
+#include <android++/win/SoftLinking.h>
 
 SOFT_LINK_LIBRARY(Mfplat);
 SOFT_LINK_OPTIONAL(Mfplat, MFStartup, HRESULT, STDAPICALLTYPE, (ULONG, DWORD));
@@ -84,7 +84,7 @@ AudioFilePrivateMediaFoundationWin::~AudioFilePrivateMediaFoundationWin()
     CoUninitialize();
 }
 
-void AudioFilePrivateMediaFoundationWin::setDataSource(const String& path)
+void AudioFilePrivateMediaFoundationWin::setDataSource(StringRef path)
 {
     m_path = path;
     m_provider = nullptr;

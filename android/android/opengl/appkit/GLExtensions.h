@@ -34,7 +34,7 @@ namespace appkit {
 
 class GLExtensions final {
 public:
-    ANDROID_EXPORT static bool supportsExtension(const String&);
+    ANDROID_EXPORT static bool supportsExtension(StringRef);
 
 private:
     GLExtensions() = default;

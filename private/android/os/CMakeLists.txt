@@ -1,24 +1,31 @@
 set(OS_SOURCES
-    BundlePrivateJSON.cpp
+    Binder.cpp
+    BundlePrivate.cpp
+    HandlerProvider.cpp
     MessageTarget.cpp
+    ParcelPrivate.cpp
+    ParcelablePrivate.cpp
 )
 
 set(OS_HEADERS
+    Binder.h
     BundlePrivate.h
     HandlerProvider.h
     MessageTarget.h
+    ParcelPrivate.h
+    ParcelablePrivate.h
+    PlatformFileDescriptor.h
 )
 
 if (WIN32)
     list(APPEND OS_SOURCES
-        win/HandlerProviderWin.cpp
+        win/BinderWin.cpp
         win/LooperWin.cpp
-        win/MessageTargetWin.cpp
+        win/PlatformFileDescriptorWin.cpp
     )
 
     list(APPEND OS_HEADERS
-        win/HandlerProviderWin.h
-        win/MessageCopyData.h
+        win/BinderWin.h
     )
 endif ()
 
@@ -30,6 +37,7 @@ include_directories(
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
+    "${LIBRARY_PRODUCT_DIR}/include/ndk"
     "${ANGLE_LIBRARY_DIR}/include"
 )
 

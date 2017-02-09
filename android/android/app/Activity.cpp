@@ -135,11 +135,11 @@ void Activity::onWindowFocusChanged(bool hasFocus)
 {
 }
 
-void Activity::setContentView(const std::shared_ptr<View>& view)
+void Activity::setContentView(std::passed_ptr<View> view)
 {
 }
 
-void Activity::onCreate(const std::shared_ptr<Bundle>& savedInstanceState)
+void Activity::onCreate(std::passed_ptr<Bundle> savedInstanceState)
 {
 }
 
@@ -151,7 +151,7 @@ void Activity::onPause()
 {
 }
 
-void Activity::onPostCreate(const std::shared_ptr<Bundle>& savedInstanceState)
+void Activity::onPostCreate(std::passed_ptr<Bundle> savedInstanceState)
 {
 }
 
@@ -163,7 +163,7 @@ void Activity::onRestart()
 {
 }
 
-void Activity::onRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState)
+void Activity::onRestoreInstanceState(std::passed_ptr<Bundle> savedInstanceState)
 {
 }
 
@@ -171,7 +171,7 @@ void Activity::onResume()
 {
 }
 
-void Activity::onSaveInstanceState(const std::shared_ptr<Bundle>& outState)
+void Activity::onSaveInstanceState(std::passed_ptr<Bundle> outState)
 {
 }
 

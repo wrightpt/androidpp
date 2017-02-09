@@ -31,9 +31,7 @@
 #include <EGL/eglext.h>
 #include <GLES2/gl2ext.h>
 
-#include <platforms/CompilerMacros.h>
-
-#include <assert>
+#include <android++/CompilerMacros.h>
 
 namespace android {
 namespace opengl {

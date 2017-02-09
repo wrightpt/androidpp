@@ -42,18 +42,18 @@ public:
         return shared;
     }
 
-    static const String& libraryNameKey()
+    static StringRef libraryNameKey()
     {
         static const String name(L"libraryName");
         return name;
     }
 
-    inline Message ProcessLaunched(std::shared_ptr<Messenger>& replyTo, int32_t connectionIdentifier)
+    inline Message ProcessLaunched(std::passed_ptr<Messenger> replyTo, int32_t connectionIdentifier)
     {
         return obtain(replyTo, PROCESS_LAUNCHED, connectionIdentifier);
     }
 
-    inline Message LoadLibrary(const String& libraryName)
+    inline Message LoadLibrary(StringRef libraryName)
     {
         Message message = Message::obtain(nullptr, LOAD_LIBRARY);
         message.getData().putCharSequence(libraryNameKey(), libraryName);

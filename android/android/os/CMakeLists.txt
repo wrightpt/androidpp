@@ -4,6 +4,9 @@ set(OS_SOURCES
     Looper.cpp
     Message.cpp
     Messenger.cpp
+    ParcelFileDescriptor.cpp
+    Parcel.cpp
+    Parcelable.cpp
 )
 
 set(OS_HEADERS
@@ -14,6 +17,8 @@ set(OS_HEADERS
     Message.h
     Messenger.h
     Parcel.h
+    ParcelFileDescriptor.h
+    Parcelable.h
 )
 
 include_directories(

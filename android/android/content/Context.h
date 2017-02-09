@@ -25,17 +25,22 @@
 
 #pragma once
 
-#include <java/lang.h>
 #include <android/content/res/Resources.h>
 
 namespace android {
 namespace content {
 
 class ContextPrivate;
+class Intent;
+class ServiceConnection;
 
 class Context {
+    NONCOPYABLE(Context);
     friend class ContextPrivate;
 public:
+    // Flag for bindService(Intent, ServiceConnection, int): automatically create the service as long as the binding exists. 
+    static const int32_t BIND_AUTO_CREATE = 1;
+
     // Use with getSystemService(Class) to retrieve a InputMethodManager for accessing input methods.
     ANDROID_EXPORT static wchar_t INPUT_METHOD_SERVICE[];
 
@@ -43,11 +48,18 @@ public:
     ANDROID_EXPORT virtual ~Context();
 
     // Return the context of the single, global Application object of the current process.
-    ANDROID_EXPORT virtual Context& getApplicationContext() = 0;
+    virtual Context& getApplicationContext() = 0;
+    // Return the name of this application's package.
+    virtual StringRef getPackageName() = 0;
     // Return the handle to a system-level service by name.
-    ANDROID_EXPORT virtual std::shared_ptr<Object> getSystemService(const String& name) = 0;
+    virtual std::shared_ptr<Object> getSystemService(StringRef name) = 0;
     // Returns a Resources instance for the application's package.
-    ANDROID_EXPORT virtual Resources& getResources() = 0;
+    virtual Resources& getResources() = 0;
+
+    // Connect to an application service, creating it if needed. 
+    virtual bool bindService(Intent& service, std::passed_ptr<ServiceConnection> conn, int32_t flags) = 0;
+    // Disconnect from an application service. 
+    virtual void unbindService(std::passed_ptr<ServiceConnection> conn) = 0;
 
 private:
     std::unique_ptr<ContextPrivate> m_private;

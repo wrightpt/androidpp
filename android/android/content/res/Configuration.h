@@ -34,15 +34,16 @@ namespace res {
 class Configuration {
 public:
     ANDROID_EXPORT Configuration();
+    ANDROID_EXPORT Configuration(const Configuration&);
+    ANDROID_EXPORT Configuration(Configuration&&);
+    ANDROID_EXPORT Configuration& operator=(const Configuration&);
+    ANDROID_EXPORT Configuration& operator=(Configuration&&);
 
     // Default value for densityDpi indicating that no width has been specified.
     static const int32_t DENSITY_DPI_UNDEFINED = 0;
 
     // The target screen density being rendered to. Set to DENSITY_DPI_UNDEFINED if no density is specified.
-    int densityDpi;
-
-private:
-    void setToDefaults();
+    int32_t densityDpi { DENSITY_DPI_UNDEFINED };
 };
 
 } // namespace res

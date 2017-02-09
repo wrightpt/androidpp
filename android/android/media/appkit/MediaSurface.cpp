@@ -45,7 +45,7 @@ MediaSurface::~MediaSurface()
     reset();
 }
 
-void MediaSurface::setSourceMedia(std::shared_ptr<MediaPlayer>& mediaPlayer)
+void MediaSurface::setSourceMedia(std::passed_ptr<MediaPlayer> mediaPlayer)
 {
     if (mediaPlayer == m_mediaPlayer)
         return;
@@ -57,7 +57,7 @@ void MediaSurface::setSourceMedia(std::shared_ptr<MediaPlayer>& mediaPlayer)
     attachCurrentSourceMedia();
 }
 
-void MediaSurface::setOutputSurface(std::shared_ptr<GLTransportSurface> surface)
+void MediaSurface::setOutputSurface(std::passed_ptr<GLTransportSurface> surface)
 {
     if (surface == m_outputSurface)
         return;

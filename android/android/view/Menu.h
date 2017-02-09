@@ -28,8 +28,8 @@
 #include <android/view/View.h>
 #include <android/view/MenuItem.h>
 
-#include <platforms/Functional.h>
-#include <platforms/Noncopyable.h>
+#include <android++/Functional.h>
+#include <android++/Noncopyable.h>
 
 #include <vector>
 
@@ -46,10 +46,10 @@ public:
 
     virtual void setOnMenuItemClickListener(OnMenuItemClickListener listener) { m_menuItemClickListener = std::move(listener); }
 
-    virtual void addItem(const std::shared_ptr<MenuItem>&) = 0;
+    virtual void addItem(std::passed_ptr<MenuItem>) = 0;
     virtual void addItems(const std::vector<std::shared_ptr<MenuItem>>&) = 0;
     virtual void addSeparator() = 0;
-    virtual std::unique_ptr<Menu> addSubmenu(const std::shared_ptr<MenuItem>&) = 0;
+    virtual std::unique_ptr<Menu> addSubmenu(std::passed_ptr<MenuItem>) = 0;
 
     virtual void show(Point&) = 0;
     virtual void dismiss() = 0;

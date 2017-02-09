@@ -25,44 +25,53 @@
 
 #pragma once
 
+#include <android.h>
 #include <android/app/Activity.h>
-#include <android/os/Looper.h>
+#include <android/os/Messenger.h>
 
 namespace com {
 namespace example {
 
 class TestActivity : public Activity {
+    friend class TestServiceConnection;
 public:
-    TestActivity();
-    virtual ~TestActivity();
+    ANDROID_EXTERN TestActivity();
+    ANDROID_EXTERN ~TestActivity();
 
-    virtual void onAttachedToWindow() override;
-    virtual void onBackPressed() override;
-    virtual void onConfigurationChanged(Configuration& newConfig) override;
-    virtual void onContentChanged() override;
-    virtual void onDetachedFromWindow() override;
-    virtual bool onGenericMotionEvent(MotionEvent& event) override;
-    virtual bool onKeyDown(int32_t keyCode, KeyEvent& event) override;
-    virtual bool onKeyLongPress(int32_t keyCode, KeyEvent& event) override;
-    virtual bool onKeyMultiple(int32_t keyCode, int32_t repeatCount, KeyEvent& event) override;
-    virtual bool onKeyShortcut(int32_t keyCode, KeyEvent& event) override;
-    virtual bool onKeyUp(int32_t keyCode, KeyEvent& event) override;
-    virtual void onLowMemory() override;
-    virtual bool onTouchEvent(MotionEvent& event) override;
-    virtual void onTrimMemory(int32_t level) override;
+    void sayHello();
+
+    void onAttachedToWindow() override;
+    void onBackPressed() override;
+    void onConfigurationChanged(Configuration& newConfig) override;
+    void onContentChanged() override;
+    void onDetachedFromWindow() override;
+    bool onGenericMotionEvent(MotionEvent& event) override;
+    bool onKeyDown(int32_t keyCode, KeyEvent& event) override;
+    bool onKeyLongPress(int32_t keyCode, KeyEvent& event) override;
+    bool onKeyMultiple(int32_t keyCode, int32_t repeatCount, KeyEvent& event) override;
+    bool onKeyShortcut(int32_t keyCode, KeyEvent& event) override;
+    bool onKeyUp(int32_t keyCode, KeyEvent& event) override;
+    void onLowMemory() override;
+    bool onTouchEvent(MotionEvent& event) override;
+    void onTrimMemory(int32_t level) override;
 
 protected:
-    virtual void onCreate(const std::shared_ptr<Bundle>& savedInstanceState) override;
-    virtual void onDestroy() override;
-    virtual void onPause() override;
-    virtual void onPostCreate(const std::shared_ptr<Bundle>& savedInstanceState) override;
-    virtual void onPostResume() override;
-    virtual void onRestart() override;
-    virtual void onRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState) override;
-    virtual void onResume() override;
-    virtual void onSaveInstanceState(const std::shared_ptr<Bundle>& outState) override;
-    virtual void onStart() override;
-    virtual void onStop() override;
+    void onCreate(std::passed_ptr<Bundle> savedInstanceState) override;
+    void onDestroy() override;
+    void onPause() override;
+    void onPostCreate(std::passed_ptr<Bundle> savedInstanceState) override;
+    void onPostResume() override;
+    void onRestart() override;
+    void onRestoreInstanceState(std::passed_ptr<Bundle> savedInstanceState) override;
+    void onResume() override;
+    void onSaveInstanceState(std::passed_ptr<Bundle> outState) override;
+    void onStart() override;
+    void onStop() override;
+
+private:
+    std::shared_ptr<Messenger> mService;
+    bool mBound { false };
+    std::shared_ptr<ServiceConnection> mConnection;
 };
 
 } // namespace example

@@ -25,15 +25,17 @@
 
 #include "ContextThemeWrapper.h"
 
+#include <android/content/ContextPrivate.h>
+
 namespace android {
 namespace content {
 
 ContextThemeWrapper::ContextThemeWrapper()
-    : ContextWrapper(nullptr)
+    : ContextWrapper(ContextPrivate::getGlobalContext())
 {
 }
 
-ContextThemeWrapper::ContextThemeWrapper(Context* base)
+ContextThemeWrapper::ContextThemeWrapper(Context& base)
     : ContextWrapper(base)
 {
 }
@@ -42,7 +44,7 @@ ContextThemeWrapper::~ContextThemeWrapper()
 {
 }
 
-std::shared_ptr<Object> ContextThemeWrapper::getSystemService(const String& name)
+std::shared_ptr<Object> ContextThemeWrapper::getSystemService(StringRef name)
 {
     return ContextWrapper::getSystemService(name);
 }

@@ -42,6 +42,8 @@ public:
     static const int32_t SOURCE_TOUCHSCREEN = 0x00001002;
     // The input source is a mouse pointing device.
     static const int32_t SOURCE_MOUSE = 0x00002002;
+    // The input source is a trackball.
+    static const int32_t SOURCE_TRACKBALL = 0x00100004;
     // The input source is a touch pad or digitizer tablet that is not associated with a display (unlike SOURCE_TOUCHSCREEN).
     static const int32_t SOURCE_TOUCHPAD = 0x00100008;
     // The input source is a joystick.

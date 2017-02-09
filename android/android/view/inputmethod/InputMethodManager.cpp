@@ -34,7 +34,7 @@ bool InputMethodManager::showSoftInput(View& view, int32_t flags)
     return false;
 }
 
-bool InputMethodManager::hideSoftInputFromWindow(IBinder windowToken, int32_t flags)
+bool InputMethodManager::hideSoftInputFromWindow(std::passed_ptr<IBinder> windowToken, int32_t flags)
 {
     return false;
 }

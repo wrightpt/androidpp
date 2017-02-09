@@ -29,8 +29,6 @@
 
 #include <algorithm>
 
-#include <assert>
-
 namespace android {
 namespace media {
 
@@ -51,7 +49,7 @@ MediaPlayerPrivateMock::~MediaPlayerPrivateMock()
     reset();
 }
 
-void MediaPlayerPrivateMock::setDataSource(const String& path)
+void MediaPlayerPrivateMock::setDataSource(StringRef path)
 {
     m_path = path;
 }

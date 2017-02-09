@@ -1,9 +1,7 @@
 set(VIEW_SOURCES
     KeyEventPrivate.cpp
     MotionEventPrivate.cpp
-    ViewHostWindow.cpp
     ViewPrivate.cpp
-    WindowProvider.cpp
 )
 
 set(VIEW_HEADERS
@@ -11,23 +9,18 @@ set(VIEW_HEADERS
     Cursor.h
     KeyEventPrivate.h
     MotionEventPrivate.h
-    ViewHostWindow.h
     ViewPrivate.h
-    WindowHandle.h
-    WindowProvider.h
 )
 
 if (WIN32)
     list(APPEND VIEW_SOURCES
         win/CursorWin.cpp
         win/MenuWin.cpp
-        win/WindowProviderWin.cpp
     )
 
     list(APPEND VIEW_HEADERS
         win/CursorWin.h
         win/MenuWin.h
-        win/WindowProviderWin.h
     )
 endif ()
 

@@ -33,7 +33,8 @@ namespace os {
 
 class Messenger;
 
-class ANDROID_EXPORT Message final {
+class Message final : public Parcelable {
+    friend class MessageCreator;
 public:
     int32_t what;
     int32_t arg1;
@@ -42,40 +43,46 @@ public:
     Handler::ptr_t target;
     Messenger* replyTo;
 
-    Message();
-    Message(const Message&);
-    Message(Message&&);
-    ~Message();
+    ANDROID_EXPORT Message();
+    ANDROID_EXPORT Message(const Message&);
+    ANDROID_EXPORT Message(Message&&);
+    ANDROID_EXPORT Message& operator=(const Message&);
+    ANDROID_EXPORT Message& operator=(Message&&);
+    ANDROID_EXPORT ~Message();
 
     // FIXME: Implement a global pool for obtain()s.
     // Return a new Message instance from the global pool.
-    static Message obtain();
+    ANDROID_EXPORT static Message obtain();
 
     // Same as obtain(), but sets the value for the target member on the Message returned.
-    static Message obtain(Handler::ptr_t h);
+    ANDROID_EXPORT static Message obtain(Handler::ptr_t h);
     // Same as obtain(), but sets the values for both target and what members on the Message.
-    static Message obtain(Handler::ptr_t h, int32_t what);
+    ANDROID_EXPORT static Message obtain(Handler::ptr_t h, int32_t what);
     // Same as obtain(), but sets the values of the target, what, arg1, and arg2 members.
-    static Message obtain(Handler::ptr_t h, int32_t what,
+    ANDROID_EXPORT static Message obtain(Handler::ptr_t h, int32_t what,
             int32_t arg1, int32_t arg2);
     // Same as obtain(), but sets the values of the target, what, and obj members.
-    static Message obtain(Handler::ptr_t h, int32_t what, intptr_t obj);
+    ANDROID_EXPORT static Message obtain(Handler::ptr_t h, int32_t what, intptr_t obj);
     // Same as obtain(), but sets the values of the target, what, arg1, arg2, and obj members.
-    static Message obtain(Handler::ptr_t h, int32_t what,
+    ANDROID_EXPORT static Message obtain(Handler::ptr_t h, int32_t what,
             int32_t arg1, int32_t arg2, intptr_t obj);
 
     // Same as obtain(), but copies the values of an existing message (including its target) into the new one.
-    static Message obtain(const Message& orig);
+    ANDROID_EXPORT static Message obtain(const Message& orig);
 
     // Sets a Bundle of arbitrary data values. 
-    void setData(Bundle& data);
-    void setData(Bundle&& data);
+    ANDROID_EXPORT void setData(Bundle& data);
+    ANDROID_EXPORT void setData(Bundle&& data);
     // Obtains a Bundle of arbitrary data associated with this event, lazily creating it if necessary. 
-    Bundle& getData();
+    ANDROID_EXPORT Bundle& getData();
     // Like getData(), but does not lazily create the Bundle. 
-    Bundle* peekData();
+    ANDROID_EXPORT Bundle* peekData();
 
-    Message& operator=(Message&&);
+    // Parcelable
+    ANDROID_EXPORT static const LazyInitializedPtr<Parcelable::Creator> CREATOR;
+
+    ANDROID_EXPORT virtual int32_t describeContents() override;
+    ANDROID_EXPORT virtual void writeToParcel(Parcel& dest, int32_t flags);
 
 private:
     mutable Bundle* data;

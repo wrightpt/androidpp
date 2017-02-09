@@ -31,12 +31,13 @@ namespace android {
 namespace content {
 
 class ContextThemeWrapper : public ContextWrapper {
+    NONCOPYABLE(ContextThemeWrapper);
 public:
     ANDROID_EXPORT ContextThemeWrapper();
-    ANDROID_EXPORT ContextThemeWrapper(Context* base);
+    ANDROID_EXPORT ContextThemeWrapper(Context& base);
     ANDROID_EXPORT virtual ~ContextThemeWrapper();
 
-    ANDROID_EXPORT virtual std::shared_ptr<Object> getSystemService(const String& name) override;
+    ANDROID_EXPORT virtual std::shared_ptr<Object> getSystemService(StringRef name) override;
     ANDROID_EXPORT virtual Resources& getResources() override;
 };
 

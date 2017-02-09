@@ -29,7 +29,30 @@ namespace android {
 namespace util {
 
 DisplayMetrics::DisplayMetrics()
+    : density(DENSITY_DEFAULT)
 {
+}
+
+DisplayMetrics::DisplayMetrics(const DisplayMetrics& other)
+    : density(other.density)
+{
+}
+
+DisplayMetrics::DisplayMetrics(DisplayMetrics&& other)
+    : density(other.density)
+{
+}
+
+DisplayMetrics& DisplayMetrics::operator=(const DisplayMetrics& other)
+{
+    density = other.density;
+    return *this;
+}
+
+DisplayMetrics& DisplayMetrics::operator=(DisplayMetrics&& other)
+{
+    density = other.density;
+    return *this;
 }
 
 } // namespace util

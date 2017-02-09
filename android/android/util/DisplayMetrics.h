@@ -33,9 +33,14 @@ namespace util {
 class DisplayMetrics {
 public:
     ANDROID_EXPORT DisplayMetrics();
+    ANDROID_EXPORT DisplayMetrics(const DisplayMetrics&);
+    ANDROID_EXPORT DisplayMetrics(DisplayMetrics&&);
+    ANDROID_EXPORT DisplayMetrics& operator=(const DisplayMetrics&);
+    ANDROID_EXPORT DisplayMetrics& operator=(DisplayMetrics&&);
+    ANDROID_EXPORT virtual ~DisplayMetrics() = default;
 
     // The reference density used throughout the system.
-    ANDROID_EXPORT static const int DENSITY_DEFAULT;
+    ANDROID_EXPORT static const int32_t DENSITY_DEFAULT;
 
     float density;
 };

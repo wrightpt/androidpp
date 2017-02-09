@@ -27,12 +27,52 @@
 
 #include <java/lang.h>
 
-#include <vector>
-
 namespace android {
 namespace os {
 
-using Parcel = std::vector<char>;
+class ParcelPrivate;
+
+class Parcel final {
+    friend class ParcelPrivate;
+public:
+    ANDROID_EXPORT Parcel();
+    ANDROID_EXPORT Parcel(const Parcel&);
+    ANDROID_EXPORT Parcel(Parcel&&);
+    ANDROID_EXPORT Parcel& operator=(const Parcel&);
+    ANDROID_EXPORT Parcel& operator=(Parcel&&);
+    ANDROID_EXPORT ~Parcel();
+
+    // Returns the total amount of data contained in the parcel. 
+    ANDROID_EXPORT int32_t dataSize();
+
+    ANDROID_EXPORT int8_t* data();
+
+    ANDROID_EXPORT Parcel& operator<<(bool);
+    ANDROID_EXPORT Parcel& operator<<(wchar_t);
+    ANDROID_EXPORT Parcel& operator<<(int8_t);
+    ANDROID_EXPORT Parcel& operator<<(int32_t);
+    ANDROID_EXPORT Parcel& operator<<(int64_t);
+    ANDROID_EXPORT Parcel& operator<<(size_t);
+    ANDROID_EXPORT Parcel& operator<<(float);
+    ANDROID_EXPORT Parcel& operator<<(double);
+    ANDROID_EXPORT Parcel& operator<<(const std::string&);
+    ANDROID_EXPORT Parcel& operator<<(const CharSequence&);
+
+    ANDROID_EXPORT Parcel& operator>>(bool&);
+    ANDROID_EXPORT Parcel& operator>>(wchar_t&);
+    ANDROID_EXPORT Parcel& operator>>(int8_t&);
+    ANDROID_EXPORT Parcel& operator>>(uint16_t&);
+    ANDROID_EXPORT Parcel& operator>>(int32_t&);
+    ANDROID_EXPORT Parcel& operator>>(int64_t&);
+    ANDROID_EXPORT Parcel& operator>>(size_t&);
+    ANDROID_EXPORT Parcel& operator>>(float&);
+    ANDROID_EXPORT Parcel& operator>>(double&);
+    ANDROID_EXPORT Parcel& operator>>(std::string&);
+    ANDROID_EXPORT Parcel& operator>>(CharSequence&);
+
+private:
+    std::shared_ptr<ParcelPrivate> m_private;
+};
 
 } // namespace os
 } // namespace android

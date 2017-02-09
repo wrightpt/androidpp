@@ -35,18 +35,19 @@ class Message;
 class MessageTarget;
 
 class Messenger final {
+    NONCOPYABLE(Messenger);
 public:
-    // Create a new Messenger pointing to the given Handler.
-    ANDROID_EXPORT Messenger(IBinder);
     // Create a Messenger from a raw IBinder, which had previously been retrieved with getBinder().
-    ANDROID_EXPORT Messenger(std::shared_ptr<Handler>);
+    ANDROID_EXPORT Messenger(std::passed_ptr<IBinder>);
+    // Create a new Messenger pointing to the given Handler.
+    ANDROID_EXPORT Messenger(std::passed_ptr<Handler>);
     ANDROID_EXPORT ~Messenger();
 
     // Send a Message to this Messenger's Handler.
     ANDROID_EXPORT void send(Message&);
 
     // Retrieve the IBinder that this Messenger is using to communicate with its associated Handler.
-    ANDROID_EXPORT IBinder getBinder();
+    ANDROID_EXPORT std::shared_ptr<IBinder> getBinder();
 
 private:
     std::unique_ptr<MessageTarget> m_target;

@@ -6,8 +6,6 @@ set(OS_HEADERS
 
 if (WIN32)
     list(APPEND OS_SOURCES
-        win/MainWin.cpp
-        win/ProcessLauncherWin.cpp
         win/ProcessWin.cpp
         win/ThreadWin.cpp
     )

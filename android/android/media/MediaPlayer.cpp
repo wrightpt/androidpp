@@ -29,8 +29,6 @@
 
 #include <algorithm>
 
-#include <assert>
-
 namespace android {
 namespace media {
 

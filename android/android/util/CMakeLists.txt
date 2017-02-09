@@ -4,9 +4,16 @@ set(UTIL_SOURCES
 )
 
 set(UTIL_HEADERS
+    Base64.h
     DisplayMetrics.h
     Log.h
 )
+
+if (WIN32)
+    list(APPEND UTIL_SOURCES
+        win/Base64Win.cpp
+    )
+endif ()
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"

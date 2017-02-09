@@ -25,16 +25,17 @@
 
 #include "View.h"
 
+#include <android/app/ActivityHostWindow.h>
+#include <android/app/WindowProvider.h>
 #include <android/content/ContextWrapper.h>
-#include <android/view/ViewHostWindow.h>
 #include <android/view/ViewPrivate.h>
-#include <android/view/WindowProvider.h>
 
 namespace android {
 namespace view {
 
-View::View()
-    : m_inWindow(false)
+View::View(Context& context)
+    : m_context(context)
+    , m_inWindow(false)
     , m_visibility(INVISIBLE)
     , m_hasFocus(false)
     , m_focusable(false)
@@ -85,13 +86,12 @@ void View::invalidate(Rect&)
 
 Context& View::getContext()
 {
-    static ContextWrapper context(0);
-    return context;
+    return m_context;
 }
 
-os::Binder* View::getWindowToken()
+std::shared_ptr<IBinder> View::getWindowToken()
 {
-    return 0;
+    return m_private->hostWindow()->window()->getWindowToken();
 }
 
 std::unique_ptr<InputConnection> View::onCreateInputConnection(EditorInfo& outAttrs)

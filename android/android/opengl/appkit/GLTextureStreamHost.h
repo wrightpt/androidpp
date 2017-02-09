@@ -42,7 +42,7 @@ public:
     ANDROID_EXPORT std::shared_ptr<GLTransportSurface> surface() { return m_surface.lock(); }
 
 protected:
-    ANDROID_EXPORT GLTextureStreamHost(std::shared_ptr<Messenger>&&);
+    ANDROID_EXPORT GLTextureStreamHost(std::passed_ptr<Messenger>&);
 
     // MessageHost
     ANDROID_EXPORT void receive(Message&) override;

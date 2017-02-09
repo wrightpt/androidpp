@@ -27,8 +27,6 @@
 
 #include "EGLOffscreenContext.h"
 
-#include <assert>
-
 namespace android {
 namespace opengl {
 namespace appkit {

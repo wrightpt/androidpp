@@ -30,9 +30,37 @@
 namespace android {
 namespace os {
 
-class Binder;
+class Parcel;
 
-using IBinder = Binder*;
+class IBinder {
+    NONCOPYABLE(IBinder);
+public:
+    virtual ~IBinder() = default;
+
+    // The first transaction code available for user commands.
+    static const int32_t FIRST_CALL_TRANSACTION = 0x00000001;
+    // IBinder protocol transaction code: interrogate the recipient side of the transaction for its canonical interface descriptor. 
+    static const int32_t INTERFACE_TRANSACTION = 0x5f4e5446;
+    // IBinder protocol transaction code: pingBinder(). 
+    static const int32_t PING_TRANSACTION = 0x5f504e47;
+    // IBinder protocol transaction code: dump internal state.
+    static const int32_t DUMP_TRANSACTION = 0x5f444d50;
+    // IBinder protocol transaction code: tell an app asynchronously that the caller likes it. 
+    static const int32_t LIKE_TRANSACTION = 0x5f4c494b;
+    // IBinder protocol transaction code: send a tweet to the target object. 
+    static const int32_t TWEET_TRANSACTION = 0x5f545754;
+    // The last transaction code available for user commands. 
+    static const int32_t LAST_CALL_TRANSACTION = 0x00ffffff;
+
+    // Flag to transact(int, Parcel, Parcel, int): this is a one-way call, meaning that the caller returns immediately, without waiting for a result from the callee. 
+    static const int32_t FLAG_ONEWAY = 0x00000001;
+
+    // Perform a generic operation with the object. 
+    virtual bool transact(int32_t code, Parcel& data, Parcel* reply, int32_t flags) = 0;
+
+protected:
+    IBinder() = default;
+};
 
 } // namespace os
 } // namespace android

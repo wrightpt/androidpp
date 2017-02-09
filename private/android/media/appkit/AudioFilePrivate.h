@@ -63,7 +63,7 @@ public:
 
     typedef AudioFile::DataSourceProvider DataSourceProvider;
 
-    virtual void setDataSource(const String&) = 0;
+    virtual void setDataSource(StringRef) = 0;
     virtual void setDataSource(DataSourceProvider) = 0;
 
     virtual std::shared_ptr<MediaFormat> getOutputFormat() = 0;

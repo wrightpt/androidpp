@@ -33,6 +33,7 @@ namespace content {
 wchar_t Context::INPUT_METHOD_SERVICE[] = L"android.view.inputmethod.InputMethodManager";
 
 Context::Context()
+    : m_private(std::make_unique<ContextPrivate>())
 {
 }
 

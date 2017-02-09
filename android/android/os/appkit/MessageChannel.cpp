@@ -33,8 +33,6 @@
 
 #include <mutex>
 
-#include <assert>
-
 namespace android {
 namespace os {
 namespace appkit {

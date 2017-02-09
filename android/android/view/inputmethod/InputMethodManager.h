@@ -40,7 +40,7 @@ public:
     // Synonym for showSoftInput(View, int, ResultReceiver) without a result receiver: explicitly request that the current input method's soft input area be shown to the user, if needed.
     ANDROID_EXPORT bool showSoftInput(View& view, int32_t flags);
     // Synonym for hideSoftInputFromWindow(IBinder, int, ResultReceiver) without a result: request to hide the soft input window from the context of the window that is currently accepting input.
-    ANDROID_EXPORT bool hideSoftInputFromWindow(IBinder windowToken, int32_t flags);
+    ANDROID_EXPORT bool hideSoftInputFromWindow(std::passed_ptr<IBinder> windowToken, int32_t flags);
     // If the input method is currently connected to the given view, restart it with its new contents.
     ANDROID_EXPORT void restartInput(View& view);
     // Report positional change of the text insertion point and/or characters in the composition string.

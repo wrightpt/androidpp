@@ -25,17 +25,18 @@
 
 #pragma once
 
+#include <android/app/ActivityHostWindow.h>
 #include <android/view/View.h>
 
 namespace android {
 namespace view {
 
 class View;
-class ViewHostWindow;
+class ActivityHostWindow;
 
 class ViewPrivate {
     friend class View;
-    friend class ViewHostWindow;
+    friend class ActivityHostWindow;
 public:
     ViewPrivate(View&);
     ~ViewPrivate();
@@ -43,7 +44,7 @@ public:
     static ViewPrivate& getPrivate(View&);
     static void setPrivate(View&, std::unique_ptr<ViewPrivate>&&);
 
-    virtual ViewHostWindow* hostWindow() const;
+    virtual app::ActivityHostWindow* hostWindow() const;
 
     View* thisView() const { return &m_thisView; }
     View* parentView() const { return m_parentView; }

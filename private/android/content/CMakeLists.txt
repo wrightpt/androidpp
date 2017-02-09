@@ -1,10 +1,20 @@
 set(CONTENT_SOURCES
+    ApplicationLauncher.cpp
     ContextPrivate.cpp
+    IntentPrivate.cpp
 )
 
 set(CONTENT_HEADERS
+    ApplicationLauncher.h
     ContextPrivate.h
+    IntentPrivate.h
 )
+
+if (WIN32)
+    list(APPEND CONTENT_SOURCES
+        win/ApplicationLauncherWin.cpp
+    )
+endif ()
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"

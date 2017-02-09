@@ -26,7 +26,7 @@
 #pragma once
 
 #include <android/opengl/appkit/GLTexture.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 namespace android {
 namespace media {
@@ -55,7 +55,7 @@ public:
         Error,
     };
 
-    virtual void setDataSource(const String& path) = 0;
+    virtual void setDataSource(StringRef path) = 0;
     virtual void setVolume(float) = 0;
 
     virtual int32_t getDuration() = 0;

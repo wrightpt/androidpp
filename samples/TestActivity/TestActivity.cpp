@@ -25,17 +25,58 @@
 
 #include "TestActivity.h"
 
-#include <platforms/LogHelper.h>
+#include "TestService.h"
+#include <android/os/Message.h>
+#include <android++/LogHelper.h>
 
 namespace com {
 namespace example {
 
+class TestServiceConnection : public ServiceConnection {
+    friend class TestActivity;
+public:
+    void onServiceConnected(ComponentName& className, std::passed_ptr<IBinder> service) {
+        // This is called when the connection with the service has been
+        // established, giving us the object we can use to
+        // interact with the service.  We are communicating with the
+        // service using a Messenger, so here we get a client-side
+        // representation of that from the raw IBinder object.
+        mThis.mService = std::make_shared<Messenger>(service);
+        mThis.mBound = true;
+        mThis.sayHello();
+    }
+
+    void onServiceDisconnected(ComponentName& className) {
+        // This is called when the connection with the service has been
+        // unexpectedly disconnected -- that is, its process crashed.
+        mThis.mService = nullptr;
+        mThis.mBound = false;
+    }
+
+private:
+    TestServiceConnection(TestActivity& activity)
+        : mThis(activity)
+    {
+    }
+
+    TestActivity& mThis;
+};
+
 TestActivity::TestActivity()
+    : mConnection(new TestServiceConnection(*this))
 {
 }
 
 TestActivity::~TestActivity()
 {
+}
+
+void TestActivity::sayHello()
+{
+    if (!mBound) return;
+    // Create and send a message to the service, using a supported 'what' value
+    Message msg = Message::obtain(nullptr, TestService::MSG_SAY_HELLO, 0, 0);
+    mService->send(msg);
 }
 
 void TestActivity::onAttachedToWindow()
@@ -115,9 +156,10 @@ void TestActivity::onTrimMemory(int32_t level)
     LOGD("%s", __FUNCTION__);
 }
 
-void TestActivity::onCreate(const std::shared_ptr<Bundle>& savedInstanceState)
+void TestActivity::onCreate(std::passed_ptr<Bundle> savedInstanceState)
 {
     LOGD("%s", __FUNCTION__);
+    Activity::onCreate(savedInstanceState);
 }
 
 void TestActivity::onDestroy()
@@ -130,7 +172,7 @@ void TestActivity::onPause()
     LOGD("%s", __FUNCTION__);
 }
 
-void TestActivity::onPostCreate(const std::shared_ptr<Bundle>& savedInstanceState)
+void TestActivity::onPostCreate(std::passed_ptr<Bundle> savedInstanceState)
 {
     LOGD("%s", __FUNCTION__);
 }
@@ -145,7 +187,7 @@ void TestActivity::onRestart()
     LOGD("%s", __FUNCTION__);
 }
 
-void TestActivity::onRestoreInstanceState(const std::shared_ptr<Bundle>& savedInstanceState)
+void TestActivity::onRestoreInstanceState(std::passed_ptr<Bundle> savedInstanceState)
 {
     LOGD("%s", __FUNCTION__);
 }
@@ -155,7 +197,7 @@ void TestActivity::onResume()
     LOGD("%s", __FUNCTION__);
 }
 
-void TestActivity::onSaveInstanceState(const std::shared_ptr<Bundle>& outState)
+void TestActivity::onSaveInstanceState(std::passed_ptr<Bundle> outState)
 {
     LOGD("%s", __FUNCTION__);
 }
@@ -163,11 +205,21 @@ void TestActivity::onSaveInstanceState(const std::shared_ptr<Bundle>& outState)
 void TestActivity::onStart()
 {
     LOGD("%s", __FUNCTION__);
+    Activity::onStart();
+    // Bind to the service
+    bindService(Intent(*this, classT<TestService>()), mConnection,
+        Context::BIND_AUTO_CREATE);
 }
 
 void TestActivity::onStop()
 {
     LOGD("%s", __FUNCTION__);
+    Activity::onStop();
+    // Unbind from the service
+    if (mBound) {
+        unbindService(mConnection);
+        mBound = false;
+    }
 }
 
 } // namespace example

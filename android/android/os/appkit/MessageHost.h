@@ -37,7 +37,7 @@ public:
     ANDROID_EXPORT virtual ~MessageHost();
 
 protected:
-    ANDROID_EXPORT MessageHost(std::shared_ptr<Messenger>&&);
+    ANDROID_EXPORT MessageHost(std::passed_ptr<Messenger>&);
 
     ANDROID_EXPORT void protect();
 

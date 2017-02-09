@@ -28,7 +28,7 @@
 #include <android/os/Handler.h>
 #include <android/os/Messenger.h>
 #include <android/os/appkit/MessageFilter.h>
-#include <platforms/Functional.h>
+#include <android++/Functional.h>
 
 namespace android {
 namespace os {
@@ -36,7 +36,7 @@ namespace appkit {
 
 class ANDROID_EXPORT Process {
 public:
-    static std::unique_ptr<Process> create(const String& modulePath, const String& moduleEntry, const String& arguments,
+    static std::unique_ptr<Process> create(StringRef modulePath, StringRef moduleEntry, StringRef arguments,
         const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, intptr_t targetHandle, const std::unordered_map<String, String>& platformMainParameters);
     static Process& current();
     static void initialize();
@@ -58,10 +58,10 @@ public:
 
 protected:
     Process();
-    Process(int32_t, IBinder);
+    Process(int32_t, IBinder*);
 
-    static Process* platformCreate(const String& modulePath, const String& moduleEntry, const String& arguments,
-        const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, IBinder targetHandle, const std::unordered_map<String, String>& platformMainParameters);
+    static Process* platformCreate(StringRef modulePath, StringRef moduleEntry, StringRef arguments,
+        const std::vector<int32_t>& fileDescriptors, int32_t connectionIdentifier, IBinder* targetHandle, const std::unordered_map<String, String>& platformMainParameters);
     virtual int32_t platformStart();
 
     void processLaunched();

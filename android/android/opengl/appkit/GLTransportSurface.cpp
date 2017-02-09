@@ -28,8 +28,6 @@
 #include "GLTextureStreamChannel.h"
 #include "GLTextureStreamHost.h"
 
-#include <assert>
-
 namespace android {
 namespace opengl {
 namespace appkit {

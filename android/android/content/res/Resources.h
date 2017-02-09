@@ -32,6 +32,7 @@ namespace content {
 namespace res {
 
 class Resources {
+    NONCOPYABLE(Resources);
 public:
     ANDROID_EXPORT Resources();
 
