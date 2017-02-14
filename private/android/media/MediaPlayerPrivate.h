@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <android/opengl/appkit/GLTexture.h>
+#include <java/lang.h>
 #include <android++/Functional.h>
 
 namespace android {
@@ -69,7 +69,6 @@ public:
     virtual void stateChanged(State oldState, State newState) = 0;
 
     virtual void setOnFrameAvailableListener(std::function<void ()> l) { m_frameAvailableListener = std::move(l); }
-    virtual void copyFrame(GLTexture&) = 0;
 
 protected:
     MediaPlayerPrivate(MediaPlayer& mp)

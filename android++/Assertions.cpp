@@ -29,5 +29,5 @@
 
 ANDROID_C_EXPORT int LOG_ASSERT(const char* file, unsigned line)
 {
-    return ((file) ? 0 : Log::wtf("LOG_ASSERT", std::string(std::string(file) + std::to_string(line)).c_str()));
+    return !file ? 0 : Log::wtf("LOG_ASSERT", std::string(std::string(file) + std::to_string(line)).c_str());
 }

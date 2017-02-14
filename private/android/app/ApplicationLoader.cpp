@@ -38,7 +38,8 @@ namespace android {
 namespace app {
 
 ApplicationLoader::ApplicationLoader()
-    : m_self(Binder::create(*this))
+    : m_process(app::ApplicationProcess::current())
+    , m_self(Binder::create(*this))
 {
 }
 

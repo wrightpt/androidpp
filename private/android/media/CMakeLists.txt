@@ -37,6 +37,4 @@ include_directories(
     "${ANGLE_LIBRARY_DIR}/include"
 )
 
-add_subdirectory(appkit)
-
 add_library(private.android.media OBJECT ${MEDIA_HEADERS} ${MEDIA_SOURCES})

@@ -83,7 +83,7 @@ String MotionEvent::axisToString(int32_t axis)
 
 int32_t MotionEvent::getAction()
 {
-    return 0;
+    return m_action;
 }
 
 int32_t MotionEvent::getActionButton()

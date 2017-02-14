@@ -57,8 +57,6 @@ public:
 
     void stateChanged(State oldState, State newState) override;
 
-    void copyFrame(GLTexture&) override;
-
 private:
     void post(std::function<void ()> callback, int32_t delayMillis);
 

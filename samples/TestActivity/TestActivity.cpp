@@ -27,6 +27,7 @@
 
 #include "TestService.h"
 #include <android/os/Message.h>
+#include <android/view/InputDevice.h>
 #include <android++/LogHelper.h>
 
 namespace com {
@@ -43,7 +44,6 @@ public:
         // representation of that from the raw IBinder object.
         mThis.mService = std::make_shared<Messenger>(service);
         mThis.mBound = true;
-        mThis.sayHello();
     }
 
     void onServiceDisconnected(ComponentName& className) {
@@ -107,12 +107,16 @@ void TestActivity::onDetachedFromWindow()
 bool TestActivity::onGenericMotionEvent(MotionEvent& event)
 {
     LOGD("%s", __FUNCTION__);
+    if (event.getSource() == InputDevice::SOURCE_MOUSE &&
+        event.getAction() == MotionEvent::ACTION_BUTTON_PRESS)
+        sayHello();
     return false;
 }
 
 bool TestActivity::onKeyDown(int32_t keyCode, KeyEvent& event)
 {
     LOGD("%s", __FUNCTION__);
+    sayHello();
     return false;
 }
 

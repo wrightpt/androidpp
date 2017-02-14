@@ -66,7 +66,7 @@ KeyEvent::KeyEvent(KeyEvent&& origEvent)
 
 int32_t KeyEvent::getAction()
 {
-    return 0;
+    return m_action;
 }
 
 int32_t KeyEvent::getDeadChar(int32_t accent, int32_t c)

@@ -59,7 +59,7 @@ private:
     void onTimer() override;
     void onTransaction(int32_t code, Parcel& data, Parcel* reply, int32_t flags) override;
 
-    ApplicationProcess m_process;
+    ApplicationProcess& m_process;
     std::shared_ptr<Binder> m_self;
     std::shared_ptr<Binder> m_peer;
     String m_component;

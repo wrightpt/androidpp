@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <java/lang.h>
+#include <android/os/Handler.h>
 #include <unordered_map>
 
 namespace android {
@@ -33,14 +33,23 @@ namespace app {
 
 class ApplicationProcess final {
 public:
-    ApplicationProcess();
+    static ApplicationProcess& current();
     ~ApplicationProcess();
 
     bool initializeProcess(std::unordered_map<String, String>& parameters);
     bool initializeApplication(StringRef moduleName);
 
+    bool post(std::function<void ()> r);
+    bool postDelayed(std::function<void ()> r, std::chrono::milliseconds delayMillis);
+
 private:
+    ApplicationProcess();
+
+    void platformInitialize();
+    void platformDestroy();
+
     void* m_module { nullptr };
+    std::shared_ptr<Handler> m_mainThreadHandler;
 };
 
 } // namespace app

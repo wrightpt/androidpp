@@ -127,13 +127,13 @@ static void pauseProcessIfNeeded(HMODULE module)
 }
 #endif
 
-ApplicationProcess::ApplicationProcess()
+void ApplicationProcess::platformInitialize()
 {
     HRESULT hRes = ::OleInitialize(NULL);
     assert(SUCCEEDED(hRes));
 }
 
-ApplicationProcess::~ApplicationProcess()
+void ApplicationProcess::platformDestroy()
 {
     ::OleUninitialize();
 }

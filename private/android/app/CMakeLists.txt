@@ -2,6 +2,7 @@ set(APP_SOURCES
     ActivityHostWindow.cpp
     ActivityPrivate.cpp
     ApplicationLoader.cpp
+    ApplicationProcess.cpp
     ServiceHostWindow.cpp
     ServicePrivate.cpp
     WindowProvider.cpp

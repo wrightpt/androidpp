@@ -25,7 +25,7 @@
 
 #include "MediaPlayerPrivateMock.h"
 
-#include <android/os/appkit/Process.h>
+#include <android/app/ApplicationProcess.h>
 
 #include <algorithm>
 
@@ -122,11 +122,6 @@ void MediaPlayerPrivateMock::stateChanged(State oldState, State newState)
     }
 }
 
-void MediaPlayerPrivateMock::copyFrame(GLTexture& texture)
-{
-    texture.image2D(mediaVideoWidth, mediaVideoHeight, GLTexture::Format::BGRA, 0);
-}
-
 void MediaPlayerPrivateMock::post(std::function<void ()> callback, int32_t delayMillis)
 {
     synchronized (this) {
@@ -134,7 +129,7 @@ void MediaPlayerPrivateMock::post(std::function<void ()> callback, int32_t delay
             return;
 
         ++m_pendingCallbacks;
-        Process::current().postDelayed([=] {
+        ApplicationProcess::current().postDelayed([=] {
             synchronized (this) {
                 --m_pendingCallbacks;
                 notifyAll();

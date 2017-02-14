@@ -44,11 +44,8 @@ if (NOT ANDROID)
         $<TARGET_OBJECTS:android.content.res>
         $<TARGET_OBJECTS:android.graphics>
         $<TARGET_OBJECTS:android.media>
-        $<TARGET_OBJECTS:android.media.appkit>
         $<TARGET_OBJECTS:android.opengl>
-        $<TARGET_OBJECTS:android.opengl.appkit>
         $<TARGET_OBJECTS:android.os>
-        $<TARGET_OBJECTS:android.os.appkit>
         $<TARGET_OBJECTS:android.util>
         $<TARGET_OBJECTS:android.view>
         $<TARGET_OBJECTS:android.view.inputmethod>
@@ -57,11 +54,8 @@ if (NOT ANDROID)
         $<TARGET_OBJECTS:private.android.app>
         $<TARGET_OBJECTS:private.android.content>
         $<TARGET_OBJECTS:private.android.media>
-        $<TARGET_OBJECTS:private.android.media.appkit>
         $<TARGET_OBJECTS:private.android.opengl>
-        $<TARGET_OBJECTS:private.android.opengl.appkit>
         $<TARGET_OBJECTS:private.android.os>
-        $<TARGET_OBJECTS:private.android.os.appkit>
         $<TARGET_OBJECTS:private.android.util>
         $<TARGET_OBJECTS:private.android.view>
         $<TARGET_OBJECTS:private.android.view.inputmethod>

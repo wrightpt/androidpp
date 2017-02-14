@@ -238,9 +238,6 @@ void ActivityHostWindow::windowIsVisible(bool visible)
 
 void ActivityHostWindow::dispatchKeyEvent(KeyEvent& event)
 {
-    if (!contentView())
-        return;
-
     View* eventTarget = contentView();
     if (eventTarget) {
         switch (event.getAction()) {
@@ -278,9 +275,6 @@ void ActivityHostWindow::dispatchKeyEvent(KeyEvent& event)
 void ActivityHostWindow::dispatchMouseEvent(MotionEvent& event)
 {
     assert(event.getSource() == InputDevice::SOURCE_MOUSE);
-
-    if (!contentView())
-        return;
 
     View* eventTarget = contentView();
     if (eventTarget) {

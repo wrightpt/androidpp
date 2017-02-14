@@ -17,6 +17,4 @@ include_directories(
     "${ANGLE_LIBRARY_DIR}/include"
 )
 
-add_subdirectory(appkit)
-
 add_library(android.opengl OBJECT ${OPENGL_HEADERS} ${OPENGL_SOURCES})

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Naver Corp. All rights reserved.
+ * Copyright (C) 2017 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,38 +23,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
-#include <android/os/appkit/Messages.h>
+#include "ApplicationProcess.h"
 
 namespace android {
-namespace os {
-namespace appkit {
+namespace app {
 
-class MessageHostMessages : public Messages {
-public:
-    const int32_t DISCONNECT;
+ApplicationProcess& ApplicationProcess::current()
+{
+    static ApplicationProcess* currentProcess = new ApplicationProcess();
+    return *currentProcess;
+}
 
-    static MessageHostMessages& get()
-    {
-        static MessageHostMessages shared;
-        return shared;
-    }
+ApplicationProcess::ApplicationProcess()
+    : m_mainThreadHandler(Handler::create())
+{
+    platformInitialize();
+}
 
-    inline Message Disconnect(int32_t host)
-    {
-        return Message::obtain(0, DISCONNECT, host, 0);
-    }
+ApplicationProcess::~ApplicationProcess()
+{
+    platformDestroy();
+}
 
-private:
-    MessageHostMessages()
-        : DISCONNECT(getUniqueMessageIdentifier(0))
-    {
-    }
-};
+bool ApplicationProcess::post(std::function<void ()> r)
+{
+    return m_mainThreadHandler->post(std::move(r));
+}
 
-} // namespace appkit
-} // namespace os
+bool ApplicationProcess::postDelayed(std::function<void ()> r, std::chrono::milliseconds delayMillis)
+{
+    return m_mainThreadHandler->postDelayed(std::move(r), delayMillis);
+}
+
+} // namespace app
 } // namespace android
-
-using MessageHostMessages = android::os::appkit::MessageHostMessages;

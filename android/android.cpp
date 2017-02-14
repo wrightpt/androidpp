@@ -38,12 +38,13 @@ namespace android {
 
 class ApplicationContext::Process {
 public:
-    app::ApplicationProcess process;
+    app::ApplicationProcess& process;
 
     Process();
 };
 
 ApplicationContext::Process::Process()
+    : process(app::ApplicationProcess::current())
 {
     std::unordered_map<String, String> parameters;
     if (!process.initializeProcess(parameters)) {

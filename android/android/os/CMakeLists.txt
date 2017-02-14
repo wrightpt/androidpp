@@ -32,6 +32,4 @@ include_directories(
     "${ANGLE_LIBRARY_DIR}/include"
 )
 
-add_subdirectory(appkit)
-
 add_library(android.os OBJECT ${OS_HEADERS} ${OS_SOURCES})
