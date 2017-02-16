@@ -45,7 +45,23 @@ ClassLoader& ClassLoader::getSystemClassLoader()
     return *loader;
 }
 
-std::shared_ptr<Class> ClassLoader::findClass(StringRef name)
+std::passed_ptr<Package> ClassLoader::definePackage(StringRef name, StringRef specTitle, StringRef specVersion, StringRef specVendor, StringRef implTitle, StringRef implVersion, StringRef implVendor, URL& sealBase)
+{
+    if (m_packages.count(name))
+        return getPackage(name);
+
+    return m_packages[name] = std::shared_ptr<Package>(new Package(*this, String(name)));
+}
+
+std::passed_ptr<Package> ClassLoader::getPackage(StringRef name)
+{
+    if (!m_packages.count(name))
+        return nullptr;
+
+    return m_packages[name];
+}
+
+std::passed_ptr<Class> ClassLoader::findClass(StringRef name)
 {
     if (!m_classes.count(name))
         return nullptr;

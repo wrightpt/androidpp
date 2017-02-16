@@ -56,6 +56,7 @@ public:
     void callOnSaveInstanceState();
     void callOnStart();
     void callOnStop();
+    void callOnContentChanged();
 
     bool callOnGenericMotionEvent(MotionEvent&);
     bool callOnKeyDown(int32_t keyCode, KeyEvent&);

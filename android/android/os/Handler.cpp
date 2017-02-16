@@ -132,11 +132,6 @@ static void enqueueWorkItem(std::vector<std::unique_ptr<WorkItem>>& workQueue, s
 
 static const std::chrono::milliseconds oneMillisecond = std::chrono::duration<int32_t, std::milli>(1);
 
-std::shared_ptr<Handler> Handler::create()
-{
-    return std::shared_ptr<Handler>(new Handler);
-}
-
 Handler::Handler()
     : m_handler(std::make_unique<HandlerProvider>(*this))
     , m_nextFireTime(std::chrono::milliseconds::max())

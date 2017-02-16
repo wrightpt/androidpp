@@ -57,9 +57,12 @@ private:
     Looper();
     ~Looper();
 
+    static int64_t platformGetThreadId();
     static void platformLooperPrepareMain();
     static void platformLooperLoop();
-    static void platformLooperQuit(int32_t);
+    static void platformLooperQuit(int64_t, int32_t);
+
+    int64_t m_tid { 0 };
 };
 
 } // namespace os

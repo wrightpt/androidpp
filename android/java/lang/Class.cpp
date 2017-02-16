@@ -30,7 +30,7 @@ namespace lang {
 
 Class::Class(ClassLoader& classLoader, String&& packageName, String&& name, std::function<std::shared_ptr<void> ()>&& constructor)
     : m_classLoader(classLoader)
-    , m_packageName(std::move(packageName))
+    , m_package(*classLoader.getPackage(packageName))
     , m_name(std::move(name))
     , m_constructor(std::move(constructor))
 {
@@ -40,14 +40,24 @@ Class::~Class()
 {
 }
 
+std::passed_ptr<Class> Class::forName(StringRef className)
+{
+    return ClassLoader::getSystemClassLoader().findClass(className);
+}
+
 ClassLoader& Class::getClassLoader()
 {
     return m_classLoader;
 }
 
+Package& Class::getPackage()
+{
+    return m_package;
+}
+
 String Class::getName()
 {
-    return m_packageName + L'.' + m_name;
+    return m_package.getName() + L'.' + m_name;
 }
 
 StringRef Class::getSimpleName()

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <java/lang/ClassLoader.h>
+#include <java/lang/Package.h>
 
 namespace java {
 namespace lang {
@@ -36,8 +36,12 @@ class Class {
 public:
     ANDROID_EXPORT virtual ~Class();
 
+    // Returns the Class object associated with the class or interface with the given string name. 
+    ANDROID_EXPORT static std::passed_ptr<Class> forName(StringRef className);
     // Returns the class loader for the class. 
     ANDROID_EXPORT virtual ClassLoader& getClassLoader();
+    // Gets the package for this class. 
+    ANDROID_EXPORT virtual Package& getPackage();
     // Returns the name of the entity (class, interface, array class, primitive type, or void) represented by this Class object, as a String.
     ANDROID_EXPORT virtual String getName();
     // Returns the simple name of the underlying class as given in the source code. 
@@ -49,7 +53,7 @@ protected:
     ANDROID_EXPORT Class(ClassLoader&, String&&, String&&, std::function<std::shared_ptr<void> ()>&&);
 
     ClassLoader& m_classLoader;
-    String m_packageName;
+    Package& m_package;
     String m_name;
     std::function<std::shared_ptr<void> ()> m_constructor;
 };
@@ -75,12 +79,13 @@ using Class = java::lang::Class;
 template<typename T>
 Class& classT(const wchar_t* packageName = nullptr, const wchar_t* name = nullptr)
 {
-    static String classBinaryName;
+    static String binaryName;
     if (packageName && name) {
-        assert(classBinaryName.empty());
+        assert(binaryName.empty());
+        ClassLoader::getSystemClassLoader().definePackage(String(packageName), String(), String(), String(), String(), String(), String(), URL());
         ClassLoader::getSystemClassLoader().resolveClass(std::make_shared<java::lang::ClassT<T>>(String(packageName), String(name)));
-        classBinaryName = String(packageName) + L'.' + String(name);
+        binaryName = String(packageName) + L'.' + String(name);
     }
 
-    return *ClassLoader::getSystemClassLoader().findClass(classBinaryName);
+    return *ClassLoader::getSystemClassLoader().findClass(binaryName);
 }

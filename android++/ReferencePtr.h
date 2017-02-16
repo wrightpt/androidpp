@@ -31,4 +31,7 @@ namespace std {
 
 template<typename T> using passed_ptr = const shared_ptr<T>&;
 
+template<typename T> shared_ptr<T> ref_ptr(T* ptr) { return shared_ptr<T>(ptr, [] (T*) {}); }
+template<typename T> shared_ptr<T> ref_ptr(T& ptr) { return shared_ptr<T>(&ptr, [] (T*) {}); }
+
 }

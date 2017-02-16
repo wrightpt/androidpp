@@ -23,37 +23,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include "GL2JNIView.h"
 
-#include <android.h>
-#include <android/app/Service.h>
-#include <android/os/Messenger.h>
+#include "GL2JNILib.h"
+#include <android++/LogHelper.h>
 
 namespace com {
 namespace example {
 
-class TestService : public Service {
-public:
-    /** Command to the service to display a message */
-    static const int32_t MSG_SAY_HELLO = 1;
+static const String TAG = L"GL2JNIView";
+static const bool DEBUG = false;
 
-    ANDROID_EXTERN TestService();
-    ANDROID_EXTERN ~TestService();
+GL2JNIView::GL2JNIView(Context& context)
+    : GLSurfaceView(context)
+{
+    init(false, 0, 0);
+}
 
-    std::shared_ptr<IBinder> onBind(Intent& intent) override;
-    void onConfigurationChanged(Configuration& newConfig) override;
-    void onCreate() override;
-    void onDestroy() override;
-    void onLowMemory() override;
-    void onRebind(Intent& intent) override;
-    void onStartCommand(Intent& intent, int32_t flags, int32_t startId) override;
-    void onTaskRemoved(Intent& rootIntent) override;
-    void onTrimMemory(int32_t level) override;
-    bool onUnbind(Intent& intent) override;
+GL2JNIView::GL2JNIView(Context& context, bool translucent, int32_t depth, int32_t stencil)
+    : GLSurfaceView(context)
+{
+    init(translucent, depth, stencil);
+}
 
-private:
-    std::shared_ptr<Messenger> mMessenger;
-};
+void GL2JNIView::init(bool translucent, int32_t depth, int32_t stencil)
+{
+    setEGLContextClientVersion(2);
+
+    /* Set the renderer responsible for frame rendering */
+    setRenderer(new Renderer());
+}
+
+void GL2JNIView::Renderer::onDrawFrame(GL10 gl)
+{
+    GL2JNILib::step();
+}
+
+void GL2JNIView::Renderer::onSurfaceChanged(GL10 gl, int32_t width, int32_t height)
+{
+    GL2JNILib::init(width, height);
+}
+
+void GL2JNIView::Renderer::onSurfaceCreated(GL10 gl)
+{
+    // Do nothing.
+}
 
 } // namespace example
 } // namespace com

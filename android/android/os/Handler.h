@@ -45,7 +45,7 @@ class Handler : public Object {
 public:
     typedef Handler* ptr_t;
 
-    ANDROID_EXPORT static std::shared_ptr<Handler> create();
+    ANDROID_EXPORT Handler();
     ANDROID_EXPORT virtual ~Handler();
 
     ANDROID_EXPORT Looper* getLooper();
@@ -93,9 +93,6 @@ public:
     ANDROID_EXPORT virtual bool sendMessageAtTime(Message& msg, std::chrono::milliseconds uptimeMillis);
     // Enqueue a message into the message queue after all pending messages before (current time + delayMillis);.
     ANDROID_EXPORT bool sendMessageDelayed(Message& msg, std::chrono::milliseconds delayMillis);
-
-protected:
-    ANDROID_EXPORT Handler();
 
 private:
     template<typename... Arguments> void removeWorkItems(Arguments...);

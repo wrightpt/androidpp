@@ -23,92 +23,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "TestService.h"
+#include "GL2JNIActivity.h"
 
-#include <android/os/Handler.h>
-#include <android/os/Message.h>
+#include "GL2JNIView.h"
 #include <android++/LogHelper.h>
 
 namespace com {
 namespace example {
 
-/**
-* Handler of incoming messages from clients.
-*/
-class IncomingHandler : public Handler {
-public:
-    void handleMessage(Message& msg) override
-    {
-        switch (msg.what) {
-        case TestService::MSG_SAY_HELLO:
-            // FIXME: test.
-            MessageBoxA(0, "Say Hello!", "Toast", 0);
-            break;
-        default:
-            Handler::handleMessage(msg);
-        }
-    }
-};
-
-TestService::TestService()
-    : mMessenger(std::make_shared<Messenger>(std::make_shared<IncomingHandler>()))
+GL2JNIActivity::GL2JNIActivity()
 {
 }
 
-TestService::~TestService()
+GL2JNIActivity::~GL2JNIActivity()
 {
 }
 
-std::shared_ptr<IBinder> TestService::onBind(Intent& intent)
+void GL2JNIActivity::onCreate(std::passed_ptr<Bundle> savedInstanceState)
 {
     LOGD("%s", __FUNCTION__);
-    return mMessenger->getBinder();
+    Activity::onCreate(savedInstanceState);
+    mView = std::make_shared<GL2JNIView>(getApplicationContext());
+    setContentView(mView);
 }
 
-void TestService::onConfigurationChanged(Configuration& newConfig)
+void GL2JNIActivity::onPause()
 {
     LOGD("%s", __FUNCTION__);
+    Activity::onPause();
+    mView->onPause();
 }
 
-void TestService::onCreate()
+void GL2JNIActivity::onResume()
 {
     LOGD("%s", __FUNCTION__);
-}
-
-void TestService::onDestroy()
-{
-    LOGD("%s", __FUNCTION__);
-}
-
-void TestService::onLowMemory()
-{
-    LOGD("%s", __FUNCTION__);
-}
-
-void TestService::onRebind(Intent& intent)
-{
-    LOGD("%s", __FUNCTION__);
-}
-
-void TestService::onStartCommand(Intent& intent, int32_t flags, int32_t startId)
-{
-    LOGD("%s", __FUNCTION__);
-}
-
-void TestService::onTaskRemoved(Intent& rootIntent)
-{
-    LOGD("%s", __FUNCTION__);
-}
-
-void TestService::onTrimMemory(int32_t level)
-{
-    LOGD("%s", __FUNCTION__);
-}
-
-bool TestService::onUnbind(Intent& intent)
-{
-    LOGD("%s", __FUNCTION__);
-    return true;
+    Activity::onResume();
+    mView->onResume();
 }
 
 } // namespace example

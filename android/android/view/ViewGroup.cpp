@@ -43,17 +43,39 @@ ViewGroup::~ViewGroup()
 
 void ViewGroup::addView(std::passed_ptr<View> view)
 {
-    ViewPrivate& viewPrivate = view::getPrivate(*view);
+    if (!view)
+        return;
+
+    ViewPrivate& viewPrivate = getPrivate(*view);
     if (!view || viewPrivate.parentView())
         return;
 
     m_children.insert(m_children.begin(), view);
-    viewPrivate.childViewAttached(view.get());
+    getPrivate(*this).childViewAttached(view.get());
 
     if (!isAttachedToWindow())
         return;
 
     view->onAttachedToWindow();
+}
+
+void ViewGroup::removeView(std::passed_ptr<View> view)
+{
+    if (!view)
+        return;
+
+    ViewPrivate& viewPrivate = getPrivate(*view);
+    if (viewPrivate.parentView() != this)
+        return;
+
+    auto child = std::find(m_children.begin(), m_children.end(), view);
+    m_children.erase(child);
+    getPrivate(*this).childViewDetached(view.get());
+
+    if (!isAttachedToWindow())
+        return;
+
+    view->onDetachedFromWindow();
 }
 
 void ViewGroup::bringChildToFront(std::passed_ptr<View>)
@@ -80,7 +102,7 @@ View* ViewGroup::getChildAt(int index)
 void ViewGroup::setVisibility(int32_t visibility)
 {
     View::setVisibility(visibility);
-    propagate(m_children, &View::setVisibility, visibility);
+    onVisibilityChanged(this, visibility);
 }
 
 bool ViewGroup::onGenericMotionEvent(MotionEvent& event)
@@ -125,7 +147,19 @@ void ViewGroup::onDetachedFromWindow()
     propagate(m_children, &View::onDetachedFromWindow);
 }
 
-void ViewGroup::onWindowVisibilityChanged(int visibility)
+void ViewGroup::onSizeChanged(int32_t w, int32_t h, int32_t oldw, int32_t oldh)
+{
+    View::onSizeChanged(w, h, oldw, oldh);
+    propagate(m_children, &View::onSizeChanged, w, h, oldw, oldh);
+}
+
+void ViewGroup::onVisibilityChanged(View* changedView, int32_t visibility)
+{
+    View::onVisibilityChanged(changedView, visibility);
+    propagate(m_children, &View::onVisibilityChanged, changedView, visibility);
+}
+
+void ViewGroup::onWindowVisibilityChanged(int32_t visibility)
 {
     View::onWindowVisibilityChanged(visibility);
     propagate(m_children, &View::onWindowVisibilityChanged, visibility);

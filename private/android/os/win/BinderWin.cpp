@@ -177,7 +177,6 @@ LRESULT CALLBACK MessageBinderWin::messageWindowProc(HWND hWnd, UINT message, WP
     if (message == WM_CLOSE) {
         MessageBinderWin* binder = static_cast<MessageBinderWin*>(reinterpret_cast<void*>(::GetWindowLongPtr(hWnd, GWLP_HANDLERPTR(1))));
         ::SetWindowLongPtr(hWnd, GWLP_HANDLERPTR(1), 0);
-        binder->m_client->onDestroy();
         delete binder;
     }
 
@@ -310,6 +309,7 @@ void MessageBinderWin::stop()
 
 void MessageBinderWin::close()
 {
+    m_client->onDestroy();
     ::SetWindowLongPtr(m_hwnd, GWLP_HANDLERPTR(0), 0);
     ::SetWindowLongPtr(m_hwnd, GWLP_HANDLERPTR(1), reinterpret_cast<LONG_PTR>(this));
     ::PostMessageA(m_hwnd, WM_CLOSE, 0, 0);

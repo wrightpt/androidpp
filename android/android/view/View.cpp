@@ -148,6 +148,14 @@ void View::onDetachedFromWindow()
     m_inWindow = false;
 }
 
+void View::onSizeChanged(int32_t w, int32_t h, int32_t oldw, int32_t oldh)
+{
+}
+
+void View::onVisibilityChanged(View* changedView, int32_t visibility)
+{
+}
+
 void View::onWindowVisibilityChanged(int32_t visibility)
 {
 }

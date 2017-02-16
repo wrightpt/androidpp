@@ -1,6 +1,7 @@
 set(LANG_SOURCES
     Class.cpp
     ClassLoader.cpp
+    Package.cpp
 )
 
 set(LANG_HEADERS
@@ -9,6 +10,7 @@ set(LANG_HEADERS
     Class.h
     ClassLoader.h
     Object.h
+    Package.h
     StringImport.h
     System.h
 )

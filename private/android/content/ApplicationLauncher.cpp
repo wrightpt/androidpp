@@ -147,6 +147,8 @@ void ApplicationLauncher::onTimer()
         default:
             break;
         }
+
+        application->state = NO_ACTION;
     }
 }
 

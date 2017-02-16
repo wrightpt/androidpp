@@ -35,7 +35,7 @@ ApplicationProcess& ApplicationProcess::current()
 }
 
 ApplicationProcess::ApplicationProcess()
-    : m_mainThreadHandler(Handler::create())
+    : m_mainThreadHandler(std::make_shared<Handler>())
 {
     platformInitialize();
 }

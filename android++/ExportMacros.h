@@ -42,10 +42,12 @@
 #define ANDROID_EXPORT COMPILER_IMPORT
 #endif
 #endif
-#if defined(BUILDING_ANDROID_PACKAGE) && !defined(ANDROID_EXTERN)
+#if !defined(ANDROID_EXTERN)
+#if defined(BUILDING_ANDROID_PACKAGE)
 #define ANDROID_EXTERN COMPILER_EXPORT
 #else
 #define ANDROID_EXTERN COMPILER_IMPORT
+#endif
 #endif
 
 #if defined(__cplusplus)

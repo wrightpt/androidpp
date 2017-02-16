@@ -44,10 +44,11 @@ class ApplicationLauncher final : public Binder::Client {
 public:
     ~ApplicationLauncher() = default;
 
-    static const int32_t ACK_APPLICATION_LOADER = 0x00000001;
-    static const int32_t APPLICATION_INITIALIZED = 0x00000002;
-    static const int32_t APPLICATION_STARTED = 0x00000003;
-    static const int32_t SERVICE_ON_BIND = 0x00000004;
+    static const int32_t NO_ACTION = 0x00000001;
+    static const int32_t ACK_APPLICATION_LOADER = 0x00000002;
+    static const int32_t APPLICATION_INITIALIZED = 0x00000003;
+    static const int32_t APPLICATION_STARTED = 0x00000004;
+    static const int32_t SERVICE_ON_BIND = 0x00000005;
 
     static ApplicationLauncher& get();
 

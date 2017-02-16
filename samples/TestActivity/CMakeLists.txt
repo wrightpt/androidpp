@@ -1,11 +1,11 @@
 set(TEST_ACTIVITY_SOURCES
     TestActivity.cpp
-    TestService.cpp
+    TestView.cpp
 )
 
 set(TEST_ACTIVITY_HEADERS
     TestActivity.h
-    TestService.h
+    TestView.h
 )
 
 set(TEST_ACTIVITY_LIB_DEPS

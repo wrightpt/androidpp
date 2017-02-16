@@ -26,6 +26,7 @@
 #include "Intent.h"
 
 #include <android/content/IntentPrivate.h>
+#include <android/os/BundlePrivate.h>
 #include <android/os/ParcelablePrivate.h>
 
 namespace android {
@@ -79,9 +80,41 @@ Intent& Intent::setComponent(ComponentName& component)
     return *this;
 }
 
+StringRef Intent::getPackage()
+{
+    return m_private->m_componentName.getPackageName();
+}
+
 Intent& Intent::setClass(Context& packageContext, Class& cls)
 {
     m_private->m_componentName = ComponentName(packageContext, cls);
+    return *this;
+}
+
+Intent& Intent::setClassName(Context& packageContext, StringRef className)
+{
+    m_private->m_componentName = ComponentName(packageContext, className);
+    return *this;
+}
+
+Intent& Intent::setClassName(StringRef packageName, StringRef className)
+{
+    m_private->m_componentName = ComponentName(packageName, className);
+    return *this;
+}
+
+int32_t Intent::getIntExtra(StringRef name, int32_t defaultValue)
+{
+    os::BundlePrivate& extras = os::BundlePrivate::getPrivate(m_private->m_extras);
+    if (!extras.findKey(name))
+        return defaultValue;
+
+    return extras.getValue(name).i;
+}
+
+Intent& Intent::putExtra(StringRef name, int32_t value)
+{
+    os::BundlePrivate::getPrivate(m_private->m_extras).putValue(name, os::BundleValue(value));
     return *this;
 }
 

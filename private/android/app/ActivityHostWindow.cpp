@@ -28,6 +28,7 @@
 #include <android/app/WindowProvider.h>
 #include <android/content/ContextPrivate.h>
 #include <android/view/InputDevice.h>
+#include <android/view/ViewGroup.h>
 #include <android/view/ViewPrivate.h>
 
 #include <algorithm>
@@ -47,10 +48,10 @@ private:
     ActivityHostWindow& m_window;
 };
 
-class ActivityHostWindow::DecorView : public view::View {
+class ActivityHostWindow::DecorView : public view::ViewGroup {
 public:
     DecorView(ActivityHostWindow& window)
-        : view::View(content::ContextPrivate::getGlobalContext())
+        : ViewGroup(content::ContextPrivate::getGlobalContext())
     {
         view::ViewPrivate::setPrivate(*this, std::make_unique<DecorViewPrivate>(*this, window));
     }
@@ -66,12 +67,12 @@ private:
 void ActivityHostWindow::DecorView::setView(std::passed_ptr<view::View> view)
 {
     if (m_view)
-        getPrivate(*this).childViewDetached(m_view.get());
+        removeView(m_view);
 
     m_view = view;
 
     if (m_view)
-        getPrivate(*this).childViewAttached(m_view.get());
+        addView(m_view);
 }
 
 std::unique_ptr<ActivityHostWindow> ActivityHostWindow::create(Activity& activity, WindowHandle parentWindow, const Rect& clientRect)
@@ -81,13 +82,14 @@ std::unique_ptr<ActivityHostWindow> ActivityHostWindow::create(Activity& activit
 
 ActivityHostWindow::ActivityHostWindow(Activity& activity, WindowHandle parentWindow, const Rect& clientRect)
     : m_activity(activity)
-    , m_handler(os::Handler::create())
+    , m_handler(std::make_shared<Handler>())
     , m_width(0)
     , m_height(0)
     , m_state(Init)
     , m_isVisible(false)
     , m_isGone(false)
     , m_isFocused(false)
+    , m_isAttached(false)
     , m_focusedView(nullptr)
     , m_decorView(std::make_unique<DecorView>(*this))
 {
@@ -118,15 +120,12 @@ void ActivityHostWindow::windowCreated()
 
     activity().callOnCreate();
     activity().callOnRestoreInstanceState();
-    activity().callOnPostCreate();
 }
 
 void ActivityHostWindow::windowDestroyed()
 {
-    if (contentView())
-        contentView()->onDetachedFromWindow();
-
-    m_activity.onDetachedFromWindow();
+    m_decorView->setVisibility(View::GONE);
+    m_decorView->onWindowFocusChanged(false);
 
     if (m_state == Pause) {
         activity().callOnStop();
@@ -134,51 +133,61 @@ void ActivityHostWindow::windowDestroyed()
     }
 
     activity().callOnDestroy();
+
+    m_decorView->onDetachedFromWindow();
+    m_activity.onDetachedFromWindow();
 }
 
 void ActivityHostWindow::windowPositionChanged(int32_t x, int32_t y)
 {
 }
 
-void ActivityHostWindow::windowSizeChanged(int32_t widthMeasureSpec, int32_t heightMeasureSpec, Resize resize)
+void ActivityHostWindow::windowSizeChanged(int32_t newWidth, int32_t newHeight, Resize resize)
 {
-    if (m_width == widthMeasureSpec && m_height == heightMeasureSpec)
+    if (!m_isAttached) {
+        m_width = newWidth;
+        m_height = newHeight;
+        return;
+    }
+
+    if (m_width == newWidth && m_height == newHeight)
         return;
 
-    m_width = widthMeasureSpec;
-    m_height = heightMeasureSpec;
+    int32_t oldWidth = m_width;
+    int32_t oldHeight = m_height;
+    m_width = newWidth;
+    m_height = newHeight;
 
-    bool windowMinimized = widthMeasureSpec == 0 && heightMeasureSpec == 0;
+    bool windowMinimized = newWidth == 0 && newHeight == 0;
     if (windowMinimized || resize == Minimized) {
         windowIsGone();
         return;
     } else if (m_isGone) {
         windowRestored();
+        return;
     }
     
-    if (!contentView())
-        return;
-    
-    bool changed = contentView()->getWidth() != widthMeasureSpec || contentView()->getHeight() != heightMeasureSpec;
+    bool changed = m_decorView->getWidth() != newWidth || m_decorView->getHeight() != newHeight;
     if (!changed)
         return;
     
-    contentView()->onMeasure(widthMeasureSpec, heightMeasureSpec);
-    contentView()->onLayout(Rect(0, 0, widthMeasureSpec, heightMeasureSpec));
+    m_decorView->onMeasure(newWidth, newHeight);
+    m_decorView->onSizeChanged(newWidth, newHeight, oldWidth, oldHeight);
+    m_decorView->onLayout(Rect(0, 0, newWidth, newHeight));
     invalidate();
 }
 
 void ActivityHostWindow::windowFocused(bool focus)
 {
+    if (!m_isAttached)
+        return;
+
     if (focus == m_isFocused)
         return;
 
     m_isFocused = focus;
 
-    if (!contentView())
-        return;
-    
-    contentView()->onWindowFocusChanged(focus);
+    m_decorView->onWindowFocusChanged(focus);
 }
 
 void ActivityHostWindow::windowActivated(bool active, bool stop)
@@ -189,50 +198,59 @@ void ActivityHostWindow::windowActivated(bool active, bool stop)
             m_state = Restart;
         }
 
-        bool notifyAttached = m_state == Create;
+        bool isNewWindow = m_state == Create;
         if (m_state == Create || m_state == Restart) {
             activity().callOnStart();
+            if (m_state == Create)
+                activity().callOnPostCreate();
             m_state = Start;
         }
+
         if (m_state == Start || m_state == Pause) {
             activity().callOnResume();
             activity().callOnPostResume();
+            if (m_isGone)
+                m_decorView->setVisibility(View::VISIBLE);
             m_state = Resume;
         }
 
-        if (notifyAttached) {
-            m_activity.onAttachedToWindow();
-            if (!contentView())
-                return;
-            contentView()->onAttachedToWindow();
+        if (isNewWindow) {
+            m_decorView->setVisibility(View::INVISIBLE);
+            m_handler->post([=] {
+                attachActivity();
+            });
         }
     } else {
         if (m_state == Resume) {
             activity().callOnPause();
-            activity().callOnSaveInstanceState();
             m_state = Pause;
         }
         if (stop && m_state == Pause) {
+            activity().callOnSaveInstanceState();
             activity().callOnStop();
             m_state = Stop;
+            if (m_isGone)
+                m_decorView->setVisibility(View::INVISIBLE);
+            m_activity.onTrimMemory(40); // TRIM_MEMORY_BACKGROUND
         }
     }
 }
 
 void ActivityHostWindow::windowIsVisible(bool visible)
 {
+    if (!m_isAttached)
+        return;
+
     if (visible == m_isVisible)
         return;
 
     m_isVisible = visible;
 
     if (!m_isVisible) {
-        if (contentView())
-            contentView()->setVisibility(View::INVISIBLE);
+        m_decorView->setVisibility(View::INVISIBLE);
         return;
     } else if (!m_isGone) {
-        if (contentView())
-            contentView()->setVisibility(View::VISIBLE);
+        m_decorView->setVisibility(View::VISIBLE);
     }
 }
 
@@ -309,38 +327,36 @@ WindowProvider* ActivityHostWindow::window() const
 
 void ActivityHostWindow::setContentView(std::passed_ptr<View> view)
 {
-    if (contentView())
-        contentView()->onDetachedFromWindow();
+    if (m_isVisible && m_isAttached) {
+        m_decorView->onWindowVisibilityChanged(View::GONE);
+        m_decorView->onDetachedFromWindow();
+    }
 
     m_decorView->setView(view);
 
-    if (contentView()) {
-        contentView()->onAttachedToWindow();
-        contentView()->setVisibility((m_isGone) ? View::GONE : (m_isVisible) ? View::VISIBLE : View::INVISIBLE);
-        contentView()->onMeasure(m_width, m_height);
-        contentView()->onLayout(Rect(0, 0, m_width, m_height));
+    if (m_isVisible && m_isAttached) {
+        m_decorView->onAttachedToWindow();
+        m_decorView->onWindowVisibilityChanged(View::VISIBLE);
+    }
 
-        if (m_isFocused)
-            contentView()->onWindowFocusChanged(true);
+    activity().callOnContentChanged();
 
+    if (m_isVisible && m_isAttached) {
+        m_decorView->onMeasure(m_width, m_height);
+        m_decorView->onSizeChanged(m_width, m_height, 0, 0);
+        m_decorView->onLayout(Rect(0, 0, m_width, m_height));
         invalidate();
     }
 }
 
 void ActivityHostWindow::invalidate()
 {
-    if (!contentView())
-        return;
-
-    contentView()->invalidate();
+    m_decorView->invalidate();
 }
 
 void ActivityHostWindow::invalidate(Rect& rect)
 {
-    if (!contentView())
-        return;
-
-    contentView()->invalidate(rect);
+    m_decorView->invalidate(rect);
 }
 
 bool ActivityHostWindow::startInputMethod(View* view, bool enable)
@@ -390,11 +406,7 @@ void ActivityHostWindow::windowRestored()
 
     m_isGone = false;
 
-    if (!contentView())
-        return;
-    
-    contentView()->onWindowVisibilityChanged(View::VISIBLE);
-    contentView()->onLayout(Rect(0, 0, m_width, m_height));
+    m_decorView->onWindowVisibilityChanged(View::VISIBLE);
 }
 
 void ActivityHostWindow::windowIsGone()
@@ -403,10 +415,21 @@ void ActivityHostWindow::windowIsGone()
 
     m_isGone = true;
 
-    if (!contentView())
-        return;
-    
-    contentView()->onWindowVisibilityChanged(View::GONE);
+    m_decorView->onWindowVisibilityChanged(View::GONE);
+}
+
+void ActivityHostWindow::attachActivity()
+{
+    m_isAttached = true;
+    windowIsVisible(true);
+    m_activity.onAttachedToWindow();
+    m_decorView->onAttachedToWindow();
+    m_decorView->onWindowVisibilityChanged(View::VISIBLE);
+    m_decorView->onMeasure(m_width, m_height);
+    m_decorView->onSizeChanged(m_width, m_height, 0, 0);
+    m_decorView->onLayout(Rect(0, 0, m_width, m_height));
+    windowFocused(true);
+    invalidate();
 }
 
 void ActivityHostWindow::setCursor(std::passed_ptr<view::Cursor> cursor)
@@ -455,7 +478,7 @@ void ActivityHostWindow::dpiChanged(int32_t dpi)
 {
     Configuration config;
     config.densityDpi = dpi;
-    contentView()->onConfigurationChanged(config);
+    m_decorView->onConfigurationChanged(config);
 }
 
 } // namespace app

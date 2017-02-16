@@ -25,7 +25,7 @@
 
 #include "Activity.h"
 
-#include <android/app/ActivityPrivate.h>
+#include <android/app/ActivityHostWindow.h>
 
 namespace android {
 namespace app {
@@ -137,6 +137,7 @@ void Activity::onWindowFocusChanged(bool hasFocus)
 
 void Activity::setContentView(std::passed_ptr<View> view)
 {
+    m_private->hostWindow()->setContentView(view);
 }
 
 void Activity::onCreate(std::passed_ptr<Bundle> savedInstanceState)

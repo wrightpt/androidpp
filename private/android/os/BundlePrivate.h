@@ -42,6 +42,15 @@ union BundleValue {
     int64_t l { 0 };
     float f;
     double d;
+
+    inline BundleValue() = default;
+    explicit inline BundleValue(int8_t value) : b(value) { }
+    explicit inline BundleValue(wchar_t value) : c(value) { }
+    explicit inline BundleValue(float value) : f(value) { }
+    explicit inline BundleValue(int16_t value) : s(value) { }
+    explicit inline BundleValue(int32_t value) : i(value) { }
+    explicit inline BundleValue(int64_t value) : l(value) { }
+    explicit inline BundleValue(double value) : d(value) { }
 };
 
 class BundlePrivate {
@@ -49,6 +58,9 @@ class BundlePrivate {
 public:
     BundlePrivate() = default;
     ~BundlePrivate() = default;
+
+    static BundlePrivate& getPrivate(Bundle&);
+    static void setPrivate(Bundle&, std::unique_ptr<BundlePrivate>&&);
 
     bool findKey(StringRef key);
     void clear();
@@ -74,7 +86,6 @@ private:
     std::unordered_map<String, std::unique_ptr<CharSequence>> m_charSequences;
     std::unordered_map<String, std::shared_ptr<Parcelable>> m_parcelables;
 };
-
 
 } // namespace os
 } // namespace android

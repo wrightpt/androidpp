@@ -37,6 +37,11 @@ public:
     static const bool DEBUG_GL = false;
     static const bool PRINT_ALL_CONFIGS = false;
 
+    // The renderer only renders when the surface is created, or when requestRender() is called. 
+    static const int32_t RENDERMODE_WHEN_DIRTY = 0;
+    // The renderer is called continuously to re-render the scene.
+    static const int32_t RENDERMODE_CONTINUOUSLY = 1;
+
     class Renderer {
     public:
         virtual ~Renderer() { }
@@ -49,6 +54,10 @@ public:
     ANDROID_EXPORT GLSurfaceView(Context&);
     ANDROID_EXPORT virtual ~GLSurfaceView();
 
+    // Inform the default EGLContextFactory and default EGLConfigChooser which EGLContext client version to pick. 
+    ANDROID_EXPORT virtual void setEGLContextClientVersion(int32_t version);
+    // Set the rendering mode. 
+    ANDROID_EXPORT virtual void setRenderMode(int32_t renderMode);
     // Control whether the EGL context is preserved when the GLSurfaceView is paused and resumed. 
     ANDROID_EXPORT virtual void setPreserveEGLContextOnPause(bool preserveOnPause);
     ANDROID_EXPORT virtual bool getPreserveEGLContextOnPause();
@@ -82,6 +91,7 @@ private:
     class GLThread;
     friend class GLThread;
 
+    int32_t m_eglContextClientVersion;
     Renderer* m_renderer;
     std::unique_ptr<GLThread> m_glThread;
 };

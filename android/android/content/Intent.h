@@ -46,11 +46,20 @@ public:
 
     // Retrieve the concrete component associated with the intent. 
     ANDROID_EXPORT virtual ComponentName& getComponent();
+    // Retrieve the application package name this Intent is limited to. 
+    ANDROID_EXPORT virtual StringRef getPackage();
     // (Usually optional) Explicitly set the component to handle the intent. 
     ANDROID_EXPORT virtual Intent& setComponent(ComponentName& component);
     // Convenience for calling setComponent(ComponentName) with the name returned by a Class object. 
     ANDROID_EXPORT virtual Intent& setClass(Context& packageContext, Class& cls);
-
+    // Convenience for calling setComponent(ComponentName) with an explicit class name. 
+    ANDROID_EXPORT virtual Intent& setClassName(Context& packageContext, StringRef className);
+    // Convenience for calling setComponent(ComponentName) with an explicit application package name and class name. 
+    ANDROID_EXPORT virtual Intent& setClassName(StringRef packageName, StringRef className);
+    // Retrieve extended data from the intent. 
+    ANDROID_EXPORT virtual int32_t getIntExtra(StringRef name, int32_t defaultValue);
+    // Add extended data to the intent. 
+    ANDROID_EXPORT virtual Intent& putExtra(StringRef name, int32_t value);
     // Retrieve extended data from the intent. 
     ANDROID_EXPORT virtual CharSequence getCharSequenceExtra(StringRef name);
     // Add extended data to the intent. 

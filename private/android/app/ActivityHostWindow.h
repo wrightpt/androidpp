@@ -86,6 +86,7 @@ private:
 
     void windowRestored();
     void windowIsGone();
+    void attachActivity();
 
     Activity& m_activity;
     std::shared_ptr<os::Handler> m_handler;
@@ -96,6 +97,7 @@ private:
     bool m_isVisible;
     bool m_isGone;
     bool m_isFocused;
+    bool m_isAttached;
     View* m_focusedView;
     std::unique_ptr<InputConnection> m_inputConnection;
 

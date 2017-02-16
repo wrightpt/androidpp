@@ -26,6 +26,7 @@
 #pragma once
 
 #include <android/graphics/PointF.h>
+#include <android/view/InputDevice.h>
 #include <android/view/InputEvent.h>
 
 namespace android {
@@ -210,19 +211,20 @@ public:
     static const int32_t TOOL_TYPE_UNKNOWN = 0x00000000;
 
     ANDROID_EXPORT MotionEvent();
-    ANDROID_EXPORT MotionEvent(MotionEvent&& other);
+    ANDROID_EXPORT MotionEvent(const MotionEvent&);
+    ANDROID_EXPORT MotionEvent(MotionEvent&&);
+    ANDROID_EXPORT MotionEvent& operator=(const MotionEvent&);
+    ANDROID_EXPORT MotionEvent& operator=(MotionEvent&&);
 
     // Create a new MotionEvent, filling in a subset of the basic motion values.
     ANDROID_EXPORT static MotionEvent obtain(std::chrono::milliseconds downTime, std::chrono::milliseconds eventTime, int32_t action, float x, float y, int32_t metaState);
-    // Create a new MotionEvent, filling in all of the basic values that define the motion.
-    ANDROID_EXPORT static MotionEvent obtain(std::chrono::milliseconds downTime, std::chrono::milliseconds eventTime, int32_t action, float x, float y, float pressure, float size, int32_t metaState, float xPrecision, float yPrecision, int32_t deviceId, int32_t edgeFlags);
     // Create a new MotionEvent, copying from an existing one.
     ANDROID_EXPORT static MotionEvent obtain(const MotionEvent& other);
 
     // Returns a string that represents the symbolic name of the specified unmasked action such as "ACTION_DOWN", "ACTION_POINTER_DOWN(3)" or an equivalent numeric constant such as "35" if unknown.
     ANDROID_EXPORT static String actionToString(int32_t action);
     // Gets an axis by its symbolic name such as "AXIS_X" or an equivalent numeric constant such as "42".
-    ANDROID_EXPORT static int32_t axisFromString(String symbolicName);
+    ANDROID_EXPORT static int32_t axisFromString(StringRef symbolicName);
     // Returns a string that represents the symbolic name of the specified axis such as "AXIS_X" or an equivalent numeric constant such as "42" if unknown.
     ANDROID_EXPORT static String axisToString(int32_t axis);
 
@@ -303,9 +305,12 @@ private:
     float m_xPrecision { 0.0f };
     float m_yPrecision { 0.0f };
     int32_t m_flags { 0 };
-    int32_t m_source { 0 };
+    int32_t m_source { InputDevice::SOURCE_UNKNOWN };
 
-    std::unique_ptr<MotionEventPrivate> m_private;
+    int32_t m_actionButton { 0 };
+    int32_t m_buttonState { 0 };
+    int32_t m_repeatCount { 0 };
+    float m_wheelDelta { 0.0f };
 };
 
 } // namespace view

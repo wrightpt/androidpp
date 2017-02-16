@@ -33,18 +33,13 @@ namespace view {
 class MotionEventPrivate {
     friend class MotionEvent;
 public:
-    MotionEventPrivate(MotionEvent&);
-    virtual ~MotionEventPrivate();
+    static void setPrivateData(MotionEvent&, int32_t actionButton, int32_t buttonState, int32_t repeatCount, float wheelDelta);
 
-    static MotionEventPrivate& getPrivate(MotionEvent&);
-    static void setPrivate(MotionEvent&, std::unique_ptr<MotionEventPrivate>&&);
+    static float getAxisValue(MotionEvent&, int32_t axis, int32_t pointerIndex);
+    static float getOrientation(MotionEvent&, int32_t pointerIndex);
 
-    int32_t actionButton { 0 };
-    int32_t buttonState { 0 };
-    int32_t repeatCount { 0 };
-
-    virtual float getAxisValue(int32_t axis, int32_t pointerIndex) = 0;
-    virtual float getOrientation(int32_t pointerIndex) = 0;
+private:
+    MotionEventPrivate() = default;
 };
 
 } // namespace view

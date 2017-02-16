@@ -33,12 +33,17 @@ namespace android {
 namespace view {
 
 class ViewGroup : public View {
+    friend class ViewPrivate;
+    friend class app::ActivityHostWindow;
 public:
     ANDROID_EXPORT ViewGroup(Context&);
     ANDROID_EXPORT virtual ~ViewGroup();
 
     // Adds a child view.
     ANDROID_EXPORT virtual void addView(std::passed_ptr<View>);
+    // Note: do not invoke this method from draw(android.graphics.Canvas), onDraw(android.graphics.Canvas), dispatchDraw(android.graphics.Canvas) or any related method. 
+    ANDROID_EXPORT virtual void removeView(std::passed_ptr<View>);
+
     // Change the z order of the child so it's on top of all other children.
     ANDROID_EXPORT virtual void bringChildToFront(std::passed_ptr<View>);
 
@@ -56,7 +61,9 @@ public:
 protected:
     ANDROID_EXPORT virtual void onAttachedToWindow() override;
     ANDROID_EXPORT virtual void onDetachedFromWindow() override;
-    ANDROID_EXPORT virtual void onWindowVisibilityChanged(int visibility) override;
+    ANDROID_EXPORT virtual void onSizeChanged(int32_t w, int32_t h, int32_t oldw, int32_t oldh) override;
+    ANDROID_EXPORT virtual void onVisibilityChanged(View* changedView, int32_t visibility) override;
+    ANDROID_EXPORT virtual void onWindowVisibilityChanged(int32_t visibility) override;
     ANDROID_EXPORT virtual void onFocusChanged(bool gainFocus, int32_t direction, Rect& previouslyFocusedRect) override;
     ANDROID_EXPORT virtual void onMeasure(int32_t, int32_t) override;
     ANDROID_EXPORT virtual void onLayout(Rect&) override;

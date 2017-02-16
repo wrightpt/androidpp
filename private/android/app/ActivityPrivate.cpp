@@ -117,6 +117,11 @@ void ActivityPrivate::callOnStop()
     m_this.onStop();
 }
 
+void ActivityPrivate::callOnContentChanged()
+{
+    m_this.onContentChanged();
+}
+
 bool ActivityPrivate::callOnGenericMotionEvent(MotionEvent& event)
 {
     return m_this.onGenericMotionEvent(event);

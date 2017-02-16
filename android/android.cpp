@@ -128,7 +128,7 @@ int32_t ApplicationContext::getFlags()
     return m_flags;
 }
 
-std::shared_ptr<Bundle> ApplicationContext::getInstanceStateBundle()
+std::passed_ptr<Bundle> ApplicationContext::getInstanceStateBundle()
 {
     return m_stateBundle;
 }

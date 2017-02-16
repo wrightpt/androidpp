@@ -33,12 +33,9 @@ namespace com {
 namespace example {
 
 class TestActivity : public Activity {
-    friend class TestServiceConnection;
 public:
     ANDROID_EXTERN TestActivity();
     ANDROID_EXTERN ~TestActivity();
-
-    void sayHello();
 
     void onAttachedToWindow() override;
     void onBackPressed() override;
@@ -68,10 +65,7 @@ protected:
     void onStart() override;
     void onStop() override;
 
-private:
-    std::shared_ptr<Messenger> mService;
-    bool mBound { false };
-    std::shared_ptr<ServiceConnection> mConnection;
+    std::shared_ptr<View> mView;
 };
 
 } // namespace example

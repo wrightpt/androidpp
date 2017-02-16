@@ -25,7 +25,7 @@
 
 #include "TestActivity.h"
 
-#include "TestService.h"
+#include "TestView.h"
 #include <android/os/Message.h>
 #include <android/view/InputDevice.h>
 #include <android++/LogHelper.h>
@@ -33,50 +33,12 @@
 namespace com {
 namespace example {
 
-class TestServiceConnection : public ServiceConnection {
-    friend class TestActivity;
-public:
-    void onServiceConnected(ComponentName& className, std::passed_ptr<IBinder> service) {
-        // This is called when the connection with the service has been
-        // established, giving us the object we can use to
-        // interact with the service.  We are communicating with the
-        // service using a Messenger, so here we get a client-side
-        // representation of that from the raw IBinder object.
-        mThis.mService = std::make_shared<Messenger>(service);
-        mThis.mBound = true;
-    }
-
-    void onServiceDisconnected(ComponentName& className) {
-        // This is called when the connection with the service has been
-        // unexpectedly disconnected -- that is, its process crashed.
-        mThis.mService = nullptr;
-        mThis.mBound = false;
-    }
-
-private:
-    TestServiceConnection(TestActivity& activity)
-        : mThis(activity)
-    {
-    }
-
-    TestActivity& mThis;
-};
-
 TestActivity::TestActivity()
-    : mConnection(new TestServiceConnection(*this))
 {
 }
 
 TestActivity::~TestActivity()
 {
-}
-
-void TestActivity::sayHello()
-{
-    if (!mBound) return;
-    // Create and send a message to the service, using a supported 'what' value
-    Message msg = Message::obtain(nullptr, TestService::MSG_SAY_HELLO, 0, 0);
-    mService->send(msg);
 }
 
 void TestActivity::onAttachedToWindow()
@@ -106,17 +68,17 @@ void TestActivity::onDetachedFromWindow()
 
 bool TestActivity::onGenericMotionEvent(MotionEvent& event)
 {
-    LOGD("%s", __FUNCTION__);
     if (event.getSource() == InputDevice::SOURCE_MOUSE &&
-        event.getAction() == MotionEvent::ACTION_BUTTON_PRESS)
-        sayHello();
+        event.getAction() == MotionEvent::ACTION_HOVER_MOVE)
+        return false;
+
+    LOGD("%s", __FUNCTION__);
     return false;
 }
 
 bool TestActivity::onKeyDown(int32_t keyCode, KeyEvent& event)
 {
     LOGD("%s", __FUNCTION__);
-    sayHello();
     return false;
 }
 
@@ -164,6 +126,8 @@ void TestActivity::onCreate(std::passed_ptr<Bundle> savedInstanceState)
 {
     LOGD("%s", __FUNCTION__);
     Activity::onCreate(savedInstanceState);
+    mView = std::make_shared<TestView>(*this);
+    setContentView(mView);
 }
 
 void TestActivity::onDestroy()
@@ -209,21 +173,11 @@ void TestActivity::onSaveInstanceState(std::passed_ptr<Bundle> outState)
 void TestActivity::onStart()
 {
     LOGD("%s", __FUNCTION__);
-    Activity::onStart();
-    // Bind to the service
-    bindService(Intent(*this, classT<TestService>()), mConnection,
-        Context::BIND_AUTO_CREATE);
 }
 
 void TestActivity::onStop()
 {
     LOGD("%s", __FUNCTION__);
-    Activity::onStop();
-    // Unbind from the service
-    if (mBound) {
-        unbindService(mConnection);
-        mBound = false;
-    }
 }
 
 } // namespace example

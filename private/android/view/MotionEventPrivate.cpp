@@ -28,22 +28,24 @@
 namespace android {
 namespace view {
 
-MotionEventPrivate::MotionEventPrivate(MotionEvent&)
+void MotionEventPrivate::setPrivateData(MotionEvent& event, int32_t actionButton, int32_t buttonState, int32_t repeatCount, float wheelDelta)
 {
+    event.m_wheelDelta = wheelDelta;
+    event.m_actionButton = actionButton;
+    event.m_buttonState = buttonState;
+    event.m_repeatCount = repeatCount;
 }
 
-MotionEventPrivate::~MotionEventPrivate()
+float MotionEventPrivate::getAxisValue(MotionEvent& event, int32_t axis, int32_t pointerIndex)
 {
+    if (axis == MotionEvent::AXIS_VSCROLL)
+        return event.m_wheelDelta;
+    return std::numeric_limits<float>::quiet_NaN();
 }
 
-MotionEventPrivate& MotionEventPrivate::getPrivate(MotionEvent& event)
+float MotionEventPrivate::getOrientation(MotionEvent& event, int32_t pointerIndex)
 {
-    return *event.m_private;
-}
-
-void MotionEventPrivate::setPrivate(MotionEvent& event, std::unique_ptr<MotionEventPrivate>&& p)
-{
-    event.m_private = std::move(p);
+    return std::numeric_limits<float>::quiet_NaN();
 }
 
 } // namespace view

@@ -26,6 +26,7 @@
 #pragma once
 
 #include <java/lang/StringImport.h>
+#include <java/net.h>
 
 #include <unordered_map>
 
@@ -33,6 +34,7 @@ namespace java {
 namespace lang {
 
 class Class;
+class Package;
 
 class ClassLoader {
     NONCOPYABLE(ClassLoader)
@@ -43,13 +45,17 @@ public:
 
     // Returns the system class loader for delegation.
     ANDROID_EXPORT static ClassLoader& getSystemClassLoader();
-
+    // Defines a package by name in this ClassLoader. 
+    ANDROID_EXPORT virtual std::passed_ptr<Package> definePackage(StringRef name, StringRef specTitle, StringRef specVersion, StringRef specVendor, StringRef implTitle, StringRef implVersion, StringRef implVendor, URL& sealBase);
+    // Returns a Package that has been defined by this class loader or any of its ancestors. 
+    ANDROID_EXPORT virtual std::passed_ptr<Package> getPackage(StringRef name);
     // Finds the class with the specified binary name.
-    ANDROID_EXPORT virtual std::shared_ptr<Class> findClass(StringRef name);
+    ANDROID_EXPORT virtual std::passed_ptr<Class> findClass(StringRef name);
     // Links the specified class. 
     ANDROID_EXPORT void resolveClass(std::passed_ptr<Class> c);
 
 private:
+    std::unordered_map<String, std::shared_ptr<Package>> m_packages;
     std::unordered_map<String, std::shared_ptr<Class>> m_classes;
 };
 

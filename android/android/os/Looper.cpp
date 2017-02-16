@@ -80,6 +80,7 @@ void Looper::prepare()
         return;
 
     threadLooper = new Looper();
+    threadLooper->m_tid = platformGetThreadId();
 }
 
 // Run the message queue in this thread.
@@ -95,13 +96,13 @@ void Looper::loop()
 // Quits the looper.
 void Looper::quit()
 {
-    platformLooperQuit(0);
+    platformLooperQuit(m_tid, 0);
 }
 
 // Quits the looper safely.
 void Looper::quitSafely()
 {
-    platformLooperQuit(0);
+    platformLooperQuit(m_tid, 0);
 }
 
 } // namespace os

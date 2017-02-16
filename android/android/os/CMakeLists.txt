@@ -19,7 +19,14 @@ set(OS_HEADERS
     Parcel.h
     ParcelFileDescriptor.h
     Parcelable.h
+    Process.h
 )
+
+if (WIN32)
+    list(APPEND OS_SOURCES
+        win/ProcessWin.cpp
+    )
+endif ()
 
 include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}"

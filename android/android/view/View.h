@@ -139,6 +139,10 @@ protected:
     ANDROID_EXPORT virtual void onAttachedToWindow();
     // This is called when the view is detached from a window.
     ANDROID_EXPORT virtual void onDetachedFromWindow();
+    // This is called during layout when the size of this view has changed.
+    ANDROID_EXPORT virtual void onSizeChanged(int32_t w, int32_t h, int32_t oldw, int32_t oldh);
+    // Called when the visibility of the view or an ancestor of the view has changed. 
+    ANDROID_EXPORT virtual void onVisibilityChanged(View* changedView, int32_t visibility);
     // Called when the window containing has change its visibility (between GONE, INVISIBLE, and VISIBLE).
     ANDROID_EXPORT virtual void onWindowVisibilityChanged(int32_t visibility);
     // Called by the view system when the focus state of this view changes.

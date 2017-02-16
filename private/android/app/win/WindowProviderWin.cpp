@@ -306,43 +306,10 @@ static int32_t buttonStateForMouseEvent(UINT nFlags)
     return modifiers;
 }
 
-class MouseEventPrivate final : public view::MotionEventPrivate {
-    friend class view::MotionEvent;
-public:
-    MouseEventPrivate(view::MotionEvent& event, int32_t actionButton, int32_t buttonState, int32_t repeatCount, float wheelDelta);
-    ~MouseEventPrivate() = default;
-
-    float wheelDelta;
-
-    float getAxisValue(int32_t axis, int32_t pointerIndex) override;
-    float getOrientation(int32_t pointerIndex) override;
-};
-
-MouseEventPrivate::MouseEventPrivate(view::MotionEvent& event, int32_t actionButton, int32_t buttonState, int32_t repeatCount, float wheelDelta)
-    : MotionEventPrivate(event)
-    , wheelDelta(wheelDelta)
-{
-    this->actionButton = actionButton;
-    this->buttonState = buttonState;
-    this->repeatCount = repeatCount;
-}
-
-float MouseEventPrivate::getAxisValue(int32_t axis, int32_t pointerIndex)
-{
-    if (axis == view::MotionEvent::AXIS_VSCROLL)
-        return wheelDelta;
-    return std::numeric_limits<float>::quiet_NaN();
-}
-
-float MouseEventPrivate::getOrientation(int32_t pointerIndex)
-{
-    return std::numeric_limits<float>::quiet_NaN();
-}
-
 static view::MotionEvent mouseEvent(std::chrono::milliseconds downTime, int32_t action, const PointF& xy, const PointF& rawXY, UINT nFlags, int32_t actionButton, int32_t repeatCount, float wheelDelta = 0.0f)
 {
     view::MotionEvent event(view::MotionEvent::obtain(downTime, System::currentTimeMillis(), action, xy.x, xy.y, metaStateForMouseEvent(nFlags)));
-    view::MotionEventPrivate::setPrivate(event, std::make_unique<MouseEventPrivate>(event, actionButton, buttonStateForMouseEvent(nFlags), repeatCount, wheelDelta));
+    view::MotionEventPrivate::setPrivateData(event, actionButton, buttonStateForMouseEvent(nFlags), repeatCount, wheelDelta);
     event.setSource(InputDevice::SOURCE_MOUSE);
     return event;
 }

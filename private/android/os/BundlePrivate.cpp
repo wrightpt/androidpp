@@ -30,6 +30,16 @@
 namespace android {
 namespace os {
 
+BundlePrivate& BundlePrivate::getPrivate(Bundle& bundle)
+{
+    return *bundle.m_private;
+}
+
+void BundlePrivate::setPrivate(Bundle& bundle, std::unique_ptr<BundlePrivate>&& bundlePrivate)
+{
+    bundle.m_private = std::move(bundlePrivate);
+}
+
 bool BundlePrivate::findKey(StringRef key)
 {
     return m_keys.count(key);

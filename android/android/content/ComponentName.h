@@ -38,6 +38,10 @@ public:
     ANDROID_EXPORT ComponentName() = default;
     // Create a new component identifier from a Context and Class object. 
     ANDROID_EXPORT ComponentName(Context& pkg, Class& cls);
+    // Create a new component identifier.
+    ANDROID_EXPORT ComponentName(StringRef pkg, StringRef cls);
+    // Create a new component identifier from a Context and class name. 
+    ANDROID_EXPORT ComponentName(Context& pkg, StringRef cls);
     ANDROID_EXPORT ComponentName(const ComponentName&);
     ANDROID_EXPORT ComponentName(ComponentName&&);
     ANDROID_EXPORT ComponentName& operator=(const ComponentName&);

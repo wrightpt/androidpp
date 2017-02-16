@@ -42,6 +42,7 @@ protected:
     ParcelableCreator(T*, String&& packageName, String&& name)
         : binaryName(packageName + L'.' + name)
     {
+        ClassLoader::getSystemClassLoader().definePackage(String(packageName), String(), String(), String(), String(), String(), String(), URL());
         ClassLoader::getSystemClassLoader().resolveClass(std::make_shared<java::lang::ClassT<T>>(std::move(packageName), std::move(name)));
     }
 

@@ -98,7 +98,7 @@ std::unique_ptr<ServiceHostWindow> ServiceHostWindow::create(Service& service)
 
 ServiceHostWindow::ServiceHostWindow(Service& service)
     : m_service(service)
-    , m_handler(os::Handler::create())
+    , m_handler(std::make_shared<Handler>())
 {
     m_handler->post([=] {
         m_windowProvider = std::make_shared<ServiceWindowProvider>(*this);

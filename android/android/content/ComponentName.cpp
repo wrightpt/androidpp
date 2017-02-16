@@ -37,6 +37,18 @@ ComponentName::ComponentName(Context& pkg, Class& cls)
 {
 }
 
+ComponentName::ComponentName(StringRef pkg, StringRef cls)
+    : m_packageName(pkg)
+    , m_className(cls)
+{
+}
+
+ComponentName::ComponentName(Context& pkg, StringRef cls)
+    : m_packageName(pkg.getPackageName())
+    , m_className(cls)
+{
+}
+
 ComponentName::ComponentName(const ComponentName& other)
     : m_packageName(other.m_packageName)
     , m_className(other.m_className)

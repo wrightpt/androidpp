@@ -32,6 +32,11 @@ namespace os {
 
 static thread_local bool isMainThreadLooper = false;
 
+int64_t Looper::platformGetThreadId()
+{
+    return ::GetCurrentThreadId();
+}
+
 void Looper::platformLooperPrepareMain()
 {
     isMainThreadLooper = true;
@@ -48,9 +53,9 @@ void Looper::platformLooperLoop()
     }
 }
 
-void Looper::platformLooperQuit(int32_t)
+void Looper::platformLooperQuit(int64_t tid, int32_t exitCode)
 {
-    ::PostQuitMessage(0);
+    ::PostThreadMessage(tid, WM_QUIT, exitCode, 0);
 }
 
 } // namespace os

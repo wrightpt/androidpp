@@ -123,42 +123,14 @@ int16_t Bundle::getShort(StringRef key, short defaultValue)
     return getShort(key);
 }
 
-static inline BundleValue wrap(int8_t value)
-{
-    BundleValue v;
-    v.b = value;
-    return v;
-}
-
-static inline BundleValue wrap(wchar_t value)
-{
-    BundleValue v;
-    v.c = value;
-    return v;
-}
-
-static inline BundleValue wrap(float value)
-{
-    BundleValue v;
-    v.f = value;
-    return v;
-}
-
-static inline BundleValue wrap(int16_t value)
-{
-    BundleValue v;
-    v.s = value;
-    return v;
-}
-
 void Bundle::putByte(StringRef key, int8_t value)
 {
-    m_private->putValue(key, wrap(value));
+    m_private->putValue(key, BundleValue(value));
 }
 
 void Bundle::putChar(StringRef key, wchar_t value)
 {
-    m_private->putValue(key, wrap(value));
+    m_private->putValue(key, BundleValue(value));
 }
 
 void Bundle::putCharSequence(StringRef key, const CharSequence& value)
@@ -168,12 +140,12 @@ void Bundle::putCharSequence(StringRef key, const CharSequence& value)
 
 void Bundle::putFloat(StringRef key, float value)
 {
-    m_private->putValue(key, wrap(value));
+    m_private->putValue(key, BundleValue(value));
 }
 
 void Bundle::putShort(StringRef key, int16_t value)
 {
-    m_private->putValue(key, wrap(value));
+    m_private->putValue(key, BundleValue(value));
 }
 
 std::shared_ptr<Parcelable> Bundle::getParcelable(StringRef key)

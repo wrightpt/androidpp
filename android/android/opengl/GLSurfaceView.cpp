@@ -130,6 +130,7 @@ public:
         , m_waitingForSurface(false)
         , m_hasEglContext(false)
         , m_hasEglSurface(false)
+        , m_renderMode(RENDERMODE_CONTINUOUSLY)
         , m_requestRender(false)
         , m_renderComplete(false)
     { }
@@ -142,6 +143,17 @@ public:
     {
         synchronized (sGLThreadManager) {
             m_requestRender = true;
+            sGLThreadManager.notifyAll();
+        }
+    }
+
+    void setRenderMode(int32_t renderMode)
+    {
+        if (!((RENDERMODE_WHEN_DIRTY <= renderMode) && (renderMode <= RENDERMODE_CONTINUOUSLY))) {
+            LOGA("IllegalArgumentException: renderMode");
+        }
+        synchronized(sGLThreadManager) {
+            m_renderMode = renderMode;
             sGLThreadManager.notifyAll();
         }
     }
@@ -318,7 +330,7 @@ private:
 
     bool readyToDraw()
     {
-        return !m_paused && m_hasSurface && !m_surfaceIsBad && m_requestRender;
+        return !m_paused && m_hasSurface && !m_surfaceIsBad && (m_requestRender || (m_renderMode == RENDERMODE_CONTINUOUSLY));
     }
 
     bool testEGLContextLost()
@@ -539,6 +551,7 @@ private:
     bool m_waitingForSurface;
     bool m_hasEglContext;
     bool m_hasEglSurface;
+    int32_t m_renderMode;
     bool m_requestRender;
     bool m_renderComplete;
     std::deque<std::function<void ()>> m_eventQueue;
@@ -550,6 +563,7 @@ private:
 
 GLSurfaceView::GLSurfaceView(Context& context)
     : View(context)
+    , m_eglContextClientVersion(1)
     , m_renderer(0)
     , m_glThread(new GLThread(*this))
 {
@@ -561,7 +575,17 @@ GLSurfaceView::~GLSurfaceView()
         m_glThread->requestExit();
 }
 
-// Control whether the EGL context is preserved when the GLSurfaceView is paused and resumed. 
+void GLSurfaceView::setEGLContextClientVersion(int32_t version)
+{
+    release_assert(version == 2);
+    m_eglContextClientVersion = version;
+}
+
+void GLSurfaceView::setRenderMode(int32_t renderMode)
+{
+    m_glThread->setRenderMode(renderMode);
+}
+
 void GLSurfaceView::setPreserveEGLContextOnPause(bool preserveOnPause)
 {
 }
@@ -576,6 +600,7 @@ void GLSurfaceView::setRenderer(Renderer* renderer)
     if (renderer == m_renderer)
         return;
 
+    release_assert(m_eglContextClientVersion == 2);
     // FIXME: May needs referencing.
     m_renderer = renderer;
 

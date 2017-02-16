@@ -25,12 +25,14 @@
 
 #include "InputEvent.h"
 
+#include "InputDevice.h"
+
 namespace android {
 namespace view {
 
 bool InputEvent::isFromSource(int32_t source)
 {
-    return false;
+    return getSource() == source;
 }
 
 } // namespace view

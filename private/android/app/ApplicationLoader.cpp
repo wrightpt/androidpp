@@ -120,11 +120,13 @@ void ApplicationLoader::onTimer()
     }
     case BIND_SERVICE: {
         m_context->setApplication(m_intent, BIND_SERVICE, m_flags);
-        break;
+        return;
     }
     default:
         break;
     }
+
+    m_state = NO_ACTION;
 }
 
 void ApplicationLoader::onTransaction(int32_t code, Parcel& data, Parcel* reply, int32_t flags)
