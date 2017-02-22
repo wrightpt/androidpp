@@ -25,6 +25,7 @@ include_directories(
     "${LIBRARY_PRODUCT_DIR}/include/android++"
     "${LIBRARY_PRODUCT_DIR}/include/android++/android"
     "${ANGLE_LIBRARY_DIR}/include"
+    "${ANGLE_LIBRARY_DIR}"
 )
 
 add_library(GL2JNIActivity SHARED ${GL2JNI_ACTIVITY_SOURCES} ${GL2JNI_ACTIVITY_HEADERS})

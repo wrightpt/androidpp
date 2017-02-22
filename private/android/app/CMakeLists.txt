@@ -40,7 +40,6 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/wtl"
-    "${ANGLE_LIBRARY_DIR}/include"
 )
 
 add_library(private.android.app OBJECT ${APP_HEADERS} ${APP_SOURCES})

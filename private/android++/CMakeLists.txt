@@ -34,6 +34,7 @@ if (NOT ANDROID)
         "${CMAKE_BINARY_DIR}"
         "${LIBRARY_PRODUCT_DIR}/include"
         "${ANGLE_LIBRARY_DIR}/include"
+        "${ANGLE_LIBRARY_DIR}"
     )
 
     add_library(android++ SHARED

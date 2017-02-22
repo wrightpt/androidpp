@@ -19,6 +19,7 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${ANGLE_LIBRARY_DIR}/include"
+    "${ANGLE_LIBRARY_DIR}"
 )
 
 add_library(android.graphics OBJECT ${GRAPHICS_HEADERS} ${GRAPHICS_SOURCES})

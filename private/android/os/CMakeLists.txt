@@ -38,7 +38,6 @@ include_directories(
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
     "${LIBRARY_PRODUCT_DIR}/include/ndk"
-    "${ANGLE_LIBRARY_DIR}/include"
 )
 
 add_library(private.android.os OBJECT ${OS_HEADERS} ${OS_SOURCES})

@@ -19,7 +19,6 @@ include_directories(
     "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_BINARY_DIR}"
     "${LIBRARY_PRODUCT_DIR}/include"
-    "${ANGLE_LIBRARY_DIR}/include"
 )
 
 add_library(private.android.util OBJECT ${UTIL_HEADERS} ${UTIL_SOURCES})
