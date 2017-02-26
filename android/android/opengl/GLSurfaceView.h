@@ -94,6 +94,7 @@ private:
     int32_t m_eglContextClientVersion;
     Renderer* m_renderer;
     std::unique_ptr<GLThread> m_glThread;
+    bool m_preserveEGLContextOnPause { false };
 };
 
 } // namespace opengl

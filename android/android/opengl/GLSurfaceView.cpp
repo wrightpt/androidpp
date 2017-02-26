@@ -45,11 +45,13 @@ public:
 
     bool shouldReleaseEGLContextWhenPausing()
     {
+        static bool limitedGLESContexts =
 #ifdef NDEBUG
-        return false;
+            false;
 #else
-        return true;
+            true;
 #endif
+        return limitedGLESContexts;
     }
 
 private:
@@ -152,7 +154,7 @@ public:
         if (!((RENDERMODE_WHEN_DIRTY <= renderMode) && (renderMode <= RENDERMODE_CONTINUOUSLY))) {
             LOGA("IllegalArgumentException: renderMode");
         }
-        synchronized(sGLThreadManager) {
+        synchronized (sGLThreadManager) {
             m_renderMode = renderMode;
             sGLThreadManager.notifyAll();
         }
@@ -588,11 +590,12 @@ void GLSurfaceView::setRenderMode(int32_t renderMode)
 
 void GLSurfaceView::setPreserveEGLContextOnPause(bool preserveOnPause)
 {
+    m_preserveEGLContextOnPause = preserveOnPause;
 }
 
 bool GLSurfaceView::getPreserveEGLContextOnPause()
 {
-    return false;
+    return m_preserveEGLContextOnPause;
 }
 
 void GLSurfaceView::setRenderer(Renderer* renderer)
