@@ -221,7 +221,7 @@ void ActivityHostWindow::windowActivated(bool active, bool stop)
             });
         }
     } else {
-        if (m_state == Resume) {
+        if (stop && m_state == Resume) {
             activity().callOnPause();
             m_state = Pause;
         }

@@ -51,7 +51,7 @@ View::~View()
 
 void View::setVisibility(int32_t visibility)
 {
-    m_visibility = visibility;
+    onVisibilityChanged(this, visibility);
 }
 
 void View::setFocusable(bool focusable)
@@ -96,7 +96,7 @@ std::shared_ptr<IBinder> View::getWindowToken()
 
 std::unique_ptr<InputConnection> View::onCreateInputConnection(EditorInfo& outAttrs)
 {
-    return 0;
+    return nullptr;
 }
 
 bool View::onGenericMotionEvent(MotionEvent&)
@@ -154,6 +154,7 @@ void View::onSizeChanged(int32_t w, int32_t h, int32_t oldw, int32_t oldh)
 
 void View::onVisibilityChanged(View* changedView, int32_t visibility)
 {
+    m_visibility = visibility;
 }
 
 void View::onWindowVisibilityChanged(int32_t visibility)
