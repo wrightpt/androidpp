@@ -209,6 +209,9 @@ public:
         bool hasData;
         source >> hasData;
         if (hasData) {
+            String binaryName;
+            source >> binaryName;
+            assert(binaryName == ParcelableCreator::creator<Bundle>().binaryName);
             result->data = new Bundle();
             result->data->readFromParcel(source);
         }
@@ -226,7 +229,7 @@ public:
     }
 };
 
-const LazyInitializedPtr<Parcelable::Creator> Message::CREATOR([] { return new MessageCreator; }, true);
+const LazyInitializedPtr<Parcelable::Creator> Message::CREATOR([] { return new MessageCreator; });
 
 int32_t Message::describeContents()
 {

@@ -34,10 +34,14 @@ namespace res {
 class Resources {
     NONCOPYABLE(Resources);
 public:
-    ANDROID_EXPORT Resources();
+    // Return a global shared Resources object that provides access to only system resources (no application resources), and is not configured for the current screen (can not use dimension units, does not change based on orientation, etc). 
+    ANDROID_EXPORT static Resources& getSystem();
 
     // Return the current display metrics that are in effect for this resource object.
     ANDROID_EXPORT DisplayMetrics& getDisplayMetrics();
+
+private:
+    Resources() = default;
 };
 
 } // namespace res

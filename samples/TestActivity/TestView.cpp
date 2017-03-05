@@ -39,7 +39,7 @@ TestView::~TestView()
 {
 }
 
-std::unique_ptr<InputConnection> TestView::onCreateInputConnection(EditorInfo& outAttrs)
+std::shared_ptr<InputConnection> TestView::onCreateInputConnection(EditorInfo& outAttrs)
 {
     LOGD("%s", __FUNCTION__);
     return View::onCreateInputConnection(outAttrs);
@@ -133,10 +133,10 @@ void TestView::onFocusChanged(bool gainFocus, int32_t direction, Rect& previousl
     View::onFocusChanged(gainFocus, direction, previouslyFocusedRect);
 }
 
-void TestView::onLayout(Rect& rc)
+void TestView::onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom)
 {
     LOGD("%s", __FUNCTION__);
-    View::onLayout(rc);
+    View::onLayout(changed, left, top, right, bottom);
 }
 
 void TestView::onMeasure(int32_t widthMeasureSpec, int32_t heightMeasureSpec)

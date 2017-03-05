@@ -2,12 +2,13 @@ set(UTIL_SOURCES
 )
 
 set(UTIL_HEADERS
+    PlatformDisplayMetrics.h
 )
 
 if (WIN32)
     list(APPEND UTIL_SOURCES
-        win/DisplayMetricsWin.cpp
         win/LogWin.cpp
+        win/PlatformDisplayMetricsWin.cpp
     )
 endif ()
 

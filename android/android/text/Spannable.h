@@ -25,50 +25,18 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
+#include <java/lang.h>
 
 namespace android {
+namespace text {
 
-template<typename T>
-class LazyInitializedPtr {
+class Spannable {
 public:
-    template<typename F>
-    LazyInitializedPtr(F&& constructor)
-        : m_constructor(std::move(constructor))
-    {
-    }
-    LazyInitializedPtr(const LazyInitializedPtr&) = delete;
-    LazyInitializedPtr& operator=(const LazyInitializedPtr&) = delete;
-
-    T* get() const
-    {
-        if (!m_isInitialized) {
-            m_ptr.reset(m_constructor());
-            m_isInitialized = true;
-        }
-
-        return m_ptr.get();
-    }
-
-    void set(T* ptr)
-    {
-        m_ptr.reset(ptr);
-        m_isInitialized = true;
-    }
-
-    T* peek() const
-    {
-        return m_ptr.get();
-    }
-
-    T* operator->() const { return get(); }
-    T& operator*() const { return *get(); }
-
-private:
-    std::function<T* ()> m_constructor;
-    mutable bool m_isInitialized = false;
-    mutable std::unique_ptr<T> m_ptr;
+    ANDROID_EXPORT Spannable() = default;
+    ANDROID_EXPORT virtual ~Spannable() = default;
 };
 
+} // namespace text
 } // namespace android
+
+using Spannable = android::text::Spannable;

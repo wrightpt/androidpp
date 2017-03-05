@@ -27,6 +27,7 @@
 
 #include <android.h>
 #include <android/app/ApplicationProcess.h>
+#include <android/content/Context.h>
 #include <android/content/IntentPrivate.h>
 #include <android/os/Binder.h>
 
@@ -35,7 +36,7 @@
 namespace android {
 namespace app {
 
-class ApplicationLoader final : public Binder::Client {
+class ApplicationLoader final : public Context, public Binder::Client {
     NONCOPYABLE(ApplicationLoader);
 public:
     ANDROID_EXPORT ApplicationLoader();
@@ -49,6 +50,15 @@ public:
     ANDROID_EXPORT int32_t start(intptr_t peer, StringRef component, std::unordered_map<String, String>& parameters);
 
     void sendOnBind(Service&, std::passed_ptr<IBinder>);
+
+    // Context
+    Context& getApplicationContext() override;
+    StringRef getPackageName() override;
+    std::shared_ptr<Object> getSystemService(StringRef name) override;
+    Resources& getResources() override;
+
+    bool bindService(Intent& service, std::passed_ptr<ServiceConnection> conn, int32_t flags) override;
+    void unbindService(std::passed_ptr<ServiceConnection> conn) override;
 
 private:
     void writeResponseHeader(Parcel& parcel);

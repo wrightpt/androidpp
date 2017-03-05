@@ -25,7 +25,13 @@
 
 #include "Context.h"
 
+#include <android/content/ComponentName.h>
 #include <android/content/ContextPrivate.h>
+#include <android/content/Intent.h>
+#include <android/os/Bundle.h>
+#include <android/os/Message.h>
+#include <android/os/ParcelFileDescriptor.h>
+#include <android/os/ParcelablePrivate.h>
 
 namespace android {
 namespace content {
@@ -35,6 +41,11 @@ wchar_t Context::INPUT_METHOD_SERVICE[] = L"android.view.inputmethod.InputMethod
 Context::Context()
     : m_private(std::make_unique<ContextPrivate>())
 {
+    ParcelableCreator::creator<Bundle>();
+    ParcelableCreator::creator<ComponentName>();
+    ParcelableCreator::creator<Intent>();
+    ParcelableCreator::creator<Message>();
+    ParcelableCreator::creator<ParcelFileDescriptor>();
 }
 
 Context::~Context()

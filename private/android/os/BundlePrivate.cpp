@@ -122,7 +122,7 @@ void BundlePrivate::writeToParcel(Parcel& dest, int32_t flags)
     dest << m_parcelables.size();
     for(auto& parcelable : m_parcelables) {
         dest << parcelable.first;
-        parcelable.second->writeToParcel(dest, 0);
+        parcelable.second->writeToParcel(dest, flags);
     }
 }
 

@@ -53,6 +53,8 @@ public:
 private:
     int32_t m_fd { 0 };
     intptr_t m_handle { 0 };
+    intptr_t m_sourcePid { 0 };
+    bool m_close { false };
 };
 
 } // namespace os

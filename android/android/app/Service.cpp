@@ -60,8 +60,9 @@ void Service::onRebind(Intent& intent)
 {
 }
 
-void Service::onStartCommand(Intent& intent, int32_t flags, int32_t startId)
+int32_t Service::onStartCommand(Intent& intent, int32_t flags, int32_t startId)
 {
+    return START_STICKY;
 }
 
 void Service::onTaskRemoved(Intent& rootIntent)

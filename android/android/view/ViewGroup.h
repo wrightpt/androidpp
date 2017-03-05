@@ -66,7 +66,7 @@ protected:
     ANDROID_EXPORT virtual void onWindowVisibilityChanged(int32_t visibility) override;
     ANDROID_EXPORT virtual void onFocusChanged(bool gainFocus, int32_t direction, Rect& previouslyFocusedRect) override;
     ANDROID_EXPORT virtual void onMeasure(int32_t, int32_t) override;
-    ANDROID_EXPORT virtual void onLayout(Rect&) override;
+    ANDROID_EXPORT virtual void onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom) override;
     ANDROID_EXPORT virtual void onConfigurationChanged(Configuration&) override;
 
 private:

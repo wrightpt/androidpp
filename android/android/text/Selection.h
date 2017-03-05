@@ -25,50 +25,25 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
+#include <android/text/Spannable.h>
 
 namespace android {
+namespace text {
 
-template<typename T>
-class LazyInitializedPtr {
+class Selection {
 public:
-    template<typename F>
-    LazyInitializedPtr(F&& constructor)
-        : m_constructor(std::move(constructor))
-    {
-    }
-    LazyInitializedPtr(const LazyInitializedPtr&) = delete;
-    LazyInitializedPtr& operator=(const LazyInitializedPtr&) = delete;
+    ANDROID_EXPORT Selection() = default;
+    ANDROID_EXPORT virtual ~Selection() = default;
 
-    T* get() const
-    {
-        if (!m_isInitialized) {
-            m_ptr.reset(m_constructor());
-            m_isInitialized = true;
-        }
-
-        return m_ptr.get();
-    }
-
-    void set(T* ptr)
-    {
-        m_ptr.reset(ptr);
-        m_isInitialized = true;
-    }
-
-    T* peek() const
-    {
-        return m_ptr.get();
-    }
-
-    T* operator->() const { return get(); }
-    T& operator*() const { return *get(); }
-
-private:
-    std::function<T* ()> m_constructor;
-    mutable bool m_isInitialized = false;
-    mutable std::unique_ptr<T> m_ptr;
+    // Return the offset of the selection anchor or cursor, or -1 if there is no selection or cursor. 
+    ANDROID_EXPORT static int32_t getSelectionStart(CharSequence& text);
+    // Return the offset of the selection edge or cursor, or -1 if there is no selection or cursor.
+    ANDROID_EXPORT static int32_t getSelectionEnd(CharSequence& text);
+    // Set the selection anchor to start and the selection edge to stop. 
+    ANDROID_EXPORT static void setSelection(Spannable& text, int32_t start, int32_t stop);
 };
 
+} // namespace text
 } // namespace android
+
+using Selection = android::text::Selection;

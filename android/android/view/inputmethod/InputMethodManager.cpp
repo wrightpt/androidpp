@@ -43,6 +43,14 @@ void InputMethodManager::restartInput(View& view)
 {
 }
 
+void InputMethodManager::updateCursorAnchorInfo(View& view, CursorAnchorInfo& cursorAnchorInfo)
+{
+}
+
+void InputMethodManager::updateSelection(View& view, int32_t selStart, int32_t selEnd, int32_t candidatesStart, int32_t candidatesEnd)
+{
+}
+
 } // namespace inputmethod
 } // namespace view
 } // namespace android

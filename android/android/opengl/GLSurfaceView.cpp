@@ -28,6 +28,7 @@
 #include <android/app/ActivityHostWindow.h>
 #include <android/opengl/GLES2/esUtil.h>
 #include <android/view/ViewPrivate.h>
+#include <android++/CompilerMacros.h>
 #include <android++/LogHelper.h>
 
 #include <deque>
@@ -567,7 +568,6 @@ GLSurfaceView::GLSurfaceView(Context& context)
     : View(context)
     , m_eglContextClientVersion(1)
     , m_renderer(0)
-    , m_glThread(new GLThread(*this))
 {
 }
 
@@ -607,10 +607,13 @@ void GLSurfaceView::setRenderer(Renderer* renderer)
     // FIXME: May needs referencing.
     m_renderer = renderer;
 
-    if (m_renderer)
+    if (m_renderer) {
+        m_glThread = std::make_unique<GLThread>(*this);
         m_glThread->run();
-    else
+    } else {
         m_glThread->requestExit();
+        m_glThread = nullptr;
+    }
 }
 
 void GLSurfaceView::requestRender()
@@ -667,10 +670,10 @@ void GLSurfaceView::onDetachedFromWindow()
     surfaceDestroyed();
 }
 
-void GLSurfaceView::onLayout(Rect& rc)
+void GLSurfaceView::onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom)
 {
-    View::onLayout(rc);
-    surfaceChanged(0, rc.width(), rc.height());
+    View::onLayout(changed, left, top, right, bottom);
+    surfaceChanged(0, right - left, bottom - top);
 }
 
 } // namespace opengl

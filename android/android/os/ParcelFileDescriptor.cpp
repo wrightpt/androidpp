@@ -37,8 +37,10 @@ public:
     {
         auto keyValue = PlatformFileDescriptor::decode(source);
         auto result = std::make_shared<ParcelFileDescriptor>();
-        result->m_fd = keyValue.first;
-        result->m_handle = keyValue.second;
+        result->m_fd = std::get<0>(keyValue);
+        result->m_handle = std::get<1>(keyValue);
+        result->m_sourcePid = std::get<2>(keyValue);
+        result->m_close = std::get<3>(keyValue);
         return std::move(result);
     }
 
@@ -53,7 +55,7 @@ public:
     }
 };
 
-const LazyInitializedPtr<Parcelable::Creator> ParcelFileDescriptor::CREATOR([] { return new ParcelFileDescriptorCreator; }, true);
+const LazyInitializedPtr<Parcelable::Creator> ParcelFileDescriptor::CREATOR([] { return new ParcelFileDescriptorCreator; });
 
 ParcelFileDescriptor::ParcelFileDescriptor()
 {
@@ -73,7 +75,7 @@ std::shared_ptr<ParcelFileDescriptor> ParcelFileDescriptor::adoptFd(int32_t fd)
 
 int32_t ParcelFileDescriptor::detachFd()
 {
-    return PlatformFileDescriptor::detachFd(m_fd, m_handle);
+    return PlatformFileDescriptor::detachFd(m_fd, m_handle, m_sourcePid, m_close);
 }
 
 int32_t ParcelFileDescriptor::describeContents()

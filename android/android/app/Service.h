@@ -39,6 +39,13 @@ class Service : public ContextThemeWrapper {
     NONCOPYABLE(Service);
     friend class ServicePrivate;
 public:
+    // Constant to return from onStartCommand(Intent, int, int): if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)), then leave it in the started state but don't retain this delivered intent. 
+    static const int32_t START_STICKY = 1;
+    // Constant to return from onStartCommand(Intent, int, int): if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)), and there are no new start intents to deliver to it, then take the service out of the started state and don't recreate until a future explicit call to Context.startService(Intent).
+    static const int32_t START_NOT_STICKY = 2;
+    // Constant to return from onStartCommand(Intent, int, int): if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)), then it will be scheduled for a restart and the last delivered Intent re-delivered to it again via onStartCommand(Intent, int, int).
+    static const int32_t START_REDELIVER_INTENT = 3;
+
     ANDROID_EXPORT Service();
     ANDROID_EXPORT virtual ~Service();
 
@@ -55,7 +62,7 @@ public:
     // Called when new clients have connected to the service, after it had previously been notified that all had disconnected in its onUnbind(Intent). 
     ANDROID_EXPORT virtual void onRebind(Intent& intent);
     // Called by the system every time a client explicitly starts the service by calling startService(Intent), providing the arguments it supplied and a unique integer token representing the start request.
-    ANDROID_EXPORT virtual void onStartCommand(Intent& intent, int32_t flags, int32_t startId);
+    ANDROID_EXPORT virtual int32_t onStartCommand(Intent& intent, int32_t flags, int32_t startId);
     // This is called if the service is currently running and the user has removed a task that comes from the service's application. 
     ANDROID_EXPORT virtual void onTaskRemoved(Intent& rootIntent);
     // Called when the operating system has determined that it is a good time for a process to trim unneeded memory from its process. 

@@ -85,7 +85,7 @@ public:
     // view.View
     ANDROID_EXPORT virtual void onAttachedToWindow() override;
     ANDROID_EXPORT virtual void onDetachedFromWindow() override;
-    ANDROID_EXPORT virtual void onLayout(Rect&) override;
+    ANDROID_EXPORT virtual void onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom) override;
 
 private:
     class GLThread;

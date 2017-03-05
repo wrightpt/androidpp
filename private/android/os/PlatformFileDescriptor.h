@@ -26,16 +26,17 @@
 #pragma once
 
 #include <android/os/Parcelable.h>
+#include <tuple>
 
 namespace android {
 namespace os {
 
 struct PlatformFileDescriptor {
     static intptr_t adoptFd(int32_t fd);
-    static int32_t detachFd(int32_t oldFd, intptr_t handle);
+    static int32_t detachFd(int32_t oldFd, intptr_t handle, intptr_t sourcePid, bool close);
 
     static void encode(Parcel& dest, int32_t fd, intptr_t handle, int32_t flags);
-    static std::pair<int32_t, intptr_t> decode(Parcel& source);
+    static std::tuple<int32_t, intptr_t, intptr_t, bool> decode(Parcel& source);
 };
 
 } // namespace os

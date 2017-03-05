@@ -99,7 +99,7 @@ private:
     bool m_isFocused;
     bool m_isAttached;
     View* m_focusedView;
-    std::unique_ptr<InputConnection> m_inputConnection;
+    std::shared_ptr<InputConnection> m_inputConnection;
 
     class DecorView;
     std::unique_ptr<DecorView> m_decorView;

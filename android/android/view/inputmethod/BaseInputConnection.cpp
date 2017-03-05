@@ -26,10 +26,74 @@
 #include "BaseInputConnection.h"
 
 #include <android/view/View.h>
+#include <android/view/inputmethod/InputConnectionPrivate.h>
 
 namespace android {
 namespace view {
 namespace inputmethod {
+
+BaseInputConnection::BaseInputConnection(View& targetView, bool fullEditor)
+{
+}
+
+const std::shared_ptr<Editable>& BaseInputConnection::getEditable()
+{
+    return mEditable;
+}
+
+bool BaseInputConnection::commitText(CharSequence& text, int32_t newCursorPosition)
+{
+    return true;
+}
+
+bool BaseInputConnection::deleteSurroundingText(int32_t beforeLength, int32_t afterLength)
+{
+    return true;
+}
+
+CharSequence BaseInputConnection::getSelectedText(int32_t flags)
+{
+    return L"";
+}
+
+bool BaseInputConnection::finishComposingText()
+{
+    return true;
+}
+
+bool BaseInputConnection::requestCursorUpdates(int32_t cursorUpdateMode)
+{
+    return true;
+}
+
+bool BaseInputConnection::setComposingText(CharSequence& text, int32_t newCursorPosition)
+{
+    return true;
+}
+
+bool BaseInputConnection::setComposingRegion(int32_t start, int32_t end)
+{
+    return true;
+}
+
+bool BaseInputConnection::sendKeyEvent(KeyEvent& event)
+{
+    return true;
+}
+
+int32_t BaseInputConnection::getComposingSpanStart(Spannable& text)
+{
+    return -1;
+}
+
+int32_t BaseInputConnection::getComposingSpanEnd(Spannable& text)
+{
+    return -1;
+}
+
+void BaseInputConnection::removeComposingSpans(Spannable& text)
+{
+}
 
 } // namespace inputmethod
 } // namespace view

@@ -173,7 +173,7 @@ void ActivityHostWindow::windowSizeChanged(int32_t newWidth, int32_t newHeight, 
     
     m_decorView->onMeasure(newWidth, newHeight);
     m_decorView->onSizeChanged(newWidth, newHeight, oldWidth, oldHeight);
-    m_decorView->onLayout(Rect(0, 0, newWidth, newHeight));
+    m_decorView->onLayout(true, 0, 0, newWidth, newHeight);
     invalidate();
 }
 
@@ -344,7 +344,7 @@ void ActivityHostWindow::setContentView(std::passed_ptr<View> view)
     if (m_isVisible && m_isAttached) {
         m_decorView->onMeasure(m_width, m_height);
         m_decorView->onSizeChanged(m_width, m_height, 0, 0);
-        m_decorView->onLayout(Rect(0, 0, m_width, m_height));
+        m_decorView->onLayout(true, 0, 0, m_width, m_height);
         invalidate();
     }
 }
@@ -427,7 +427,7 @@ void ActivityHostWindow::attachActivity()
     m_decorView->onWindowVisibilityChanged(View::VISIBLE);
     m_decorView->onMeasure(m_width, m_height);
     m_decorView->onSizeChanged(m_width, m_height, 0, 0);
-    m_decorView->onLayout(Rect(0, 0, m_width, m_height));
+    m_decorView->onLayout(true, 0, 0, m_width, m_height);
     windowFocused(true);
     invalidate();
 }

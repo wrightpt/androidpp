@@ -85,6 +85,36 @@ void ApplicationLoader::sendOnBind(Service& service, std::passed_ptr<IBinder> bi
     m_state = SERVICE_CONNECTED;
 }
 
+Context& ApplicationLoader::getApplicationContext()
+{
+    return *m_context;
+}
+
+StringRef ApplicationLoader::getPackageName()
+{
+    return m_context->getPackageName();
+}
+
+std::shared_ptr<Object> ApplicationLoader::getSystemService(StringRef name)
+{
+    return m_context->getSystemService(name);
+}
+
+Resources& ApplicationLoader::getResources()
+{
+    return m_context->getResources();
+}
+
+bool ApplicationLoader::bindService(Intent& service, std::passed_ptr<ServiceConnection> conn, int32_t flags)
+{
+    return m_context->bindService(service, conn, flags);
+}
+
+void ApplicationLoader::unbindService(std::passed_ptr<ServiceConnection> conn)
+{
+    m_context->unbindService(conn);
+}
+
 void ApplicationLoader::writeResponseHeader(Parcel& parcel)
 {
     parcel << m_component;

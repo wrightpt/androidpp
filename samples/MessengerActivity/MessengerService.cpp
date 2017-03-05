@@ -90,9 +90,10 @@ void MessengerService::onRebind(Intent& intent)
     LOGD("%s", __FUNCTION__);
 }
 
-void MessengerService::onStartCommand(Intent& intent, int32_t flags, int32_t startId)
+int32_t MessengerService::onStartCommand(Intent& intent, int32_t flags, int32_t startId)
 {
     LOGD("%s", __FUNCTION__);
+    return Service::onStartCommand(intent, flags, startId);
 }
 
 void MessengerService::onTaskRemoved(Intent& rootIntent)

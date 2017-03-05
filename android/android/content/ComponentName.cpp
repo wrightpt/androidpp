@@ -33,7 +33,7 @@ namespace content {
 
 ComponentName::ComponentName(Context& pkg, Class& cls)
     : m_packageName(pkg.getPackageName())
-    , m_className(cls.getSimpleName())
+    , m_className(cls.getName())
 {
 }
 
@@ -86,19 +86,20 @@ String ComponentName::getPackageName()
 
 String ComponentName::getClassName()
 {
-    return m_packageName + L'.' + m_className;
+    return m_className;
 }
 
 String ComponentName::getShortClassName()
 {
-    return L'.' + m_className;
+    if (m_className.find_first_of(m_packageName) == 0)
+        return m_className.substr(m_packageName.length());
+
+    return m_className;
 }
 
 String ComponentName::flattenToString()
 {
-    String flat = getClassName();
-    std::replace(flat.begin(), flat.end(), L'.', L'/');
-    return std::move(flat);
+    return m_packageName + L'/' + m_className;
 }
 
 class ComponentNameCreator final : public android::os::ParcelableCreator {
@@ -122,7 +123,7 @@ public:
     }
 };
 
-const LazyInitializedPtr<Parcelable::Creator> ComponentName::CREATOR([] { return new ComponentNameCreator; }, true);
+const LazyInitializedPtr<Parcelable::Creator> ComponentName::CREATOR([] { return new ComponentNameCreator; });
 
 int32_t ComponentName::describeContents()
 {

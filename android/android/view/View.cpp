@@ -94,7 +94,7 @@ std::shared_ptr<IBinder> View::getWindowToken()
     return m_private->hostWindow()->window()->getWindowToken();
 }
 
-std::unique_ptr<InputConnection> View::onCreateInputConnection(EditorInfo& outAttrs)
+std::shared_ptr<InputConnection> View::onCreateInputConnection(EditorInfo& outAttrs)
 {
     return nullptr;
 }
@@ -169,9 +169,9 @@ void View::onFocusChanged(bool gainFocus, int32_t direction, Rect& previouslyFoc
         m_focusChangeListener(this, gainFocus);
 }
 
-void View::onLayout(Rect& rc)
+void View::onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom)
 {
-    m_rect = rc;
+    m_rect = Rect(left, top, right, bottom);
 }
 
 void View::onMeasure(int32_t widthMeasureSpec, int32_t heightMeasureSpec)

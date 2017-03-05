@@ -47,6 +47,7 @@ if (NOT ANDROID)
         $<TARGET_OBJECTS:android.media>
         $<TARGET_OBJECTS:android.opengl>
         $<TARGET_OBJECTS:android.os>
+        $<TARGET_OBJECTS:android.text>
         $<TARGET_OBJECTS:android.util>
         $<TARGET_OBJECTS:android.view>
         $<TARGET_OBJECTS:android.view.inputmethod>

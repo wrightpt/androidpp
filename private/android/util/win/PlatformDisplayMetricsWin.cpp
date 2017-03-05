@@ -23,12 +23,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <android/util/DisplayMetrics.h>
+#include "PlatformDisplayMetrics.h"
+
+#include <windows.h>
 
 namespace android {
 namespace util {
 
 const int DisplayMetrics::DENSITY_DEFAULT = 96;
+
+void PlatformDisplayMetrics::init(DisplayMetrics& metrics)
+{
+    RECT screenSize;
+    ::GetWindowRect(GetDesktopWindow(), &screenSize);
+    metrics.widthPixels = screenSize.right - screenSize.left;
+    metrics.heightPixels = screenSize.bottom - screenSize.top;
+    metrics.density = DisplayMetrics::DENSITY_DEFAULT;
+}
 
 } // namespace util
 } // namespace android

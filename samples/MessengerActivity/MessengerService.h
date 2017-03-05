@@ -46,7 +46,7 @@ public:
     void onDestroy() override;
     void onLowMemory() override;
     void onRebind(Intent& intent) override;
-    void onStartCommand(Intent& intent, int32_t flags, int32_t startId) override;
+    int32_t onStartCommand(Intent& intent, int32_t flags, int32_t startId) override;
     void onTaskRemoved(Intent& rootIntent) override;
     void onTrimMemory(int32_t level) override;
     bool onUnbind(Intent& intent) override;

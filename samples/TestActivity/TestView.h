@@ -36,7 +36,7 @@ public:
     TestView(Context&);
     ~TestView();
 
-    std::unique_ptr<InputConnection> onCreateInputConnection(EditorInfo& outAttrs) override;
+    std::shared_ptr<InputConnection> onCreateInputConnection(EditorInfo& outAttrs) override;
     bool onGenericMotionEvent(MotionEvent& event) override;
     bool onKeyDown(int32_t keyCode, KeyEvent& event) override;
     bool onKeyLongPress(int32_t keyCode, KeyEvent& event) override;
@@ -53,7 +53,7 @@ protected:
     void onVisibilityChanged(View* changedView, int32_t visibility) override;
     void onWindowVisibilityChanged(int32_t visibility) override;
     void onFocusChanged(bool gainFocus, int32_t direction, Rect& previouslyFocusedRect) override;
-    void onLayout(Rect&) override;
+    void onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom) override;
     void onMeasure(int32_t, int32_t) override;
     void onConfigurationChanged(Configuration&) override;
 };

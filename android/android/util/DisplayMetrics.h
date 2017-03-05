@@ -42,7 +42,12 @@ public:
     // The reference density used throughout the system.
     ANDROID_EXPORT static const int32_t DENSITY_DEFAULT;
 
+    // The logical density of the display. 
     float density;
+    // The absolute width of the available display size in pixels. 
+    int32_t widthPixels;
+    // The absolute height of the available display size in pixels. 
+    int32_t heightPixels;
 };
 
 } // namespace util

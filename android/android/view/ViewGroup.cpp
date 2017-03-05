@@ -177,10 +177,10 @@ void ViewGroup::onMeasure(int32_t widthMeasureSpec, int32_t heightMeasureSpec)
     propagate(m_children, &View::onMeasure, widthMeasureSpec, heightMeasureSpec);
 }
 
-void ViewGroup::onLayout(Rect& rc)
+void ViewGroup::onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom)
 {
-    View::onLayout(rc);
-    propagate(m_children, &View::onLayout, std::ref(rc));
+    View::onLayout(changed, left, top, right, bottom);
+    propagate(m_children, &View::onLayout, changed, left, top, right, bottom);
 }
 
 void ViewGroup::onConfigurationChanged(Configuration& config)

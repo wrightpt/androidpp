@@ -25,12 +25,17 @@
 
 #include "DisplayMetrics.h"
 
+#include <android/util/PlatformDisplayMetrics.h>
+
 namespace android {
 namespace util {
 
 DisplayMetrics::DisplayMetrics()
     : density(DENSITY_DEFAULT)
+    , widthPixels(0)
+    , heightPixels(0)
 {
+    PlatformDisplayMetrics::init(*this);
 }
 
 DisplayMetrics::DisplayMetrics(const DisplayMetrics& other)

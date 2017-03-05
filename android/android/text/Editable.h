@@ -25,50 +25,29 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
+#include <android/text/Spannable.h>
 
 namespace android {
+namespace text {
 
-template<typename T>
-class LazyInitializedPtr {
+class Editable : public Spannable {
+    NONCOPYABLE(Editable);
 public:
-    template<typename F>
-    LazyInitializedPtr(F&& constructor)
-        : m_constructor(std::move(constructor))
-    {
-    }
-    LazyInitializedPtr(const LazyInitializedPtr&) = delete;
-    LazyInitializedPtr& operator=(const LazyInitializedPtr&) = delete;
+    ANDROID_EXPORT Editable() = default;
+    ANDROID_EXPORT virtual ~Editable() = default;
+    ANDROID_EXPORT operator CharSequence&() { return characters(); }
+    ANDROID_EXPORT CharSequence& operator*() { return characters(); }
 
-    T* get() const
-    {
-        if (!m_isInitialized) {
-            m_ptr.reset(m_constructor());
-            m_isInitialized = true;
-        }
+    // Replaces the specified range (st¡¦en) of text in this Editable with a copy of the slice start¡¦end from source.
+    virtual Editable& replace(int32_t st, int32_t en, CharSequence source, int32_t start, int32_t end) = 0;
+    // Convenience for replace(st, en, text, 0, text.length()) 
+    virtual Editable& replace(int32_t st, int32_t en, CharSequence text) = 0;
 
-        return m_ptr.get();
-    }
-
-    void set(T* ptr)
-    {
-        m_ptr.reset(ptr);
-        m_isInitialized = true;
-    }
-
-    T* peek() const
-    {
-        return m_ptr.get();
-    }
-
-    T* operator->() const { return get(); }
-    T& operator*() const { return *get(); }
-
-private:
-    std::function<T* ()> m_constructor;
-    mutable bool m_isInitialized = false;
-    mutable std::unique_ptr<T> m_ptr;
+protected:
+    ANDROID_EXPORT virtual CharSequence& characters() = 0;
 };
 
+} // namespace text
 } // namespace android
+
+using Editable = android::text::Editable;

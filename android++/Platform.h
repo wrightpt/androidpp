@@ -33,7 +33,6 @@
 using namespace std::chrono_literals;
 
 #include "Assertions.h"
-#include "CompilerMacros.h"
 #include "ExportMacros.h"
 #include "Noncopyable.h"
 #include "ReferencePtr.h"

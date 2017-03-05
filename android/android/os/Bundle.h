@@ -60,6 +60,10 @@ public:
     ANDROID_EXPORT virtual float getFloat(StringRef key);
     // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key.
     ANDROID_EXPORT virtual float getFloat(StringRef key, float defaultValue);
+    // Returns the value associated with the given key, or 0 if no mapping of the desired type exists for the given key.
+    ANDROID_EXPORT virtual int32_t getInt(StringRef key);
+    // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. 
+    ANDROID_EXPORT virtual int32_t getInt(StringRef key, int32_t defaultValue);
     // Returns the value associated with the given key, or (short) 0 if no mapping of the desired type exists for the given key.
     ANDROID_EXPORT virtual int16_t getShort(StringRef key);
     // Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. 
@@ -73,6 +77,8 @@ public:
     ANDROID_EXPORT virtual void putCharSequence(StringRef key, const CharSequence& value);
     // Inserts a float value into the mapping of this Bundle, replacing any existing value for the given key. 
     ANDROID_EXPORT virtual void putFloat(StringRef key, float value);
+    // Inserts an int value into the mapping of this Bundle, replacing any existing value for the given key. 
+    ANDROID_EXPORT virtual void putInt(StringRef key, int32_t value);
     // Inserts a short value into the mapping of this Bundle, replacing any existing value for the given key. 
     ANDROID_EXPORT virtual void putShort(StringRef key, int16_t value);
 

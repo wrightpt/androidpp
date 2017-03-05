@@ -110,6 +110,19 @@ float Bundle::getFloat(StringRef key, float defaultValue)
     return getFloat(key);
 }
 
+int32_t Bundle::getInt(StringRef key)
+{
+    return m_private->getValue(key).i;
+}
+
+int32_t Bundle::getInt(StringRef key, int32_t defaultValue)
+{
+    if (!m_private->findKey(key))
+        return defaultValue;
+
+    return getInt(key);
+}
+
 int16_t Bundle::getShort(StringRef key)
 {
     return m_private->getValue(key).s;
@@ -139,6 +152,11 @@ void Bundle::putCharSequence(StringRef key, const CharSequence& value)
 }
 
 void Bundle::putFloat(StringRef key, float value)
+{
+    m_private->putValue(key, BundleValue(value));
+}
+
+void Bundle::putInt(StringRef key, int32_t value)
 {
     m_private->putValue(key, BundleValue(value));
 }
@@ -193,7 +211,7 @@ public:
     }
 };
 
-const LazyInitializedPtr<Parcelable::Creator> Bundle::CREATOR([] { return new BundleCreator; }, true);
+const LazyInitializedPtr<Parcelable::Creator> Bundle::CREATOR([] { return new BundleCreator; });
 
 int32_t Bundle::describeContents()
 {

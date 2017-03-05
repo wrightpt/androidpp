@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <android/text/Editable.h>
 #include <android/view/inputmethod/InputConnection.h>
 
 namespace android {
@@ -37,7 +38,10 @@ namespace inputmethod {
 class BaseInputConnection : public InputConnection {
 public:
     ANDROID_EXPORT BaseInputConnection(View& targetView, bool fullEditor);
+    ANDROID_EXPORT virtual ~BaseInputConnection() = default;
 
+    // Return the target of edit operations. 
+    ANDROID_EXPORT virtual const std::shared_ptr<Editable>& getEditable();
     // Commit text to the text box and set the new cursor position. 
     ANDROID_EXPORT virtual bool commitText(CharSequence& text, int32_t newCursorPosition) override;
     // Delete beforeLength characters of text before the current cursor position, and delete afterLength characters of text after the current cursor position, excluding the selection. 
@@ -50,10 +54,17 @@ public:
     ANDROID_EXPORT virtual bool requestCursorUpdates(int32_t cursorUpdateMode) override;
     // Replace the currently composing text with the given text, and set the new cursor position.
     ANDROID_EXPORT virtual bool setComposingText(CharSequence& text, int32_t newCursorPosition) override;
+    // Mark a certain region of text as composing text. 
+    ANDROID_EXPORT virtual bool setComposingRegion(int32_t start, int32_t end);
     // Send a key event to the process that is currently attached through this input connection.
     ANDROID_EXPORT virtual bool sendKeyEvent(KeyEvent& event) override;
 
-    ANDROID_EXPORT virtual ~BaseInputConnection() = default;
+    ANDROID_EXPORT static int32_t getComposingSpanStart(Spannable& text);
+    ANDROID_EXPORT static int32_t getComposingSpanEnd(Spannable& text);
+    ANDROID_EXPORT static void removeComposingSpans(Spannable& text);
+
+private:
+    std::shared_ptr<Editable> mEditable;
 };
 
 } // namespace inputmethod

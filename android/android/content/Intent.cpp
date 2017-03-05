@@ -28,6 +28,7 @@
 #include <android/content/IntentPrivate.h>
 #include <android/os/BundlePrivate.h>
 #include <android/os/ParcelablePrivate.h>
+#include <android++/LogHelper.h>
 
 namespace android {
 namespace content {
@@ -136,6 +137,11 @@ std::shared_ptr<Parcelable> Intent::getParcelableExtra(StringRef name)
 
 Intent& Intent::putExtra(StringRef name, std::passed_ptr<Parcelable> value)
 {
+    if (value->describeContents() == Parcelable::CONTENTS_FILE_DESCRIPTOR) {
+        LOGA("RuntimeException: Not allowed to write file descriptor here");
+        return *this;
+    }
+
     m_private->m_extras.putParcelable(name, value);
     return *this;
 }
@@ -168,7 +174,7 @@ public:
     }
 };
 
-const LazyInitializedPtr<Parcelable::Creator> Intent::CREATOR([] { return new IntentCreator; }, true);
+const LazyInitializedPtr<Parcelable::Creator> Intent::CREATOR([] { return new IntentCreator; });
 
 int32_t Intent::describeContents()
 {

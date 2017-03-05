@@ -99,7 +99,7 @@ std::shared_ptr<IBinder> BinderMessageTarget::binder() const
 void BinderMessageTarget::send(Message& message)
 {
     Parcel data;
-    message.writeToParcel(data, 0);
+    message.writeToParcel(data, Parcelable::PARCELABLE_WRITE_RETURN_VALUE);
     if (!m_target->transact(MessageTarget::SEND_MESSAGE, data, nullptr, IBinder::FLAG_ONEWAY)) {
         LOGE("Transaction to IBinder %x failed.", m_target.get());
     }

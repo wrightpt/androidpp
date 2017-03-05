@@ -25,6 +25,7 @@
 
 #include "PlatformFileDescriptor.h"
 
+#include <android++/LogHelper.h>
 #include <android++/StringConversion.h>
 #include <win/osf.h>
 
@@ -38,33 +39,51 @@ namespace os {
 intptr_t PlatformFileDescriptor::adoptFd(int32_t fd)
 {
     HANDLE handle = reinterpret_cast<HANDLE>(win32_release_osfhandle(fd));
-    // Ensure that the child process inherits the file descriptor handles.
-    ::SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT);
     return reinterpret_cast<intptr_t>(handle);
 }
 
-int32_t PlatformFileDescriptor::detachFd(int32_t oldFd, intptr_t handle)
+int32_t PlatformFileDescriptor::detachFd(int32_t oldFd, intptr_t handle, intptr_t sourcePid, bool close)
 {
-    return win32_open_osfhandle(handle, 0, oldFd);
+    HANDLE sourceProcess = ::OpenProcess(PROCESS_DUP_HANDLE, FALSE, sourcePid);
+    if (sourceProcess == NULL) {
+        LOGA("The source process is invalid");
+        return -1;
+    }
+
+    HANDLE myHandle = NULL;
+    DWORD options = DUPLICATE_SAME_ACCESS | (close ? DUPLICATE_CLOSE_SOURCE : 0);
+    if (!DuplicateHandle(sourceProcess, reinterpret_cast<HANDLE>(handle),
+        ::GetCurrentProcess(), &myHandle, 0, FALSE, options)) {
+        LOGA("Couldn't detach handle from the source process");
+        ::CloseHandle(sourceProcess);
+        return -1;
+    }
+
+    ::CloseHandle(sourceProcess);
+
+    return win32_open_osfhandle(reinterpret_cast<intptr_t>(myHandle), 0, oldFd);
 }
 
 void PlatformFileDescriptor::encode(Parcel& dest, int32_t fd, intptr_t handle, int32_t flags)
 {
     dest << fd;
     dest << handle;
+    dest << static_cast<intptr_t>(::GetCurrentProcessId());
 
-    if (flags == Parcelable::PARCELABLE_WRITE_RETURN_VALUE) {
-        // We can now close the file descriptor handles.
-        ::CloseHandle((HANDLE)handle);
-    }
+    if (flags == Parcelable::PARCELABLE_WRITE_RETURN_VALUE)
+        dest << true;
+    else
+        dest << false;
 }
 
-std::pair<int32_t, intptr_t> PlatformFileDescriptor::decode(Parcel& source)
+std::tuple<int32_t, intptr_t, intptr_t, bool> PlatformFileDescriptor::decode(Parcel& source)
 {
-    std::pair<int32_t, intptr_t> result;
-    source >> result.first;
-    source >> result.second;
-    return std::move(result);
+    std::tuple<int32_t, intptr_t, intptr_t, bool> result;
+    source >> std::get<0>(result);
+    source >> std::get<1>(result);
+    source >> std::get<2>(result);
+    source >> std::get<3>(result);
+    return result;
 }
 
 } // namespace os

@@ -167,8 +167,7 @@ std::shared_ptr<Object> ApplicationContext::getSystemService(StringRef name)
 
 Resources& ApplicationContext::getResources()
 {
-    static Resources resources;
-    return resources;
+    return Resources::getSystem();
 }
 
 bool ApplicationContext::bindService(Intent& service, std::passed_ptr<ServiceConnection> conn, int32_t flags)

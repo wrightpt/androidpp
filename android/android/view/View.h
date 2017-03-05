@@ -116,7 +116,7 @@ public:
     ANDROID_EXPORT virtual void setOnFocusChangeListener(OnFocusChangeListener listener) { m_focusChangeListener = listener; }
 
     // Create a new InputConnection for an InputMethod to interact with the view.
-    ANDROID_EXPORT virtual std::unique_ptr<InputConnection> onCreateInputConnection(EditorInfo& outAttrs);
+    ANDROID_EXPORT virtual std::shared_ptr<InputConnection> onCreateInputConnection(EditorInfo& outAttrs);
     // Implement this method to handle generic motion events.
     ANDROID_EXPORT virtual bool onGenericMotionEvent(MotionEvent& event);
     // Default implementation of KeyEvent.Callback.onKeyDown(): perform press of the view when KEYCODE_DPAD_CENTER or KEYCODE_ENTER is released, if the view is enabled and clickable.
@@ -148,7 +148,7 @@ protected:
     // Called by the view system when the focus state of this view changes.
     ANDROID_EXPORT virtual void onFocusChanged(bool gainFocus, int32_t direction, Rect& previouslyFocusedRect);
     // Called from layout when this view should assign a size and position to each of its children. 
-    ANDROID_EXPORT virtual void onLayout(Rect&);
+    ANDROID_EXPORT virtual void onLayout(bool changed, int32_t left, int32_t top, int32_t right, int32_t bottom);
     // Measure the view and its content to determine the measured width and the measured height.
     ANDROID_EXPORT virtual void onMeasure(int32_t, int32_t);
     // Called when the current configuration of the resources being used by the application have changed.

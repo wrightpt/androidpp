@@ -29,8 +29,10 @@ namespace android {
 namespace content {
 namespace res {
 
-Resources::Resources()
+Resources& Resources::getSystem()
 {
+    static Resources systemResources;
+    return systemResources;
 }
 
 DisplayMetrics& Resources::getDisplayMetrics()
