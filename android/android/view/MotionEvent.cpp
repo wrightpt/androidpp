@@ -248,6 +248,11 @@ int32_t MotionEvent::getActionButton()
     return m_actionButton;
 }
 
+int32_t MotionEvent::getActionMasked()
+{
+    return m_action & ACTION_MASK;
+}
+
 float MotionEvent::getAxisValue(int32_t axis, int32_t pointerIndex)
 {
     return MotionEventPrivate::getAxisValue(*this, axis, pointerIndex);

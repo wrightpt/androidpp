@@ -32,6 +32,7 @@
 
 #include <algorithm>
 #include <mutex>
+#include <android++/LogHelper.h>
 
 namespace android {
 namespace os {
@@ -148,13 +149,11 @@ Looper* Handler::getLooper()
     return m_looper;
 }
 
-// Subclasses must implement this to receive messages.
 void Handler::handleMessage(Message& msg)
 {
     assert(0);
 }
 
-// Check if there are any pending posts of messages with code 'what' in the message queue.
 bool Handler::hasMessages(int32_t what)
 {
     synchronized (this) {
@@ -165,31 +164,26 @@ bool Handler::hasMessages(int32_t what)
     return false;
 }
 
-// Returns a new Message from the global message pool.
 Message Handler::obtainMessage()
 {
     return Message::obtain(this);
 }
 
-// Same as obtainMessage(), except that it also sets the what member of the returned Message.
 Message Handler::obtainMessage(int32_t what)
 {
     return Message::obtain(this, what);
 }
 
-// Same as obtainMessage(), except that it also sets the what, arg1 and arg2 members of the returned Message.
 Message Handler::obtainMessage(int32_t what, int32_t arg1, int32_t arg2)
 {
     return Message::obtain(this, what, arg1, arg2);
 }
 
-// Remove any pending posts of std::function<void ()> r that are in the message queue.
 void Handler::removeCallbacks(std::function<void()> r)
 {
     removeWorkItems(r);
 }
 
-// Causes the std::function<void ()> r to be added to the message queue.
 bool Handler::post(std::function<void()> r)
 {
     synchronized (this) {
@@ -198,7 +192,6 @@ bool Handler::post(std::function<void()> r)
     }
 }
 
-// Posts a message to an object that implements std::function<void ()>.
 bool Handler::postAtFrontOfQueue(std::function<void()> r)
 {
     synchronized (this) {
@@ -207,7 +200,6 @@ bool Handler::postAtFrontOfQueue(std::function<void()> r)
     }
 }
 
-// Causes the std::function<void ()> r to be added to the message queue, to be run at a specific time given by uptimeMillis.
 bool Handler::postAtTime(std::function<void()> r, std::chrono::milliseconds uptimeMillis)
 {
     synchronized (this) {
@@ -216,37 +208,31 @@ bool Handler::postAtTime(std::function<void()> r, std::chrono::milliseconds upti
     }
 }
 
-// Causes the std::function<void ()> r to be added to the message queue, to be run after the specified amount of time elapses.
 bool Handler::postDelayed(std::function<void()> r, std::chrono::milliseconds delayMillis)
 {
     return postAtTime(r, System::currentTimeMillis() + delayMillis);
 }
 
-// Remove any pending posts of messages with code 'what' that are in the message queue.
 void Handler::removeMessages(int32_t what)
 {
     removeWorkItems(what);
 }
 
-// Sends a Message containing only the what value.
 bool Handler::sendEmptyMessage(int32_t what)
 {
     return sendMessage(obtainMessage(what));
 }
 
-// Sends a Message containing only the what value, to be delivered at a specific time.
 bool Handler::sendEmptyMessageAtTime(int32_t what, std::chrono::milliseconds uptimeMillis)
 {
     return sendMessageAtTime(obtainMessage(what), uptimeMillis);
 }
 
-// Sends a Message containing only the what value, to be delivered after the specified amount of time elapses.
 bool Handler::sendEmptyMessageDelayed(int32_t what, std::chrono::milliseconds delayMillis)
 {
     return sendMessageDelayed(obtainMessage(what), delayMillis);
 }
 
-// Pushes a message onto the end of the message queue after all pending messages before the current time.
 bool Handler::sendMessage(Message& msg)
 {
     synchronized (this) {
@@ -255,7 +241,6 @@ bool Handler::sendMessage(Message& msg)
     }
 }
 
-// Enqueue a message at the front of the message queue, to be processed on the next iteration of the message loop.
 bool Handler::sendMessageAtFrontOfQueue(Message& msg)
 {
     synchronized (this) {
@@ -264,7 +249,6 @@ bool Handler::sendMessageAtFrontOfQueue(Message& msg)
     }
 }
 
-// Enqueue a message into the message queue after all pending messages before the absolute time (in milliseconds) uptimeMillis.
 bool Handler::sendMessageAtTime(Message& msg, std::chrono::milliseconds uptimeMillis)
 {
     synchronized (this) {
@@ -273,7 +257,6 @@ bool Handler::sendMessageAtTime(Message& msg, std::chrono::milliseconds uptimeMi
     }
 }
 
-// Enqueue a message into the message queue after all pending messages before (current time + delayMillis).
 bool Handler::sendMessageDelayed(Message& msg, std::chrono::milliseconds delayMillis)
 {
     return sendMessageAtTime(msg, System::currentTimeMillis() + delayMillis);

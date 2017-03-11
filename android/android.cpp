@@ -25,8 +25,11 @@
 
 #include "android.h"
 
+#include <android/app/ActivityHostWindow.h>
 #include <android/app/ActivityPrivate.h>
 #include <android/app/ApplicationProcess.h>
+#include <android/app/ServiceHostWindow.h>
+#include <android/app/ServicePrivate.h>
 #include <android/content/ApplicationLauncher.h>
 #include <android/content/ContextPrivate.h>
 #include <android/content/IntentPrivate.h>
@@ -136,6 +139,19 @@ std::passed_ptr<Bundle> ApplicationContext::getInstanceStateBundle()
 void ApplicationContext::setInstanceStateBundle(std::passed_ptr<Bundle> stateBundle)
 {
     m_stateBundle = std::move(stateBundle);
+}
+
+std::shared_ptr<IBinder> ApplicationContext::getWindowToken()
+{
+    if (content::ContextPrivate::getPrivate(*m_application).isActivity()) {
+        auto activity = std::static_pointer_cast<Activity>(m_application);
+        return app::ActivityPrivate::getPrivate(*activity).hostWindow()->window()->getWindowToken();
+    } else if (content::ContextPrivate::getPrivate(*m_application).isService()) {
+        auto service = std::static_pointer_cast<Service>(m_application);
+        return app::ServicePrivate::getPrivate(*service).hostWindow()->window()->getWindowToken();
+    }
+
+    return nullptr;
 }
 
 int32_t ApplicationContext::runApplication()

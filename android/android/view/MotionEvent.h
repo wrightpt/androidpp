@@ -57,24 +57,8 @@ public:
     static const int32_t ACTION_MOVE = 0x00000002;
     // Constant for getActionMasked(): A movement has happened outside of the normal bounds of the UI element.
     static const int32_t ACTION_OUTSIDE = 0x00000004;
-    // This constant was deprecated in API level 8.Use ACTION_POINTER_INDEX_MASK to retrieve the data index associated with ACTION_POINTER_DOWN.
-    static const int32_t ACTION_POINTER_1_DOWN = 0x00000005;
-    // This constant was deprecated in API level 8.Use ACTION_POINTER_INDEX_MASK to retrieve the data index associated with ACTION_POINTER_UP.
-    static const int32_t ACTION_POINTER_1_UP = 0x00000006;
-    // This constant was deprecated in API level 8.Use ACTION_POINTER_INDEX_MASK to retrieve the data index associated with ACTION_POINTER_DOWN.
-    static const int32_t ACTION_POINTER_2_DOWN = 0x00000105;
-    // This constant was deprecated in API level 8.Use ACTION_POINTER_INDEX_MASK to retrieve the data index associated with ACTION_POINTER_UP.
-    static const int32_t ACTION_POINTER_2_UP = 0x00000106;
-    // This constant was deprecated in API level 8.Use ACTION_POINTER_INDEX_MASK to retrieve the data index associated with ACTION_POINTER_DOWN.
-    static const int32_t ACTION_POINTER_3_DOWN = 0x00000205;
-    // This constant was deprecated in API level 8.Use ACTION_POINTER_INDEX_MASK to retrieve the data index associated with ACTION_POINTER_UP.
-    static const int32_t ACTION_POINTER_3_UP = 0x00000206;
     // Constant for getActionMasked(): A non-primary pointer has gone down.
     static const int32_t ACTION_POINTER_DOWN = 0x00000005;
-    // This constant was deprecated in API level 8.Renamed to ACTION_POINTER_INDEX_MASK to match the actual data contained in these bits.
-    static const int32_t ACTION_POINTER_ID_MASK = 0x0000ff00;
-    // This constant was deprecated in API level 8.Renamed to ACTION_POINTER_INDEX_SHIFT to match the actual data contained in these bits.
-    static const int32_t ACTION_POINTER_ID_SHIFT = 0x00000008;
     // Bits in the action code that represent a pointer index, used with ACTION_POINTER_DOWN and ACTION_POINTER_UP.
     static const int32_t ACTION_POINTER_INDEX_MASK = 0x0000ff00;
     // Bit shift for the action bits holding the pointer index as defined by ACTION_POINTER_INDEX_MASK.
@@ -232,6 +216,8 @@ public:
     ANDROID_EXPORT int32_t getAction();
     // Gets which button has been modified during a press or release action.
     ANDROID_EXPORT int32_t getActionButton();
+    // Return the kind of action being performed.
+    ANDROID_EXPORT int32_t getActionMasked();
     // Returns the value of the requested axis for the given pointer index (use getPointerId(int32_t) to find the pointer identifier for this index).
     ANDROID_EXPORT float getAxisValue(int32_t axis, int32_t pointerIndex);
     // getAxisValue(int32_t) for the first pointer index (may be an arbitrary pointer identifier).

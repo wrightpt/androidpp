@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Daewoong Jang.
+ * Copyright (C) 2017 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,43 +23,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "DisplayMetrics.h"
+#include "AlertDialogPrivate.h"
 
-#include <android/util/PlatformDisplayMetrics.h>
+#include <android.h>
+#include <android/content/ContextPrivate.h>
+#include <android/os/Binder.h>
+#include <windows.h>
 
 namespace android {
-namespace util {
+namespace app {
 
-DisplayMetrics::DisplayMetrics()
-    : density(1.0f)
-    , densityDpi(DENSITY_DEFAULT)
-    , widthPixels(0)
-    , heightPixels(0)
+void AlertDialogPrivate::show()
 {
-    PlatformDisplayMetrics::init(*this);
+    auto window = std::static_pointer_cast<Binder>(content::ContextPrivate::getGlobalContext().getWindowToken());
+    UINT type = MB_OK;
+    if (m_positiveButton.first && m_negativeButton.first)
+        type = MB_YESNO;
+
+    int result = ::MessageBox(reinterpret_cast<HWND>(window->handle()), m_message.c_str(), L"Alert", type);
+    switch (result) {
+    case IDYES:
+        m_positiveButton.second.second(m_this, DialogInterface::BUTTON_POSITIVE);
+        break;
+    case IDNO:
+        m_negativeButton.second.second(m_this, DialogInterface::BUTTON_NEGATIVE);
+        break;
+    case IDOK:
+    default:
+        break;
+    }
 }
 
-DisplayMetrics::DisplayMetrics(const DisplayMetrics& other)
-    : density(other.density)
-{
-}
-
-DisplayMetrics::DisplayMetrics(DisplayMetrics&& other)
-    : density(other.density)
-{
-}
-
-DisplayMetrics& DisplayMetrics::operator=(const DisplayMetrics& other)
-{
-    density = other.density;
-    return *this;
-}
-
-DisplayMetrics& DisplayMetrics::operator=(DisplayMetrics&& other)
-{
-    density = other.density;
-    return *this;
-}
-
-} // namespace util
+} // namespace app
 } // namespace android

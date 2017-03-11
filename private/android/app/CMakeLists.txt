@@ -1,6 +1,7 @@
 set(APP_SOURCES
     ActivityHostWindow.cpp
     ActivityPrivate.cpp
+    AlertDialogPrivate.cpp
     ApplicationLoader.cpp
     ApplicationProcess.cpp
     ServiceHostWindow.cpp
@@ -11,6 +12,7 @@ set(APP_SOURCES
 set(APP_HEADERS
     ActivityHostWindow.h
     ActivityPrivate.h
+    AlertDialogPrivate.h
     ApplicationLoader.h
     ApplicationProcess.h
     HostWindow.h
@@ -22,6 +24,7 @@ set(APP_HEADERS
 
 if (WIN32)
     list(APPEND APP_SOURCES
+        win/AlertDialogPrivateWin.cpp
         win/ApplicationProcessWin.cpp
         win/WindowProviderWin.cpp
     )

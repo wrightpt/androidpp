@@ -43,6 +43,8 @@ public:
 
     void initialize();
 
+    ServiceHostWindow* hostWindow() const;
+
     std::shared_ptr<IBinder> callOnBind();
     void callOnCreate();
     void callOnDestroy();

@@ -41,7 +41,7 @@ public:
         HostWindow&);
     virtual ~WindowProvider() { }
 
-    virtual std::shared_ptr<IBinder> getWindowToken() = 0;
+    virtual std::passed_ptr<IBinder> getWindowToken() = 0;
 
     WindowHandle windowHandle() const;
 

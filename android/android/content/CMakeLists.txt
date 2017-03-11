@@ -11,6 +11,7 @@ set(CONTENT_HEADERS
     Context.h
     ContextThemeWrapper.h
     ContextWrapper.h
+    DialogInterface.h
     Intent.h
     ServiceConnection.h
 )

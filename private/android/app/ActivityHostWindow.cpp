@@ -297,14 +297,14 @@ void ActivityHostWindow::dispatchMouseEvent(MotionEvent& event)
     View* eventTarget = contentView();
     if (eventTarget) {
         switch (event.getAction()) {
-        case MotionEvent::ACTION_BUTTON_PRESS:
+        case MotionEvent::ACTION_DOWN:
             if (!event.getActionButton() == MotionEvent::BUTTON_SECONDARY)
                 m_windowProvider->setWindowFocus(true);
             m_windowProvider->setWindowCaptureMouse(true);
             if (eventTarget->onGenericMotionEvent(event))
                 return;
             break;
-        case MotionEvent::ACTION_BUTTON_RELEASE:
+        case MotionEvent::ACTION_UP:
             m_windowProvider->setWindowCaptureMouse(false);
             if (eventTarget->onGenericMotionEvent(event))
                 return;

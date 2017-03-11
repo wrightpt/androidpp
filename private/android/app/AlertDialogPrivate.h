@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Daewoong Jang.
+ * Copyright (C) 2017 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,43 +23,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "DisplayMetrics.h"
+#pragma once
 
-#include <android/util/PlatformDisplayMetrics.h>
+#include <android/app/AlertDialog.h>
 
 namespace android {
-namespace util {
+namespace app {
 
-DisplayMetrics::DisplayMetrics()
-    : density(1.0f)
-    , densityDpi(DENSITY_DEFAULT)
-    , widthPixels(0)
-    , heightPixels(0)
-{
-    PlatformDisplayMetrics::init(*this);
-}
+class AlertDialogPrivate final {
+    friend class AlertDialog;
+public:
+    AlertDialogPrivate(AlertDialog&, Context&);
+    ~AlertDialogPrivate();
 
-DisplayMetrics::DisplayMetrics(const DisplayMetrics& other)
-    : density(other.density)
-{
-}
+    static AlertDialogPrivate& getPrivate(AlertDialog&);
+    static void setPrivate(AlertDialog&, std::unique_ptr<AlertDialogPrivate>&&);
 
-DisplayMetrics::DisplayMetrics(DisplayMetrics&& other)
-    : density(other.density)
-{
-}
+    void setMessage(CharSequence message);
+    void setNegativeButton(CharSequence text, DialogInterface::OnClickListener&& listener);
+    void setPositiveButton(CharSequence text, DialogInterface::OnClickListener&& listener);
+    void show();
 
-DisplayMetrics& DisplayMetrics::operator=(const DisplayMetrics& other)
-{
-    density = other.density;
-    return *this;
-}
+private:
+    AlertDialog& m_this;
+    Context& m_context;
+    CharSequence m_message;
+    using Button = std::pair<bool, std::pair<CharSequence, DialogInterface::OnClickListener>>;
+    Button m_positiveButton;
+    Button m_negativeButton;
+};
 
-DisplayMetrics& DisplayMetrics::operator=(DisplayMetrics&& other)
-{
-    density = other.density;
-    return *this;
-}
-
-} // namespace util
+} // namespace app
 } // namespace android

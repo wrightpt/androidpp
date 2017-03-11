@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Daewoong Jang.
+ * Copyright (C) 2017 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,43 +23,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "DisplayMetrics.h"
-
-#include <android/util/PlatformDisplayMetrics.h>
+#include "AlertDialogPrivate.h"
 
 namespace android {
-namespace util {
+namespace app {
 
-DisplayMetrics::DisplayMetrics()
-    : density(1.0f)
-    , densityDpi(DENSITY_DEFAULT)
-    , widthPixels(0)
-    , heightPixels(0)
-{
-    PlatformDisplayMetrics::init(*this);
-}
-
-DisplayMetrics::DisplayMetrics(const DisplayMetrics& other)
-    : density(other.density)
+AlertDialogPrivate::AlertDialogPrivate(AlertDialog& dialog, Context& context)
+    : m_this(dialog)
+    , m_context(context)
 {
 }
 
-DisplayMetrics::DisplayMetrics(DisplayMetrics&& other)
-    : density(other.density)
+AlertDialogPrivate::~AlertDialogPrivate()
 {
 }
 
-DisplayMetrics& DisplayMetrics::operator=(const DisplayMetrics& other)
+AlertDialogPrivate& AlertDialogPrivate::getPrivate(AlertDialog& dialog)
 {
-    density = other.density;
-    return *this;
+    return *dialog.m_private;
 }
 
-DisplayMetrics& DisplayMetrics::operator=(DisplayMetrics&& other)
+void AlertDialogPrivate::setPrivate(AlertDialog& dialog, std::unique_ptr<AlertDialogPrivate>&& p)
 {
-    density = other.density;
-    return *this;
+    dialog.m_private = std::move(p);
 }
 
-} // namespace util
+void AlertDialogPrivate::setMessage(CharSequence message)
+{
+    m_message = std::move(message);
+}
+
+void AlertDialogPrivate::setNegativeButton(CharSequence text, DialogInterface::OnClickListener&& listener)
+{
+    m_negativeButton.first = true;
+    m_negativeButton.second.first = std::move(text);
+    m_negativeButton.second.second = std::move(listener);
+}
+
+void AlertDialogPrivate::setPositiveButton(CharSequence text, DialogInterface::OnClickListener&& listener)
+{
+    m_negativeButton.first = false;
+    m_positiveButton.second.first = std::move(text);
+    m_positiveButton.second.second = std::move(listener);
+}
+
+} // namespace app
 } // namespace android

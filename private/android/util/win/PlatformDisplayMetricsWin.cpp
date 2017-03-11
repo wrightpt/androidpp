@@ -38,7 +38,7 @@ void PlatformDisplayMetrics::init(DisplayMetrics& metrics)
     ::GetWindowRect(GetDesktopWindow(), &screenSize);
     metrics.widthPixels = screenSize.right - screenSize.left;
     metrics.heightPixels = screenSize.bottom - screenSize.top;
-    metrics.density = DisplayMetrics::DENSITY_DEFAULT;
+    metrics.densityDpi = DisplayMetrics::DENSITY_DEFAULT;
 }
 
 } // namespace util

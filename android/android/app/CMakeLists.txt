@@ -1,10 +1,12 @@
 set(APP_SOURCES
     Activity.cpp
+    AlertDialog.cpp
     Service.cpp
 )
 
 set(APP_HEADERS
     Activity.h
+    AlertDialog.h
     Service.h
 )
 

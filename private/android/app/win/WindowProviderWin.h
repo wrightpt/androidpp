@@ -55,7 +55,7 @@ public:
     DECLARE_WND_CLASS_EX(L"WTL_WindowProviderWin", CS_DBLCLKS, 0);
     virtual ~WindowProviderWin();
 
-    std::shared_ptr<IBinder> getWindowToken() override { return m_windowToken; }
+    std::passed_ptr<IBinder> getWindowToken() override { return m_windowToken; }
 
 private:
     WindowProviderWin(WindowHandle parentWindow, const Rect& clientRect, HostWindow&);

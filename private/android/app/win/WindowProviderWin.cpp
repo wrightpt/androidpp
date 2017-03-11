@@ -293,9 +293,11 @@ static int32_t metaStateForMouseEvent(UINT nFlags)
     return modifiers;
 }
 
+static const int32_t buttonMask = MK_LBUTTON | MK_RBUTTON | MK_MBUTTON;
+
 static int32_t buttonStateForMouseEvent(UINT nFlags)
 {
-    int32_t modifiers;
+    int32_t modifiers = 0;
     if (nFlags & MK_LBUTTON)
         modifiers |= view::MotionEvent::BUTTON_PRIMARY;
     if (nFlags & MK_RBUTTON)
@@ -306,63 +308,63 @@ static int32_t buttonStateForMouseEvent(UINT nFlags)
     return modifiers;
 }
 
-static view::MotionEvent mouseEvent(std::chrono::milliseconds downTime, int32_t action, const PointF& xy, const PointF& rawXY, UINT nFlags, int32_t actionButton, int32_t repeatCount, float wheelDelta = 0.0f)
+static view::MotionEvent mouseEvent(std::chrono::milliseconds downTime, int32_t action, const PointF& xy, const PointF& rawXY, UINT nFlags, int32_t button, int32_t repeatCount, float wheelDelta = 0.0f)
 {
     view::MotionEvent event(view::MotionEvent::obtain(downTime, System::currentTimeMillis(), action, xy.x, xy.y, metaStateForMouseEvent(nFlags)));
-    view::MotionEventPrivate::setPrivateData(event, actionButton, buttonStateForMouseEvent(nFlags), repeatCount, wheelDelta);
+    view::MotionEventPrivate::setPrivateData(event, 0, button | buttonStateForMouseEvent(nFlags), repeatCount, wheelDelta);
     event.setSource(InputDevice::SOURCE_MOUSE);
     return event;
 }
 
 void WindowProviderWin::OnLButtonDown(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(generateDownTime(VK_LBUTTON), view::MotionEvent::ACTION_BUTTON_PRESS, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_PRIMARY, 1));
+    m_host.dispatchMouseEvent(mouseEvent(generateDownTime(VK_LBUTTON), view::MotionEvent::ACTION_DOWN, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_PRIMARY, 1));
 }
 
 void WindowProviderWin::OnLButtonDoubleClick(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_LBUTTON), view::MotionEvent::ACTION_BUTTON_PRESS, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_PRIMARY, 2));
+    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_LBUTTON), view::MotionEvent::ACTION_DOWN, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_PRIMARY, 2));
 }
 
 void WindowProviderWin::OnLButtonUp(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_LBUTTON), view::MotionEvent::ACTION_BUTTON_RELEASE, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_PRIMARY, 1));
+    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_LBUTTON), view::MotionEvent::ACTION_UP, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_PRIMARY, 1));
 }
 
 void WindowProviderWin::OnMButtonDown(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(generateDownTime(VK_MBUTTON), view::MotionEvent::ACTION_BUTTON_PRESS, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_TERTIARY, 1));
+    m_host.dispatchMouseEvent(mouseEvent(generateDownTime(VK_MBUTTON), view::MotionEvent::ACTION_DOWN, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_TERTIARY, 1));
 }
 
 void WindowProviderWin::OnMButtonDoubleClick(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_MBUTTON), view::MotionEvent::ACTION_BUTTON_PRESS, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_TERTIARY, 2));
+    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_MBUTTON), view::MotionEvent::ACTION_DOWN, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_TERTIARY, 2));
 }
 
 void WindowProviderWin::OnMButtonUp(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_MBUTTON), view::MotionEvent::ACTION_BUTTON_RELEASE, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_TERTIARY, 1));
+    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_MBUTTON), view::MotionEvent::ACTION_UP, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_TERTIARY, 1));
 }
 
 void WindowProviderWin::OnRButtonDown(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(generateDownTime(VK_RBUTTON), view::MotionEvent::ACTION_BUTTON_PRESS, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_SECONDARY, 1));
+    m_host.dispatchMouseEvent(mouseEvent(generateDownTime(VK_RBUTTON), view::MotionEvent::ACTION_DOWN, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_SECONDARY, 1));
 }
 
 void WindowProviderWin::OnRButtonDoubleClick(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_RBUTTON), view::MotionEvent::ACTION_BUTTON_PRESS, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_SECONDARY, 2));
+    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_RBUTTON), view::MotionEvent::ACTION_DOWN, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_SECONDARY, 2));
 }
 
 void WindowProviderWin::OnRButtonUp(UINT nFlags, CPoint point)
 {
-    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_RBUTTON), view::MotionEvent::ACTION_BUTTON_RELEASE, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_SECONDARY, 1));
+    m_host.dispatchMouseEvent(mouseEvent(getDownTime(VK_RBUTTON), view::MotionEvent::ACTION_UP, pointF(point), toScreen(point), nFlags, view::MotionEvent::BUTTON_SECONDARY, 1));
 }
 
 void WindowProviderWin::OnMouseMove(UINT nFlags, CPoint point)
 {
     sendGeneratedMouseEnterEventIfNeeded(nFlags, point);
-    m_host.dispatchMouseEvent(mouseEvent(0ms, view::MotionEvent::ACTION_HOVER_MOVE, pointF(point), toScreen(point), nFlags, 0, 0));
+    m_host.dispatchMouseEvent(mouseEvent(0ms, (nFlags & buttonMask) ? view::MotionEvent::ACTION_MOVE : view::MotionEvent::ACTION_HOVER_MOVE, pointF(point), toScreen(point), nFlags, 0, 0));
 }
 
 void WindowProviderWin::OnMouseLeave()

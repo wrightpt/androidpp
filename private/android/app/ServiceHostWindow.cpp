@@ -39,7 +39,7 @@ public:
     ServiceWindowProvider(ServiceHostWindow&);
     ~ServiceWindowProvider() = default;
 
-    std::shared_ptr<IBinder> getWindowToken() override { return m_binder; }
+    std::passed_ptr<IBinder> getWindowToken() override { return m_binder; }
 
     // Binder::Client
     void onCreate() override;

@@ -40,7 +40,7 @@ float MotionEventPrivate::getAxisValue(MotionEvent& event, int32_t axis, int32_t
 {
     if (axis == MotionEvent::AXIS_VSCROLL)
         return event.m_wheelDelta;
-    return std::numeric_limits<float>::quiet_NaN();
+    return 0.0f;
 }
 
 float MotionEventPrivate::getOrientation(MotionEvent& event, int32_t pointerIndex)

@@ -34,7 +34,7 @@ class ContextPrivate;
 class Intent;
 class ServiceConnection;
 
-class Context {
+class Context : public Object {
     NONCOPYABLE(Context);
     friend class ContextPrivate;
 public:

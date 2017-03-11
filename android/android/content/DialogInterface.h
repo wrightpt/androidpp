@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Daewoong Jang.
+ * Copyright (C) 2017 Daewoong Jang.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,43 +23,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "DisplayMetrics.h"
+#pragma once
 
-#include <android/util/PlatformDisplayMetrics.h>
+#include <java/lang.h>
 
 namespace android {
-namespace util {
+namespace content {
 
-DisplayMetrics::DisplayMetrics()
-    : density(1.0f)
-    , densityDpi(DENSITY_DEFAULT)
-    , widthPixels(0)
-    , heightPixels(0)
-{
-    PlatformDisplayMetrics::init(*this);
-}
+class DialogInterface {
+public:
+    // The identifier for the positive button. 
+    static const int32_t BUTTON_POSITIVE = -1;
+    // The identifier for the negative button.
+    static const int32_t BUTTON_NEGATIVE = -2;
+    // The identifier for the neutral button.
+    static const int32_t BUTTON_NEUTRAL = -3;
 
-DisplayMetrics::DisplayMetrics(const DisplayMetrics& other)
-    : density(other.density)
-{
-}
+    using OnClickListener = std::function<void (DialogInterface& dialog, int32_t which)>;
 
-DisplayMetrics::DisplayMetrics(DisplayMetrics&& other)
-    : density(other.density)
-{
-}
+    ANDROID_EXPORT DialogInterface() = default;
+    ANDROID_EXPORT ~DialogInterface() = default;
+};
 
-DisplayMetrics& DisplayMetrics::operator=(const DisplayMetrics& other)
-{
-    density = other.density;
-    return *this;
-}
-
-DisplayMetrics& DisplayMetrics::operator=(DisplayMetrics&& other)
-{
-    density = other.density;
-    return *this;
-}
-
-} // namespace util
+} // namespace content
 } // namespace android
+
+using DialogInterface = android::content::DialogInterface;

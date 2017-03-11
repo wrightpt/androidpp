@@ -47,6 +47,7 @@ public:
     ANDROID_EXPORT virtual int32_t getFlags();
     ANDROID_EXPORT virtual std::passed_ptr<Bundle> getInstanceStateBundle();
     ANDROID_EXPORT virtual void setInstanceStateBundle(std::passed_ptr<Bundle> stateBundle);
+    ANDROID_EXPORT std::shared_ptr<IBinder> getWindowToken();
 
     ANDROID_EXPORT virtual int32_t runApplication();
 

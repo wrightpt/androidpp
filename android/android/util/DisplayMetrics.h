@@ -44,6 +44,8 @@ public:
 
     // The logical density of the display. 
     float density;
+    // The screen density expressed as dots-per-inch. 
+    float densityDpi;
     // The absolute width of the available display size in pixels. 
     int32_t widthPixels;
     // The absolute height of the available display size in pixels. 

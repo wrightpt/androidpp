@@ -57,6 +57,11 @@ void ServicePrivate::initialize()
     m_hostWindow = ServiceHostWindow::create(m_this);
 }
 
+ServiceHostWindow* ServicePrivate::hostWindow() const
+{
+    return m_hostWindow.get();
+}
+
 std::shared_ptr<IBinder> ServicePrivate::callOnBind()
 {
     return m_this.onBind(content::ContextPrivate::getGlobalContext().getIntent());
