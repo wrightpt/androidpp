@@ -54,7 +54,9 @@ static RECT windowClientRect(WindowHandle parentWindow, const Rect& clientRect)
         return rect;
     }
 
-    static const RECT defaultClientRect = { 0, 0, 800, 450 };
+    RECT defaultClientRect = { 0, 0, 540, 960 };
+    ::AdjustWindowRect(&defaultClientRect, WS_OVERLAPPEDWINDOW, FALSE);
+    ::OffsetRect(&defaultClientRect, -defaultClientRect.left, -defaultClientRect.top);
     return defaultClientRect;
 }
 
@@ -74,7 +76,7 @@ WindowProviderWin::WindowProviderWin(WindowHandle parentWindow, const Rect& clie
     , m_isCompositing(false)
     , m_requestedCursorUpdates(false)
 {
-    Create(reinterpret_cast<HWND>(parentWindow), ATL::_U_RECT(windowClientRect(parentWindow, clientRect)), _T("WindowProviderHWND"),
+    Create(reinterpret_cast<HWND>(parentWindow), ATL::_U_RECT(windowClientRect(parentWindow, clientRect)), _T("Android++"),
         parentWindow ? WS_CHILDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : WS_OVERLAPPEDWINDOW);
 
     m_windowToken = Binder::adapt(reinterpret_cast<intptr_t>(hwnd()));
